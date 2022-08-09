@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import Auth from "../components/Auth/Auth";
 import PersonalPage from './PersonalPage/PersonalPage';
 import Canvas from './Canvas/Canvas';
+import ErrorPage from './ErrorPage/ErrorPage';
 
 const AppRouter = () => {
   // const isAuth = useSelector((store: any) => store.user.isAuth);
@@ -17,7 +18,6 @@ const AppRouter = () => {
     { path: '/login', element: <Auth /> },
     { path: '/register', element: <Auth /> },
   ]
-  
 
 
   return (
@@ -31,7 +31,7 @@ const AppRouter = () => {
             key={route.path}
           />
         )}
-        <Route path='*' element={<PersonalPage publicRoutes={publicRoutes} />} />
+        <Route path='*' element={<ErrorPage publicRoutes={publicRoutes} />} />
       </Routes> :
       <Routes>
         {publicRoutes.map(route =>
@@ -41,7 +41,7 @@ const AppRouter = () => {
             key={route.path}
           />
         )}
-        <Route path='*' element={<Auth />} />
+        <Route path='*' element={<ErrorPage privateRoutes={privateRoutes} />} />
       </Routes>
 
   );
