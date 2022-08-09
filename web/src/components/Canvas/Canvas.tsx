@@ -1,5 +1,6 @@
 import React, { ReactElement } from 'react'
 
+
 type Props = {}
 
 export default function Canvas({ }: Props): ReactElement {
@@ -7,4 +8,6 @@ export default function Canvas({ }: Props): ReactElement {
     <div>Canvas</div>
   )
 }
+
+export default Canvas
 

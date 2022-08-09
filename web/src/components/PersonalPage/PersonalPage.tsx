@@ -14,3 +14,4 @@ export default function PersonalPage(props: IProps): ReactElement {
     <div>PersonalPage</div>
   )
 }
+
