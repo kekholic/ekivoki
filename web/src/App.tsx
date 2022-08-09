@@ -1,19 +1,15 @@
 import React from 'react';
-import logo from './logo.svg';
-import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css';
 import Auth from './components/Auth/Auth';
 import PersonalPage from './components/PersonalPage/PersonalPage';
 import Canvas from './components/Canvas/Canvas';
+import NavBar from './components/NavBar/NavBar';
 
 function App() {
   return (
     <BrowserRouter>
-      <div>
-        <NavLink to="/auth">Auth</NavLink>
-        <NavLink to='/canvas'>Paint</NavLink>
-        <NavLink to='/personal'>Personal</NavLink>
-      </div>
+      <NavBar />
       <Routes>
         <Route path={'/auth'} element={<Auth />} />
         <Route path={'/personal'} element={<PersonalPage />} />
