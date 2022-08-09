@@ -1,7 +1,12 @@
-import React from 'react';
+import React, { FC } from 'react'
+import { useNavigate } from "react-router-dom";
 
-export default function PersonalPage() {
+type Props = {}
+
+const PersonalPage: FC = () => {
+  console.log(window.location.href)
   return (
     <div>PersonalPage</div>
-  );
+  )
 }
+export default PersonalPage;
