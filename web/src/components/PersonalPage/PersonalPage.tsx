@@ -1,17 +1,19 @@
-import React, { FC, ReactElement, useEffect } from 'react'
+import React, { FC, ReactElement, useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom";
 
 
 interface IProps {
-  test?: boolean;
   publicRoutes?: Array<Object>;
 }
 
+
 export default function PersonalPage(props: IProps): ReactElement {
-  console.log(props)
+  const [publicRoutes, setpublicRoutes] = useState(props.publicRoutes)
+  console.log(window.location.pathname)
+  console.log(publicRoutes)
   // console.log(publicRoutes)
   return (
-    <div>PersonalPage</div>
+    <div></div>
   )
 }
 

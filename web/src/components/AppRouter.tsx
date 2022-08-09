@@ -17,6 +17,7 @@ const AppRouter = () => {
     { path: '/login', element: <Auth /> },
     { path: '/register', element: <Auth /> },
   ]
+  
 
 
   return (
@@ -30,7 +31,7 @@ const AppRouter = () => {
             key={route.path}
           />
         )}
-        <Route path='*' element={<PersonalPage test={true} publicRoutes={publicRoutes} />} />
+        <Route path='*' element={<PersonalPage publicRoutes={publicRoutes} />} />
       </Routes> :
       <Routes>
         {publicRoutes.map(route =>

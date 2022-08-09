@@ -9,5 +9,4 @@ export default function Canvas({ }: Props): ReactElement {
   )
 }
 
-export default Canvas
 
