@@ -1,17 +1,13 @@
+import React, { ReactElement } from 'react'
 
-import React, { FC } from 'react'
 
 type Props = {}
 
-// export default function Canvas({ }: Props) {
-//   return (
-//     <div>Canvas</div>
-//   )
-// }
-
-const Canvas: FC = () => {
+export default function Canvas({ }: Props): ReactElement {
   return (
     <div>Canvas</div>
   )
 }
+
 export default Canvas
+
