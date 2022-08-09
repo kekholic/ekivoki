@@ -7,7 +7,7 @@ import Canvas from './Canvas/Canvas';
 
 const AppRouter = () => {
   // const isAuth = useSelector((store: any) => store.user.isAuth);
-  const isAuth = true;
+  const isAuth = false;
 
   return (
     isAuth
