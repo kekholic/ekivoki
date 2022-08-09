@@ -1,25 +1,45 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route, Routes } from "react-router-dom";
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import Auth from "../components/Auth/Auth";
 import PersonalPage from './PersonalPage/PersonalPage';
 import Canvas from './Canvas/Canvas';
 
 const AppRouter = () => {
   // const isAuth = useSelector((store: any) => store.user.isAuth);
-  const isAuth = false;
+  const isAuth = true;
+  const privateRoutes = [
+    { path: '/personal', element: <PersonalPage /> },
+    { path: '/canvas', element: <Canvas /> },
+  ]
+
+  const publicRoutes = [
+    { path: '/login', element: <Auth /> },
+    { path: '/register', element: <Auth /> },
+  ]
+
 
   return (
     isAuth
       ?
       <Routes>
-        <Route path='/personal' element={<PersonalPage />} />
-        <Route path='/canvas' element={<Canvas />} />
-        <Route path='*' element={<PersonalPage />} />
+        {privateRoutes.map(route =>
+          <Route
+            element={route.element}
+            path={route.path}
+            key={route.path}
+          />
+        )}
+        <Route path='*' element={<PersonalPage test={true} publicRoutes={publicRoutes} />} />
       </Routes> :
       <Routes>
-        <Route path='/log' element={<Auth />} />
-        <Route path='/reg' element={<Auth />} />
+        {publicRoutes.map(route =>
+          <Route
+            element={route.element}
+            path={route.path}
+            key={route.path}
+          />
+        )}
         <Route path='*' element={<Auth />} />
       </Routes>
 
