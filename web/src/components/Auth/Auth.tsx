@@ -1,3 +1,4 @@
+
 import React, { ReactElement } from 'react'
 
 type Props = {}
@@ -18,9 +19,4 @@ export default function Auth({ }: Props): ReactElement {
   )
 }
 
-// const Auth: FC = () => {
-//   return (
-//     <div> Auth </div>
-//   )
-// }
-// export default Auth;
+

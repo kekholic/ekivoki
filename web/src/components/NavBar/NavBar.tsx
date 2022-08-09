@@ -5,10 +5,10 @@ type Props = {}
 
 export default function NavBar({ }: Props) {
   return (
-    <header>
+    <>
       <NavLink to="/auth">Auth</NavLink>
       <NavLink to='/canvas'>Paint</NavLink>
       <NavLink to='/personal'>Personal</NavLink>
-    </header>
+    </>
   )
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { BrowserRouter } from 'react-router-dom'
 import './App.css';
 
@@ -8,8 +8,12 @@ import AppRouter from './components/AppRouter';
 function App() {
   return (
     <BrowserRouter>
-      <NavBar />
-      <AppRouter />
+      <header>
+        <NavBar />
+      </header>
+      <main>
+        <AppRouter />
+      </main>
     </BrowserRouter>
   );
 }
