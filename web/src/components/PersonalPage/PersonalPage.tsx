@@ -1,9 +1,7 @@
-import React from 'react'
+import React from 'react';
 
-type Props = {}
-
-export default function PersonalPage({ }: Props) {
+export default function PersonalPage() {
   return (
     <div>PersonalPage</div>
-  )
+  );
 }

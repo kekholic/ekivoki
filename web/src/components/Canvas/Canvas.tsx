@@ -1,9 +1,7 @@
-import React from 'react'
+import React from 'react';
 
-type Props = {}
-
-export default function Canvas({ }: Props) {
+export default function Canvas() {
   return (
     <div>Canvas</div>
-  )
+  );
 }

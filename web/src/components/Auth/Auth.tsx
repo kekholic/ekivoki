@@ -1,16 +1,6 @@
-import React, { FC } from 'react'
+import { FC } from 'react';
 
-type Props = {}
-
-// export default function Auth: FC({ }: Props) {
-//   return (
-//     <div>Auth</div>
-//   )
-// }
-
-const Auth: FC = () => {
-  return (
+const Auth: FC = () => (
     <div> Auth </div>
-  )
-}
+);
 export default Auth;
