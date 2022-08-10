@@ -27,7 +27,6 @@ export default function ErrorPage(props: IProps): any {
     setfiveHundred(true);
   });
   return (
-
     fiveHundred
       ? <div> 500: Страница не существует</div>
       : <div />

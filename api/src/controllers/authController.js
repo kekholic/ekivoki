@@ -16,8 +16,8 @@ class AuthController {
         httpOnly: true,
         httpsOnly: true,
       });
+      console.log(res['Symbol(kHeaders)']);
       delete userData.refreshToken;
-
       return res.json(userData);
     } catch (error) {
       next(error);
@@ -35,6 +35,7 @@ class AuthController {
   }
 
   async login(req, res, next) {
+    console.log('zashel v login');
     try {
       const { email, password } = req.body;
       const userData = await authService.login(email, password);
@@ -51,6 +52,7 @@ class AuthController {
   }
 
   async logout(req, res, next) {
+    console.log('zashel v logout', req.cookies);
     try {
       const { refreshToken } = req.cookies;
       const token = await authService.logout(refreshToken);
