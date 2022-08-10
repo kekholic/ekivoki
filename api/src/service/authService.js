@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 const bcrypt = require('bcrypt');
 const uuid = require('uuid');
 const { PrismaClient } = require('@prisma/client');
@@ -11,7 +12,7 @@ const mailService = require('./mailService');
 const prisma = new PrismaClient();
 
 class AuthService {
-  static async registration(email, password, username) {
+  async registration(email, password, username) {
     try {
       const candidate = await prisma.user.findUnique({ where: { email } });
       if (candidate) {
@@ -20,10 +21,12 @@ class AuthService {
       const hashPassword = await bcrypt.hash(password, 8);
       const activateLink = uuid.v4();
       const user = await prisma.user.create({
-        email,
-        username,
-        password: hashPassword,
-        codeActivation: `${process.env.API_URL}/activate/${activateLink}`,
+        data: {
+          email,
+          username,
+          password: hashPassword,
+          codeActivation: `${process.env.API_URL}/activate/${activateLink}`,
+        },
       });
       await mailService.sendActivationMail(
         email,
@@ -39,6 +42,7 @@ class AuthService {
         user: userDto,
       };
     } catch (error) {
+      console.log(error);
       throw ApiError.BadRequest('Невалидные данные');
     }
   }
