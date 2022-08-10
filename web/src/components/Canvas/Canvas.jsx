@@ -1,49 +1,87 @@
+/* eslint-disable consistent-return */
 import '../../App.css';
 import React, { useEffect, useRef } from 'react';
-import CanvasContainer from '../CanvasContainer/CanvasContainer';
+import CanvasContainer from '../CanvasContainer/CanvasContainer.jsx';
 
 export default function Canvas() {
+  const id = Math.random();
   const CANVAS_REF = useRef(null);
 
   const isDrawing = useRef(false);
 
-  function startDrawing(event) {
+  const drawHandler = (msg) => {
+    const canvas = CANVAS_REF.current;
+    console.log('isDrawing: ', isDrawing);
+    if (canvas && isDrawing.current === false && msg.id !== id) {
+      const context = canvas.getContext('2d');
+      if (msg.figure.START) {
+        context.beginPath();
+        context.lineTo(msg.figure.x, msg.figure.y);
+      }
+      if (msg.figure.x) {
+        context.lineTo(msg.figure.x, msg.figure.y);
+        console.log('yes');
+        context.strokeStyle = 'black';
+        context.lineWidth = '3px';
+        context.lineCap = 'round';
+        context.lineJoin = 'round';
+
+        context.stroke();
+      }
+      if (msg.figure.STOP) {
+        context.closePath();
+      }
+    }
+  };
+
+  function getCanvasOffset(event) {
+    const currentTargetRect = event.currentTarget.getBoundingClientRect();
+    const eventOffsetX = event.pageX - currentTargetRect.left;
+    const eventOffsetY = event.pageY - currentTargetRect.top;
+
+    return { eventOffsetX, eventOffsetY };
+  }
+
+  function startDrawing(event, socket) {
     isDrawing.current = true;
     const canvas = CANVAS_REF.current;
     const context = canvas.getContext('2d');
     console.log('STARt');
     context.beginPath();
-    const { event_offsetX, event_offsetY } = getCanvasOffset(event);
-    context.lineTo(event_offsetX, event_offsetY);
+    const { eventOffsetX, eventOffsetY } = getCanvasOffset(event);
+    socket.send(
+      JSON.stringify({
+        method: 'draw',
+        id,
+        figure: {
+          START: 'START',
+          x: eventOffsetX,
+          y: eventOffsetY,
+        },
+      }),
+    );
+    context.lineTo(eventOffsetX, eventOffsetY);
     event.preventDefault();
-  }
-
-  function getCanvasOffset(event) {
-    let currentTargetRect = event.currentTarget.getBoundingClientRect();
-    const event_offsetX = event.pageX - currentTargetRect.left,
-      event_offsetY = event.pageY - currentTargetRect.top;
-
-    return { event_offsetX, event_offsetY };
   }
 
   function draw(event, socket) {
     if (isDrawing.current) {
       const canvas = CANVAS_REF.current;
       const context = canvas.getContext('2d');
-      const { event_offsetX, event_offsetY } = getCanvasOffset(event);
-      console.log(event_offsetX, event_offsetY);
+      const { eventOffsetX, eventOffsetY } = getCanvasOffset(event);
+      console.log(eventOffsetX, eventOffsetY);
       // console.log(event);
       socket.send(
         JSON.stringify({
           method: 'draw',
-          // id: id,
+          id,
           figure: {
-            x: event_offsetX,
-            y: event_offsetY,
+            x: eventOffsetX,
+            y: eventOffsetY,
           },
-        })
+        }),
       );
-      context.lineTo(event_offsetX, event_offsetY);
+      context.lineTo(eventOffsetX, eventOffsetY);
 
       context.strokeStyle = 'black';
       context.lineWidth = '3px';
@@ -54,11 +92,20 @@ export default function Canvas() {
     event.preventDefault();
   }
 
-  function stopDrawing(event) {
+  function stopDrawing(event, socket) {
     if (isDrawing.current) {
       const canvas = CANVAS_REF.current;
       const context = canvas.getContext('2d');
       console.log('STOP');
+      socket.send(
+        JSON.stringify({
+          method: 'draw',
+          id,
+          figure: {
+            STOP: 'STOP',
+          },
+        }),
+      );
 
       context.stroke();
       context.closePath();
@@ -68,7 +115,7 @@ export default function Canvas() {
   }
 
   useEffect(() => {
-    const socket = new WebSocket(`ws://localhost:4000/canvas`);
+    const socket = new WebSocket('ws://localhost:4000/canvas');
     socket.onopen = () => {
       console.log('Подключение установлено');
       socket.send(
@@ -76,14 +123,14 @@ export default function Canvas() {
           // id:params.id,
           // username: canvasState.username,
           method: 'connection',
-        })
+        }),
       );
     };
     socket.onmessage = (event) => {
-      let msg = JSON.parse(event.data);
+      const msg = JSON.parse(event.data);
       switch (msg.method) {
         case 'connection':
-          console.log(`пользователь {msg.username} присоединился`);// поправить
+          console.log('пользователь {msg.username} присоединился'); // поправить
           break;
 
         case 'draw':
@@ -100,10 +147,16 @@ export default function Canvas() {
     canvas.height = 600;
 
     if (canvas) {
-      canvas.addEventListener('mousedown', startDrawing);
+      canvas.addEventListener('mousedown', (event) => {
+        startDrawing(event, socket);
+      });
       canvas.addEventListener('mousemove', (event) => draw(event, socket));
-      canvas.addEventListener('mouseup', stopDrawing);
-      canvas.addEventListener('mouseout', stopDrawing);
+      canvas.addEventListener('mouseup', (event) => {
+        stopDrawing(event, socket);
+      });
+      canvas.addEventListener('mouseout', (event) => {
+        stopDrawing(event, socket);
+      });
 
       return () => {
         canvas.removeEventListener('mousedown', startDrawing);
@@ -113,22 +166,6 @@ export default function Canvas() {
       };
     }
   }, []);
-
-  const drawHandler = (msg) => {
-    const canvas = CANVAS_REF.current;
-    console.log('canvas: ', canvas);
-    if (canvas) {
-      const context = canvas.getContext('2d');
-      context.lineTo(msg.x, msg.y);
-      console.log('yes');
-      context.strokeStyle = 'black';
-      context.lineWidth = '3px';
-      context.lineCap = 'round';
-      context.lineJoin = 'round';
-
-      context.stroke();
-    }
-  };
 
   return (
     <div>

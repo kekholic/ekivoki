@@ -1,5 +1,9 @@
-import styled from "styled-components";
-import React from "react";
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable react/prop-types */
+/* eslint-disable no-shadow */
+
+import styled from 'styled-components';
+import React from 'react';
 
 const Container = styled.div`
   display: flex;
