@@ -10,12 +10,12 @@ export default function ErrorPage(props: IProps): any {
   const navigate = useNavigate();
   const { publicRoutes, privateRoutes } = props;
 
+  console.log(publicRoutes, privateRoutes);
   const [fiveHundred, setfiveHundred] = useState(false);
 
   useEffect(() => {
     const findInPublic = publicRoutes?.find((el: any) => el.path === window.location.pathname);
     const findInPrivate = privateRoutes?.find((el: any) => el.path === window.location.pathname);
-    console.log(findInPublic);
     if (findInPublic) {
       alert('Вы уже авторизованы!');
       navigate('/personal');
