@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-use-before-define */
 require('dotenv').config(); // подключение переменных env
 
 const express = require('express'); // подключение  express
@@ -6,13 +8,11 @@ const path = require('path');
 
 const cors = require('cors');
 
+const app = express(); // создание версии сервера express'a
+const WSServer = require('express-ws')(app);
 const errorMiddleware = require('./src/middlewares/error-middleware');
 
-
 const { PORT } = process.env; // получение переменных env
-
-const app = express(); // создание версии сервера express'a
-
 
 const corsOptions = {
   origin: ['http://localhost:3000'],
@@ -22,12 +22,9 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-const WSServer = require('express-ws')(app);
-
 const aWss = WSServer.getWss();
 
 const authRouter = require('./src/routes/authRouter');
-
 
 app.use(express.static(path.join(__dirname, 'public'))); // подключение  public директории
 
@@ -36,9 +33,7 @@ app.use(morgan('dev')); // добавление настроек и инициа
 app.use(express.urlencoded({ extended: true })); // добавление отлова post запросов.
 app.use(express.json()); // парсинг post запросов в json.
 
-
 app.use('/auth', authRouter);
-
 
 app.ws('/canvas', (ws, req) => {
   ws.on('message', (msg) => {
