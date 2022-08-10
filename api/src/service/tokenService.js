@@ -1,3 +1,5 @@
+/* eslint-disable class-methods-use-this */
+/* eslint-disable consistent-return */
 const jwt = require('jsonwebtoken');
 const { PrismaClient } = require('@prisma/client');
 

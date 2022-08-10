@@ -16,8 +16,7 @@ class AuthController {
         httpOnly: true,
         httpsOnly: true,
       });
-
-      const { accessToken } = userData;
+      delete userData.refreshToken;
 
       return res.json(userData);
     } catch (error) {
@@ -43,9 +42,9 @@ class AuthController {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
       });
+      delete userData.refreshToken;
 
-      const { accessToken } = userData;
-      return res.json({ accessToken });
+      return res.json(userData);
     } catch (error) {
       next(error);
     }
