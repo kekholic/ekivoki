@@ -19,7 +19,7 @@ class AuthController {
 
       const { accessToken } = userData;
 
-      return res.json({ accessToken });
+      return res.json(userData);
     } catch (error) {
       next(error);
     }

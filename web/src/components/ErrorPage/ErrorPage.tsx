@@ -1,4 +1,5 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+/* eslint-disable react/require-default-props */
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface IProps {
@@ -10,7 +11,7 @@ export default function ErrorPage(props: IProps): any {
   const navigate = useNavigate();
   const { publicRoutes, privateRoutes } = props;
 
-  console.log(publicRoutes, privateRoutes);
+  // console.log(publicRoutes, privateRoutes);
   const [fiveHundred, setfiveHundred] = useState(false);
 
   useEffect(() => {

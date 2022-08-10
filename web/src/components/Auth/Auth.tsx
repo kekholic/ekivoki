@@ -1,10 +1,14 @@
+/* eslint-disable no-empty-pattern */
 import React, { ReactElement, useEffect, useState } from 'react';
-import $api from '../../http';
+
+import action from '../../store/actions/action';
+import { useAppDispatch } from '../../store/store';
 
 type Props = {}
 
 export default function Auth({ }: Props): ReactElement {
   const [input, setInput] = useState({ email: '', password: '', username: '' });
+  const dispatch = useAppDispatch();
 
   const submitHandler = (e: any) => {
     e.preventDefault();
@@ -15,26 +19,7 @@ export default function Auth({ }: Props): ReactElement {
   };
   useEffect(() => {
     if (input.email) {
-      $api
-        .post(`/auth/${input.username ? 'registration' : 'login'}`, input)
-        .then((data) => {
-          console.log(data);
-          // dispatch(authAndLoginUser(data));
-          // dispatch(setIsAuth());
-          // dispatch(setIsLoading(false));
-          // navigate('/home', { replace: true });
-        })
-        .catch((error) => {
-          console.log(error);
-          // dispatch(
-          //   getError({
-          //     status: error.response.status,
-          //     error: error.response.data.message,
-          //   }),
-          // );
-          // dispatch(setIsLoading(false));
-          // navigate('/error', { replace: true });
-        });
+      dispatch(action.authUser(input));
     }
 
     return () => {
