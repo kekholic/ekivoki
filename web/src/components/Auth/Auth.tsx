@@ -1,21 +1,59 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import $api from '../../http';
 
 type Props = {}
 
 export default function Auth({ }: Props): ReactElement {
-  const [input, setInput] = useState({});
+  const [input, setInput] = useState({ email: '', password: '', username: '' });
 
   const submitHandler = (e: any) => {
     e.preventDefault();
-    console.log(e);
-    setInput(e);
+    const email = e.target.email.value;
+    const username = e.target.username.value || undefined;
+    const password = e.target.password.value;
+    setInput({ email, password, username });
   };
+  useEffect(() => {
+    if (input.email) {
+      $api
+        .post(`/auth/${input.username ? 'registration' : 'login'}`, input)
+        .then((data) => {
+          console.log(data);
+          // dispatch(authAndLoginUser(data));
+          // dispatch(setIsAuth());
+          // dispatch(setIsLoading(false));
+          // navigate('/home', { replace: true });
+        })
+        .catch((error) => {
+          console.log(error);
+          // dispatch(
+          //   getError({
+          //     status: error.response.status,
+          //     error: error.response.data.message,
+          //   }),
+          // );
+          // dispatch(setIsLoading(false));
+          // navigate('/error', { replace: true });
+        });
+    }
+
+    return () => {
+      // second
+    };
+  }, [input]);
+
   return (
     <form onSubmit={submitHandler}>
-      <label htmlFor="mail">
+      <label htmlFor="username">
+        Username:
+        <input type="text" name="username" />
+
+      </label>
+      {' '}
+      <br />
+      <label htmlFor="email">
         Mail:
-        <input type="text" name="mail" />
+        <input type="text" name="email" />
 
       </label>
       {' '}

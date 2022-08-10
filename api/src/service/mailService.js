@@ -14,13 +14,14 @@ class MailService {
   }
 
   async sendActivationMail(to, link) {
+    console.log('hoba');
     await this.transporter.sendMail({
       from: process.env.SMTP_USER,
       to,
       subject: 'Activation account',
       text: 'Для активации пройдите по ссылке',
       html:
-          `
+        `
             <div>
               <h2>Для активации пройдите по ссылке</h2>
               <a href=${link}>${link}</a>
