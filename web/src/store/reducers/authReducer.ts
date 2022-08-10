@@ -3,7 +3,7 @@ import authType from '../types/authTypes';
 
 const authReducer = (state = {}, action: any) => {
   switch (action.type) {
-    case authType.USER_AUTH:
+    case authType.USER_AUTH_SUCCES:
       window.localStorage.setItem(
         'token',
         action.payload.accessToken,
@@ -11,7 +11,7 @@ const authReducer = (state = {}, action: any) => {
 
       return action.payload.user;
 
-    case authType.USER_LOGOUT:
+    case authType.USER_LOGOUT_SUCCES:
       window.localStorage.removeItem('token');
       return {};
 

@@ -1,14 +1,21 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import action from '../../store/actions/action';
+import { useAppDispatch } from '../../store/store';
 
-type Props = {}
+export default function NavBar() {
+  const dispatch = useAppDispatch();
+  const logoutHendler = () => {
+    dispatch(action.logoutUser());
+  };
 
-export default function NavBar({ }: Props) {
   return (
     <>
-      <NavLink to="/auth">Auth</NavLink>
-      <NavLink to='/canvas'>Paint</NavLink>
-      <NavLink to='/personal'>Personal</NavLink>
+      <NavLink to="/register">Registration</NavLink>
+      <NavLink to="/login">Login</NavLink>
+      <NavLink to="/canvas">Paint</NavLink>
+      <NavLink to="/personal">Personal</NavLink>
+      <button type="submit" onClick={() => logoutHendler()}>logout</button>
     </>
-  )
+  );
 }
