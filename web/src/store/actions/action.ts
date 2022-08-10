@@ -1,8 +1,9 @@
 import $api from '../../http';
+import { AppDispatch } from '../store';
 import authType from '../types/authTypes';
 
 const action = {
-  authUser: (data: any) => async (dispatch: any) => {
+  authUser: (data: any) => async (dispatch: AppDispatch) => {
     const response = await $api
       .post(`/auth/${data.username ? 'registration' : 'login'}`, data);
     dispatch(action.authUserSucces(response.data));

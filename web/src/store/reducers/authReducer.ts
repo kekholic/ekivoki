@@ -1,5 +1,18 @@
-/* eslint-disable default-param-last */
 import authType from '../types/authTypes';
+
+// interface IPayload {
+//   accessToken: string,
+//   user: any,
+// }
+
+// // MATRESHKA
+// interface IAction {
+//   type: string,
+//   payload: {
+//     accessToken: string,
+//     user: any
+//   },
+// }
 
 const authReducer = (state = {}, action: any) => {
   switch (action.type) {
