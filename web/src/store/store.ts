@@ -1,6 +1,3 @@
-// import { combineReducers, configureStore } from '@reduxjs/toolkit';
-// import { applyMiddleware, createStore } from 'redux';
-// import thunk from 'redux-thunk';
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import authReducer from './reducers/authReducer';
