@@ -14,7 +14,6 @@ class MailService {
   }
 
   async sendActivationMail(to, link) {
-    console.log('hoba');
     await this.transporter.sendMail({
       from: process.env.SMTP_USER,
       to,

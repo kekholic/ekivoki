@@ -33,7 +33,6 @@ class AuthService {
         `${process.env.API_URL}/activate/${activateLink}`,
       );
       const userDto = new UserDto(user);
-      console.log(userDto);
       const tokens = tokenService.generateTokens({ ...userDto });
       await tokenService.saveToken(userDto.id, tokens);
 
