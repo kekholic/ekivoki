@@ -1,9 +1,12 @@
-import React from 'react'
+import React from 'react';
+import './Button.module.css';
 
-type Props = {}
+interface Props {
+  children: string;
+}
 
-export default function Button({ }: Props) {
+export default function Button(props: Props) {
   return (
-    <div>Button</div>
-  )
+    <button type="submit">{props.children}</button>
+  );
 }

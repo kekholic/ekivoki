@@ -1,5 +1,7 @@
 /* eslint-disable no-empty-pattern */
 import React, { ReactElement, useEffect, useState } from 'react';
+import Button from '../UI/Button/Button';
+import './Auth.module.css';
 
 import action from '../../store/actions/action';
 import { useAppDispatch } from '../../store/store';
@@ -50,7 +52,7 @@ export default function Auth({ }: Props): ReactElement {
       </label>
       {' '}
       <br />
-      <button type="submit">Submit</button>
+      <Button>Submit</Button>
     </form>
   );
 }
