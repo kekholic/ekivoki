@@ -19,7 +19,7 @@ export default function ErrorPage(props: IProps): ReactElement {
     const findInPrivate = privateRoutes?.find((el: any) => el.path === window.location.pathname);
     if (findInPublic) {
       alert('Вы уже авторизованы!');
-      navigate('/personal');
+      navigate('/game/start');
     } else if (findInPrivate) {
       alert('У вас нет доступа к этой странице!');
       navigate('/login');
