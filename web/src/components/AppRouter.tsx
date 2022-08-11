@@ -7,6 +7,21 @@ import { Route, Routes } from 'react-router-dom';
 import { useAppSelector } from '../hooks/redux';
 // import { useSelector } from 'react-redux';
 
+
+function AppRouter() {
+
+  // const isAuth = useSelector((store: any) => store.user.isAuth);
+  const isAuth = true;
+
+  //const isAuth = localStorage.getItem('token');
+  //console.log(isAuth);
+
+  const privateRoutes = [
+    { path: '/personal', element: <PersonalPage /> },
+    { path: '/canvas', element: <Canvas /> },
+    { path: '/logout' },
+  ];
+
 import ErrorPage from './ErrorPage/ErrorPage';
 
 import { privateRoutes, publicRoutes } from './Routes/Routes';
