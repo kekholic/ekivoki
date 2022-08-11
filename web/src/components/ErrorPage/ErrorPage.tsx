@@ -30,7 +30,7 @@ export default function ErrorPage(props: IProps): ReactElement {
 
     <div>
       {' '}
-      {isLoading && fiveHundred}
+      {!isLoading && fiveHundred}
     </div>
 
   );

@@ -15,7 +15,7 @@ function AppRouter() {
     if (localStorage.getItem('token')) {
       dispatch(getInit());
     }
-  }, [localStorage]);
+  }, []);
 
   // const isAuth = true;
   return (

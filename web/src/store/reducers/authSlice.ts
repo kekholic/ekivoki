@@ -57,7 +57,7 @@ export const authSlice = createSlice({
       state.error = action.payload;
     },
 
-    //init reducers
+    // init reducers
     [getInit.fulfilled.type]: (state, action: PayloadAction<IUser>) => {
       state.isLoading = false;
       state.error = '';
