@@ -1,5 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
+import CameraContainer from '../CameraContainer/CameraContainer';
 import QuestionCard from '../QuestionCard/QuestionCard';
 
 type Props = {}
@@ -19,14 +20,7 @@ export default function GameMain({ }: Props) {
   const howManyPlayers = 6; // TODO с бэка
   return (
     <>
-      <div className="cameras">
-        <div>player1</div>
-        <div>player2</div>
-        <div>player3</div>
-        <div>player4</div>
-        <div>player5</div>
-        <div>player6</div>
-      </div>
+      <CameraContainer />
       <div className="placeQuestion">
         <button type="submit">Назвать слово!</button>
         <QuestionCard />
