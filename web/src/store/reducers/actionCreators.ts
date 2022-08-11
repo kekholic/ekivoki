@@ -9,6 +9,7 @@ export const getAuth = createAsyncThunk('auth/getAuth', async (data: any, thunkA
     const res = await $api
       .post<IData>(`/auth/${data.username ? 'registration' : 'login'}`, data);
     localStorage.setItem('token', res.data.accessToken);
+    localStorage.setItem('user', res.data.user);
     return res.data;
   } catch (err) {
     return thunkAPI.rejectWithValue('Ошибка');
@@ -87,5 +88,5 @@ export const endGame = createAsyncThunk('game/endGame', async (data: Object, thu
 });
 
 export const getInit = createAsyncThunk('auth/init', async (_, thunkAPI) => {
-  if (localStorage.getItem('token')) return true;
+  if (localStorage.getItem('token')) return localStorage.getItem('user');
 });

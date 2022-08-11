@@ -56,6 +56,21 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
+
+    //init reducers
+    [getInit.fulfilled.type]: (state, action: PayloadAction<IUser>) => {
+      state.isLoading = false;
+      state.error = '';
+      state.user = action.payload;
+      state.isAuth = true;
+    },
+    [getInit.pending.type]: (state) => {
+      state.isLoading = true;
+    },
+    [getInit.rejected.type]: (state, action: PayloadAction<string>) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
   },
 });
 
