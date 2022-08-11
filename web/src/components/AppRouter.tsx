@@ -8,11 +8,12 @@ import Canvas from './Canvas/Canvas.jsx';
 import ErrorPage from './ErrorPage/ErrorPage';
 import Registration from './Auth/Registration/Registration';
 import Login from './Auth/Login/Login';
+import GameStart from './GameStart/GameStart';
 
 function AppRouter() {
   const isAuth = localStorage.getItem('token');
-  console.log(isAuth);
   const privateRoutes = [
+    { path: '/game/start', element: <GameStart /> },
     { path: '/personal', element: <PersonalPage /> },
     { path: '/canvas', element: <Canvas /> },
     { path: '/logout' },
