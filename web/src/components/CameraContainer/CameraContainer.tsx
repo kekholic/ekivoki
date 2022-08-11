@@ -1,14 +1,17 @@
+/* eslint-disable indent */
 import React, { useEffect, useState } from 'react';
-import { useAppSelector } from '../../hooks/redux';
+// import { useAppSelector } from '../../hooks/redux';
+import Camera from '../Camera/Camera';
 
-type Props = {}
 interface IUser {
   id: number,
   name: string
 }
 
-export default function CameraContainer({ }: Props) {
-  const [users, setUsers] = useState([{}]);
+// FIX ANY PLS!!!!
+export default function CameraContainer(): any {
+  const [users, setUsers] = useState([{ id: 0, name: '' }]);
+  const [show, setShow] = useState(false);
 
   // здесь поднимаем сокет конекшен с айди игры из стейта
   // добавляем в редакс в стор в массив playersPriority игроков
@@ -37,18 +40,22 @@ export default function CameraContainer({ }: Props) {
       return -1;
     });
     setUsers(allUsers);
+    setShow(true);
     return () => {
 
     };
   }, []);
 
   return (
-    <div className="cameras">
-      {users.length && users.map((user: any) => (
-        <div>
+    show
+      ? (users.map((user) => (
+        <Camera
+          key={user.id}
+        >
           {user.name}
-        </div>
-      ))}
-    </div>
+        </Camera>
+      )))
+      : (<div>ne show</div>)
+
   );
 }

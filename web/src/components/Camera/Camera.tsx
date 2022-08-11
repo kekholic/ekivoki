@@ -1,9 +1,11 @@
-import React from 'react'
+import React from 'react';
 
-type Props = {}
+interface IProps {
+  children: any;
+}
 
-export default function Camera({ }: Props) {
+export default function Camera(props: IProps) {
   return (
-    <div>Camera</div>
-  )
+    <div>{props.children}</div>
+  );
 }
