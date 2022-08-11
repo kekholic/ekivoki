@@ -1,6 +1,7 @@
 /* eslint-disable react/require-default-props */
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../../hooks/redux';
 
 interface IProps {
   publicRoutes?: Array<Object>;
@@ -10,6 +11,7 @@ interface IProps {
 export default function ErrorPage(props: IProps): ReactElement {
   const navigate = useNavigate();
   const { publicRoutes, privateRoutes } = props;
+  const isLoading = useAppSelector((store) => store.user.isLoading);
 
   // console.log(publicRoutes, privateRoutes);
   const [fiveHundred, setfiveHundred] = useState('Страницы не существует');
@@ -28,7 +30,7 @@ export default function ErrorPage(props: IProps): ReactElement {
 
     <div>
       {' '}
-      {fiveHundred}
+      {isLoading && fiveHundred}
     </div>
 
   );
