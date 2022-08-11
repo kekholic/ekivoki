@@ -16,7 +16,8 @@ function AppRouter() {
       dispatch(getInit());
     }
   }, []);
-
+  // { path: '/room/:id', element: <Room /> },
+  //   { path: '/loby', element: <Loby /> },
   // const isAuth = true;
   return (
     isAuth
