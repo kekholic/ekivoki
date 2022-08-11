@@ -1,6 +1,7 @@
 // NOTE: CHECK SUBMIT HANDLER DOUBLE TYPES
 import React, { ReactElement, useEffect, useState } from 'react';
-import action from '../../store/actions/action';
+
+import { getAuth } from '../../store/reducers/actionCreators';
 import { useAppDispatch } from '../../store/store';
 
 interface IProps {
@@ -19,7 +20,8 @@ export default function Form({ auth }: IProps): ReactElement {
 
   useEffect(() => {
     if (input.email) {
-      dispatch(action.authUser(input));
+      dispatch(getAuth(input));
+      // dispatch(action.authUser(input));
     }
   }, [input]);
 

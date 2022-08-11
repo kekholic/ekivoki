@@ -1,12 +1,12 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import action from '../../store/actions/action';
+import { getLogout } from '../../store/reducers/actionCreators';
 import { useAppDispatch } from '../../store/store';
 
 export default function NavBar() {
   const dispatch = useAppDispatch();
   const logoutHendler = () => {
-    dispatch(action.logoutUser());
+    dispatch(getLogout());
   };
 
   return (
