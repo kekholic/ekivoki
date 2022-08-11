@@ -3,23 +3,29 @@ import React
   from 'react';
 import { Route, Routes } from 'react-router-dom';
 // import { useSelector } from 'react-redux';
-import Auth from './Auth/Auth';
 import PersonalPage from './PersonalPage/PersonalPage';
-import Canvas from './Canvas/Canvas';
+import Canvas from './Canvas/Canvas.jsx';
 import ErrorPage from './ErrorPage/ErrorPage';
+import Registration from './Auth/Registration/Registration';
+import Login from './Auth/Login/Login';
 
 function AppRouter() {
+<<<<<<< HEAD
   // const isAuth = useSelector((store: any) => store.user.isAuth);
   const isAuth = true;
+=======
+  const isAuth = localStorage.getItem('token');
+  console.log(isAuth);
+>>>>>>> a23014259fe3fc09488439294366c93885be3d82
   const privateRoutes = [
     { path: '/personal', element: <PersonalPage /> },
     { path: '/canvas', element: <Canvas /> },
+    { path: '/logout' },
   ];
 
   const publicRoutes = [
-    { path: '/login', element: <Auth /> },
-    { path: '/register', element: <Auth /> },
-    { path: '/auth', element: <Auth /> },
+    { path: '/login', element: <Login /> },
+    { path: '/register', element: <Registration /> },
   ];
 
   return (

@@ -6,6 +6,7 @@ class AuthController {
   async registration(req, res, next) {
     try {
       const { email, password, username } = req.body;
+      console.log('AAAAAAAAAAA', req.body);
       const userData = await authService.registration(
         email,
         password,
@@ -17,7 +18,6 @@ class AuthController {
         httpsOnly: true,
       });
       delete userData.refreshToken;
-
       return res.json(userData);
     } catch (error) {
       next(error);
@@ -35,6 +35,7 @@ class AuthController {
   }
 
   async login(req, res, next) {
+    console.log('zashel v login');
     try {
       const { email, password } = req.body;
       const userData = await authService.login(email, password);
@@ -51,6 +52,7 @@ class AuthController {
   }
 
   async logout(req, res, next) {
+    console.log('zashel v logout', req.cookies);
     try {
       const { refreshToken } = req.cookies;
       const token = await authService.logout(refreshToken);

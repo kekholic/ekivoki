@@ -1,23 +1,15 @@
-// import { combineReducers, configureStore } from '@reduxjs/toolkit';
-// import { applyMiddleware, createStore } from 'redux';
-// import thunk from 'redux-thunk';
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
-import authReducer from './reducers/authReducer';
-
-// const rootReducer = combineReducers({
-//   user: userReducer,
-// });
-
-// export const setupStore = () => configureStore({ rootReducer });
-
-// export type RootState = ReturnType<typeof rootReducer>
-// export type AppStore = ReturnType<typeof setupStore>
-// export type AppDispatch = AppStore['dispatch']
+import allGamesSlice from './reducers/allGamesSlice';
+// import authReducer from './reducers/authReducer';
+import authSlice from './reducers/authSlice';
+import gameSlice from './reducers/gameSlice';
 
 const store = configureStore({
   reducer: {
-    user: authReducer,
+    user: authSlice,
+    game: gameSlice,
+    allGame: allGamesSlice,
   },
 });
 export type RootState = ReturnType<typeof store.getState>
