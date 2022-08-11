@@ -11,7 +11,7 @@ interface IProps {
 
 export default function Form({ auth }: IProps): ReactElement {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   interface IInput {
     email: string;
     password: string;
@@ -26,11 +26,11 @@ export default function Form({ auth }: IProps): ReactElement {
     }
   }, [input]);
 
-  useEffect(() => {
-    if (localStorage.getItem('token')) {
-      navigate('/game/start');
-    }
-  }, [localStorage]);
+  // useEffect(() => {
+  //   if (localStorage.getItem('token')) {
+  //     navigate('/game/start');
+  //   }
+  // }, [localStorage]);
 
   const submitHandler = (e: React.SyntheticEvent): void => {
     e.preventDefault();
