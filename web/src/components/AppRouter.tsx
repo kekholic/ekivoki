@@ -1,7 +1,10 @@
 import React
-  //  ,{ useEffect, useState }
+, {
+
+} //  ,{ useEffect, useState }
   from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { useAppSelector } from '../hooks/redux';
 // import { useSelector } from 'react-redux';
 
 import ErrorPage from './ErrorPage/ErrorPage';
@@ -9,7 +12,7 @@ import ErrorPage from './ErrorPage/ErrorPage';
 import { privateRoutes, publicRoutes } from './Routes/Routes';
 
 function AppRouter() {
-  const isAuth = localStorage.getItem('token');
+  const isAuth = useAppSelector((store) => store.user.isAuth);
   return (
     isAuth
       ? (
