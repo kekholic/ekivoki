@@ -11,7 +11,7 @@ import Room from './WebChat/Room';
 
 function AppRouter() {
   // const isAuth = useSelector((store: any) => store.user.isAuth);
-  const isAuth = false;
+  const isAuth = true;
   const privateRoutes = [
     { path: '/personal', element: <PersonalPage /> },
     { path: '/canvas', element: <Canvas /> },

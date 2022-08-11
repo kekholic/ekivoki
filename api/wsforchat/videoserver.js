@@ -13,13 +13,15 @@ const io = require('socket.io')(server, {
 });
 const morgan = require('morgan');
 const path = require('path');
+const { version, validate } = require('uuid');
 const ACTIONS = require('./actions');
 
 app.use(morgan('dev'));
 
 function getClientRooms() {
   const { rooms } = io.sockets.adapter;
-  return Array.from(rooms.keys());
+  console.log('getClientRooms');
+  return Array.from(rooms.keys()).filter((roomID) => validate(roomID) && version(roomID) === 4);
 }
 
 function shareRoomsInfo() {
@@ -33,6 +35,7 @@ io.on('connection', (socket) => {
   console.log('socket connection');
   socket.on(ACTIONS.JOIN, (config) => {
     const { room: roomID } = config;
+    console.log(config);
     const { rooms: joinedRooms } = socket;
 
     if (Array.from(joinedRooms).includes(roomID)) {
@@ -79,6 +82,20 @@ io.on('connection', (socket) => {
 
   socket.on(ACTIONS.LEAVE, leaveRoom);
   socket.on('disconnecting', leaveRoom);
+
+  socket.on(ACTIONS.RELAY_SDP, ({ peerID, sessionDescription }) => {
+    io.to(peerID).emit(ACTIONS.SESSION_DESCRIPTION, {
+      peerID: socket.id,
+      sessionDescription,
+    });
+  });
+
+  socket.on(ACTIONS.RELAY_ICE, ({ peerID, iceCandidate }) => {
+    io.to(peerID).emit(ACTIONS.ICE_CANDIDATE, {
+      peerID: socket.id,
+      iceCandidate,
+    });
+  });
 });
 
 server.listen(PORT_VS, async () => {
