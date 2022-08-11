@@ -1,33 +1,33 @@
 import React
-  //  ,{ useEffect, useState }
+, {
+
+} //  ,{ useEffect, useState }
   from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { useAppSelector } from '../hooks/redux';
 // import { useSelector } from 'react-redux';
-import PersonalPage from './PersonalPage/PersonalPage';
-import Canvas from './Canvas/Canvas.jsx';
-import ErrorPage from './ErrorPage/ErrorPage';
-import Registration from './Auth/Registration/Registration';
-import Login from './Auth/Login/Login';
+
 
 function AppRouter() {
-<<<<<<< HEAD
+
   // const isAuth = useSelector((store: any) => store.user.isAuth);
   const isAuth = true;
-=======
-  const isAuth = localStorage.getItem('token');
-  console.log(isAuth);
->>>>>>> a23014259fe3fc09488439294366c93885be3d82
+
+  //const isAuth = localStorage.getItem('token');
+  //console.log(isAuth);
+
   const privateRoutes = [
     { path: '/personal', element: <PersonalPage /> },
     { path: '/canvas', element: <Canvas /> },
     { path: '/logout' },
   ];
 
-  const publicRoutes = [
-    { path: '/login', element: <Login /> },
-    { path: '/register', element: <Registration /> },
-  ];
+import ErrorPage from './ErrorPage/ErrorPage';
 
+import { privateRoutes, publicRoutes } from './Routes/Routes';
+
+function AppRouter() {
+  const isAuth = useAppSelector((store) => store.user.isAuth);
   return (
     isAuth
       ? (
@@ -54,7 +54,6 @@ function AppRouter() {
           <Route path="*" element={<ErrorPage privateRoutes={privateRoutes} />} />
         </Routes>
       )
-
   );
 }
 
