@@ -3,6 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import $api from '../../http';
 import { IData } from '../../models/IData';
 import { IDataGame } from '../../models/IDataGame';
+import { IGame } from '../../models/IGame';
 
 export const getAuth = createAsyncThunk('auth/getAuth', async (data: any, thunkAPI) => {
   try {
@@ -26,7 +27,7 @@ export const getLogout = createAsyncThunk('auth/getLogOut', async (_, thunkAPI) 
   }
 });
 
-export const createGame = createAsyncThunk('game/createGame', async (data: Object, thunkAPI) => {
+export const createGame = createAsyncThunk('game/createGame', async (data: IGame, thunkAPI) => {
   try {
     const res = await $api
       .post<IDataGame>('/game', data);
