@@ -1,8 +1,9 @@
 // NOTE: CHECK SUBMIT HANDLER DOUBLE TYPES
 import React, { ReactElement, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../hooks/redux';
 
 import { getAuth } from '../../store/reducers/actionCreators';
-import { useAppDispatch } from '../../store/store';
 
 interface IProps {
   auth: boolean;
@@ -10,6 +11,7 @@ interface IProps {
 
 export default function Form({ auth }: IProps): ReactElement {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   interface IInput {
     email: string;
     password: string;
@@ -21,7 +23,6 @@ export default function Form({ auth }: IProps): ReactElement {
   useEffect(() => {
     if (input.email) {
       dispatch(getAuth(input));
-      // dispatch(action.authUser(input));
     }
   }, [input]);
 
@@ -36,6 +37,7 @@ export default function Form({ auth }: IProps): ReactElement {
     const username = target.username?.value;
     const password = target.password.value;
     setInput({ email, password, username });
+    navigate('/game/start');
   };
 
   return (

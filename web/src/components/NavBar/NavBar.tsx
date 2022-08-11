@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { useAppDispatch } from '../../hooks/redux';
 import { getLogout } from '../../store/reducers/actionCreators';
-import { useAppDispatch } from '../../store/store';
 
 export default function NavBar() {
   const dispatch = useAppDispatch();
