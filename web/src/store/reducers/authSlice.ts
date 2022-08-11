@@ -2,7 +2,7 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IUser } from '../../models/IUser';
-import { getAuth, getLogout } from './actionCreators';
+import { getAuth, getLogout, getInit } from './actionCreators';
 
 interface UserState {
   user: IUser;

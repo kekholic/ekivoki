@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useAppSelector } from '../hooks/redux';
 // import { useSelector } from 'react-redux';
@@ -8,7 +8,12 @@ import ErrorPage from './ErrorPage/ErrorPage';
 import { privateRoutes, publicRoutes } from './Routes/Routes';
 
 function AppRouter() {
-  const isAuth = useAppSelector((store) => store.user.isAuth);
+  // let isAuth = useAppSelector((store) => store.user.isAuth);
+  // useEffect(() => {
+  //   if (localStorage.getItem('token')) isAuth = true;
+  // }, []);
+  // console.log(isAuth);
+  const isAuth = true;
   return (
     isAuth
       ? (

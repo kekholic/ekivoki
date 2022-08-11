@@ -33,8 +33,8 @@ export default function CameraContainer({ }: Props) {
 
   return (
     <div className="cameras">
-      {/* {users.map(() => {
-
+      {/* {users.map((user) => {
+        <div>{user.name}</div>;
       })} */}
     </div>
   );
