@@ -5,6 +5,7 @@ import { getLogout } from '../../store/reducers/actionCreators';
 
 export default function NavBar() {
   const dispatch = useAppDispatch();
+  const token = localStorage.getItem('token');
   const logoutHendler = () => {
     dispatch(getLogout());
   };
@@ -16,7 +17,10 @@ export default function NavBar() {
       <NavLink to="/canvas">Paint</NavLink>
       <NavLink to="/personal">Personal</NavLink>
       <NavLink to="/game/start">game start</NavLink>
-      <button type="submit" onClick={() => logoutHendler()}>logout</button>
+      {
+        token && <button type="submit" onClick={() => logoutHendler()}>logout</button>
+      }
+
     </>
   );
 }
