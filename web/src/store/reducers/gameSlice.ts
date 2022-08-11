@@ -13,7 +13,7 @@ import {
 interface GameState {
   game: IGame;
   isCanvas: boolean;
-  playersPriority: Array<number | null | Object>;
+  playersPriority: Array< Object>;
   isHost: number | null;
   progress: Array<Object>;
   isLoading: boolean;

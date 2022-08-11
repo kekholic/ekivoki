@@ -8,7 +8,8 @@ import ErrorPage from './ErrorPage/ErrorPage';
 import { privateRoutes, publicRoutes } from './Routes/Routes';
 
 function AppRouter() {
-  const isAuth = useAppSelector((user) => user.user.isAuth);
+  // const isAuth = useAppSelector((user) => user.user.isAuth);
+  const isAuth = true;
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -16,35 +17,21 @@ function AppRouter() {
       dispatch(getInit());
     }
   }, []);
-  // { path: '/room/:id', element: <Room /> },
-  //   { path: '/loby', element: <Loby /> },
-  // const isAuth = true;
-  return (
-    isAuth
-      ? (
-        <Routes>
-          {privateRoutes.map((route) => (
-            <Route
-              element={route.element}
-              path={route.path}
-              key={route.path}
-            />
-          ))}
-          <Route path="*" element={<ErrorPage publicRoutes={publicRoutes} />} />
-        </Routes>
-      )
-      : (
-        <Routes>
-          {publicRoutes.map((route) => (
-            <Route
-              element={route.element}
-              path={route.path}
-              key={route.path}
-            />
-          ))}
-          <Route path="*" element={<ErrorPage privateRoutes={privateRoutes} />} />
-        </Routes>
-      )
+
+  return isAuth ? (
+    <Routes>
+      {privateRoutes.map((route) => (
+        <Route element={route.element} path={route.path} key={route.path} />
+      ))}
+      <Route path='*' element={<ErrorPage publicRoutes={publicRoutes} />} />
+    </Routes>
+  ) : (
+    <Routes>
+      {publicRoutes.map((route) => (
+        <Route element={route.element} path={route.path} key={route.path} />
+      ))}
+      <Route path='*' element={<ErrorPage privateRoutes={privateRoutes} />} />
+    </Routes>
   );
 }
 

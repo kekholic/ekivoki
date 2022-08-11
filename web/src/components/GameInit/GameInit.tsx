@@ -1,37 +1,50 @@
+/* eslint-disable comma-dangle */
 import React, { useEffect, useState } from 'react';
-import { useAppDispatch } from '../../hooks/redux';
-import { createGame } from '../../store/reducers/actionCreators';
+import { useNavigate } from 'react-router';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import {
+  createGame,
+  incrementCountPlayers,
+} from '../../store/reducers/actionCreators';
 
-type Props = {};
-
-export default function GameInit({}: Props) {
-
-  interface IInputGame {
-    title: string;
-    password: string;
-    maxPlayers: number |undefined;
-  };
-
+export default function GameInit() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const game = useAppSelector((store) => store.game);
+  const user = useAppSelector((store) => store.user);
 
-  const [input, setInput] = useState({ title: '', password: '', maxPlayers: 6 });
+  const [input, setInput] = useState({
+    title: '',
+    password: '',
+    maxPlayers: 6,
+    countPlayers: 0,
+  });
 
   const submitHandler = (e: React.SyntheticEvent): void => {
     e.preventDefault();
     const target = e.target as typeof e.target & {
       title: { value: string };
       password: { value: string };
-      maxPlayers?: { value: number |undefined};
+      maxPlayers?: { value: number | undefined };
     };
     const title = target.title.value;
     const password = target.password.value;
     const maxPlayers = target.maxPlayers?.value || 6;
-    setInput({ title, password, maxPlayers });
+    setInput({
+      title, password, maxPlayers, countPlayers: 0
+    });
   };
 
   useEffect(() => {
     if (input) {
       dispatch(createGame(input));
+      dispatch(
+        incrementCountPlayers({
+          ...game,
+          userId: user.user.id,
+          userName: user.user.username,
+        })
+      );
     }
   }, [input]);
 
@@ -39,7 +52,12 @@ export default function GameInit({}: Props) {
 
   return (
     <div>
-      <form onSubmit={submitHandler}>
+      <form
+        onSubmit={(e) => {
+          submitHandler(e);
+          navigate(`/game/${game.game.id}`);
+        }}
+      >
         <input type="text" name="title" />
         <input type="password" name="password" />
 
