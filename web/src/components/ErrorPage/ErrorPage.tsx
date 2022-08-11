@@ -1,36 +1,37 @@
 /* eslint-disable react/require-default-props */
-import React, { useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../../hooks/redux';
 
 interface IProps {
   publicRoutes?: Array<Object>;
   privateRoutes?: Array<Object>;
 }
 
-export default function ErrorPage(props: IProps): any {
+export default function ErrorPage(props: IProps): ReactElement {
   const navigate = useNavigate();
   const { publicRoutes, privateRoutes } = props;
+  const isLoading = useAppSelector((store) => store.user.isLoading);
 
   // console.log(publicRoutes, privateRoutes);
-  const [fiveHundred, setfiveHundred] = useState(false);
+  const [fiveHundred, setfiveHundred] = useState('Страницы не существует');
 
   useEffect(() => {
     const findInPublic = publicRoutes?.find((el: any) => el.path === window.location.pathname);
     const findInPrivate = privateRoutes?.find((el: any) => el.path === window.location.pathname);
     if (findInPublic) {
-      alert('Вы уже авторизованы!');
-      navigate('/personal');
+      // alert('Вы уже авторизованы!');
+      navigate('/game/start');
     } else if (findInPrivate) {
-      alert('У вас нет доступа к этой странице!');
-      navigate('/login');
+      setfiveHundred('Отказано в доступе');
     }
-    setfiveHundred(true);
   });
   return (
 
-    fiveHundred
-      ? <div> 500: Страница не существует</div>
-      : <div />
+    <div>
+      {' '}
+      {!isLoading && fiveHundred}
+    </div>
 
   );
 }

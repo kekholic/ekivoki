@@ -5,6 +5,7 @@ require('dotenv').config(); // подключение переменных env
 const express = require('express'); // подключение  express
 const morgan = require('morgan'); // подключение  morgan
 const path = require('path');
+const cookieParser = require('cookie-parser');
 
 const cors = require('cors');
 
@@ -21,6 +22,8 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+
+app.use(cookieParser());
 
 const aWss = WSServer.getWss();
 

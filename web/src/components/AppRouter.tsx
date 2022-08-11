@@ -1,31 +1,24 @@
-/* eslint-disable linebreak-style */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
-// import { useSelector } from 'react-redux';
-import Auth from './Auth/Auth';
-import PersonalPage from './PersonalPage/PersonalPage';
-import Canvas from './Canvas/Canvas';
+import { useAppDispatch, useAppSelector } from '../hooks/redux';
+import { getInit } from '../store/reducers/actionCreators';
+
 import ErrorPage from './ErrorPage/ErrorPage';
-import Loby from './WebChat/Loby';
-import Room from './WebChat/Room';
+
+import { privateRoutes, publicRoutes } from './Routes/Routes';
 
 function AppRouter() {
-  // const isAuth = useSelector((store: any) => store.user.isAuth);
-  const isAuth = true;
-  const privateRoutes = [
-    { path: '/personal', element: <PersonalPage /> },
-    { path: '/canvas', element: <Canvas /> },
-    { path: '/room/:id', element: <Room /> },
-    { path: '/loby', element: <Loby /> },
+  const isAuth = useAppSelector((user) => user.user.isAuth);
+  const dispatch = useAppDispatch();
 
-  ];
-
-  const publicRoutes = [
-    { path: '/login', element: <Auth /> },
-    { path: '/register', element: <Auth /> },
-    { path: '/auth', element: <Auth /> },
-  ];
-
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      dispatch(getInit());
+    }
+  }, []);
+  // { path: '/room/:id', element: <Room /> },
+  //   { path: '/loby', element: <Loby /> },
+  // const isAuth = true;
   return (
     isAuth
       ? (
@@ -52,7 +45,6 @@ function AppRouter() {
           <Route path="*" element={<ErrorPage privateRoutes={privateRoutes} />} />
         </Routes>
       )
-
   );
 }
 
