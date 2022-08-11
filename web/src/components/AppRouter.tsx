@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-
+import { useAppSelector } from '../hooks/redux';
 // import { useSelector } from 'react-redux';
 
 import ErrorPage from './ErrorPage/ErrorPage';
@@ -8,8 +8,7 @@ import ErrorPage from './ErrorPage/ErrorPage';
 import { privateRoutes, publicRoutes } from './Routes/Routes';
 
 function AppRouter() {
-  // const isAuth = useAppSelector((store) => store.user.isAuth);
-  const isAuth = true;
+  const isAuth = useAppSelector((store) => store.user.isAuth);
   return (
     isAuth
       ? (

@@ -18,17 +18,17 @@ export default function ErrorPage(props: IProps): ReactElement {
     const findInPublic = publicRoutes?.find((el: any) => el.path === window.location.pathname);
     const findInPrivate = privateRoutes?.find((el: any) => el.path === window.location.pathname);
     if (findInPublic) {
-      alert('Вы уже авторизованы!');
+      // alert('Вы уже авторизованы!');
       navigate('/game/start');
     } else if (findInPrivate) {
-      alert('У вас нет доступа к этой странице!');
+      // alert('У вас нет доступа к этой странице!');
       navigate('/login');
     }
     setfiveHundred(true);
   });
   return (
     fiveHundred
-      ? <div> 500: Страница не существует</div>
+      ? <div> 404: Страница не существует</div>
       : <div />
 
   );

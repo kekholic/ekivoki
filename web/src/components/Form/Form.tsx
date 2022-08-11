@@ -26,6 +26,12 @@ export default function Form({ auth }: IProps): ReactElement {
     }
   }, [input]);
 
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      navigate('/game/start');
+    }
+  }, [localStorage]);
+
   const submitHandler = (e: React.SyntheticEvent): void => {
     e.preventDefault();
     const target = e.target as typeof e.target & {
@@ -37,7 +43,6 @@ export default function Form({ auth }: IProps): ReactElement {
     const username = target.username?.value;
     const password = target.password.value;
     setInput({ email, password, username });
-    navigate('/game/start');
   };
 
   return (
