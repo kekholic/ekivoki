@@ -10,8 +10,8 @@ import Registration from './Auth/Registration/Registration';
 import Login from './Auth/Login/Login';
 
 function AppRouter() {
-  // const isAuth = useSelector((store: any) => store.user.isAuth);
-  const isAuth = false;
+  const isAuth = localStorage.getItem('token');
+  console.log(isAuth);
   const privateRoutes = [
     { path: '/personal', element: <PersonalPage /> },
     { path: '/canvas', element: <Canvas /> },
