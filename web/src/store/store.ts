@@ -1,20 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
-import authReducer from './reducers/authReducer';
-
-// const rootReducer = combineReducers({
-//   user: userReducer,
-// });
-
-// export const setupStore = () => configureStore({ rootReducer });
-
-// export type RootState = ReturnType<typeof rootReducer>
-// export type AppStore = ReturnType<typeof setupStore>
-// export type AppDispatch = AppStore['dispatch']
+// import authReducer from './reducers/authReducer';
+import authSlice from './reducers/authSlice';
 
 const store = configureStore({
   reducer: {
-    user: authReducer,
+    user: authSlice,
   },
 });
 export type RootState = ReturnType<typeof store.getState>

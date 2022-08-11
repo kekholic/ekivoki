@@ -1,7 +1,0 @@
-const authType = {
-  USER_CHECKAUTH: 'USER_CHECKAUTH',
-  USER_LOGOUT_SUCCES: 'USER_LOGOUT_SUCCES',
-  USER_AUTH_SUCCES: 'USER_AUTH_SUCCES',
-};
-
-export default authType;

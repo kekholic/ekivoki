@@ -11,7 +11,7 @@ import Login from './Auth/Login/Login';
 
 function AppRouter() {
   // const isAuth = useSelector((store: any) => store.user.isAuth);
-  const isAuth = true;
+  const isAuth = false;
   const privateRoutes = [
     { path: '/personal', element: <PersonalPage /> },
     { path: '/canvas', element: <Canvas /> },

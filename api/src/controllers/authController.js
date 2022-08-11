@@ -6,6 +6,7 @@ class AuthController {
   async registration(req, res, next) {
     try {
       const { email, password, username } = req.body;
+      console.log('AAAAAAAAAAA', req.body);
       const userData = await authService.registration(
         email,
         password,
@@ -16,7 +17,6 @@ class AuthController {
         httpOnly: true,
         httpsOnly: true,
       });
-      console.log(res['Symbol(kHeaders)']);
       delete userData.refreshToken;
       return res.json(userData);
     } catch (error) {
