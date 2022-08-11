@@ -9,5 +9,4 @@ const options = {
 
 const socket = io(`${process.env.REACT_APP_VS_URL}`, options);
 
-
-export default socket
+export default socket;
