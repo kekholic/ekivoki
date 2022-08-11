@@ -3,27 +3,13 @@ import React
   from 'react';
 import { Route, Routes } from 'react-router-dom';
 // import { useSelector } from 'react-redux';
-import PersonalPage from './PersonalPage/PersonalPage';
-import Canvas from './Canvas/Canvas.jsx';
+
 import ErrorPage from './ErrorPage/ErrorPage';
-import Registration from './Auth/Registration/Registration';
-import Login from './Auth/Login/Login';
-import GameStart from './GameStart/GameStart';
+
+import { privateRoutes, publicRoutes } from './Routes/Routes';
 
 function AppRouter() {
   const isAuth = localStorage.getItem('token');
-  const privateRoutes = [
-    { path: '/game/start', element: <GameStart /> },
-    { path: '/personal', element: <PersonalPage /> },
-    { path: '/canvas', element: <Canvas /> },
-    { path: '/logout' },
-  ];
-
-  const publicRoutes = [
-    { path: '/login', element: <Login /> },
-    { path: '/register', element: <Registration /> },
-  ];
-
   return (
     isAuth
       ? (
@@ -50,7 +36,6 @@ function AppRouter() {
           <Route path="*" element={<ErrorPage privateRoutes={privateRoutes} />} />
         </Routes>
       )
-
   );
 }
 

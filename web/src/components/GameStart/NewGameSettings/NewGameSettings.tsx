@@ -1,8 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {}
 
 export default function NewGameSettings({ }: Props) {
+  const navigate = useNavigate();
   const createGameHandler = (e: React.SyntheticEvent): void => {
     e.preventDefault();
     const target = e.target as typeof e.target & {
@@ -19,6 +21,9 @@ export default function NewGameSettings({ }: Props) {
     // отправка в редакс стейт нужных полей
     // отрпавка в базу данных нужной инфы с инпутов
     // Сделать максимум 6 человек в настройках формы
+    // Получить гейм айди с бэка
+    const id = 123;
+    navigate(`/game/${id}`);
   };
   return (
     <form onSubmit={createGameHandler}>
