@@ -1,23 +1,36 @@
 import React, { useEffect, useState } from 'react';
+import { useAppSelector } from '../../hooks/redux';
 
 type Props = {}
+interface IUser {
+  id: number,
+  name: string
+}
 
 export default function CameraContainer({ }: Props) {
-  // TODO:
-  // из стейта получаем ведущего
-  // камеру отрисовываем только при подключении пользователя
   const [users, setUsers] = useState([{}]);
 
-  useEffect(() => {
-    // здесь поднимаем сокет конекшен с айди игры из стейта
-    // добавляем в массив пользователей новых подключившихся игроков
-    // сортируем по айди.
+  // здесь поднимаем сокет конекшен с айди игры из стейта
+  // добавляем в редакс в стор в массив playersPriority игроков
+  // сортируем по айди.
 
-    const allUsers: { id: number, name: string }[] = [{ id: 24, name: 'vasya' },
+  // ГОТОВЫЙ КОД КОГДА БУДЕТ СТЕЙТ НЕ УДАЛЯТЬ!
+  // const usersConnected = useAppSelector((store) => store.game.playersPriority);
+  // if (usersConnected.length) {
+  //   usersConnected.sort((current, next) => {
+  //     if (current.id > next.id) return 1;
+  //     return -1;
+  //   });
+  // }
+
+  useEffect(() => {
+    // сверху usersConnected это мои allUsers, заменить когда будут
+    const allUsers: IUser[] = [{ id: 24, name: 'vasya' },
     { id: 1, name: 'petya' },
     { id: 28, name: 'clown' },
     { id: 6, name: 'dolbaeb' },
-    { id: 100, name: 'huesos' }];
+    { id: 100, name: 'huesos' },
+    ];
 
     allUsers.sort((current, next) => {
       if (current.id > next.id) return 1;
@@ -29,13 +42,13 @@ export default function CameraContainer({ }: Props) {
     };
   }, []);
 
-  useEffect(() => { }, [users]);
-
   return (
     <div className="cameras">
-      {/* {users.map((user) => {
-        <div>{user.name}</div>;
-      })} */}
+      {users.length && users.map((user: any) => (
+        <div>
+          {user.name}
+        </div>
+      ))}
     </div>
   );
 }
