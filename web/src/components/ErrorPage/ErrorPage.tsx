@@ -12,7 +12,7 @@ export default function ErrorPage(props: IProps): ReactElement {
   const { publicRoutes, privateRoutes } = props;
 
   // console.log(publicRoutes, privateRoutes);
-  const [fiveHundred, setfiveHundred] = useState(false);
+  const [fiveHundred, setfiveHundred] = useState('Страницы не существует');
 
   useEffect(() => {
     const findInPublic = publicRoutes?.find((el: any) => el.path === window.location.pathname);
@@ -21,15 +21,15 @@ export default function ErrorPage(props: IProps): ReactElement {
       // alert('Вы уже авторизованы!');
       navigate('/game/start');
     } else if (findInPrivate) {
-      // alert('У вас нет доступа к этой странице!');
-      // navigate('/login');
+      setfiveHundred('Отказано в доступе');
     }
-    setfiveHundred(true);
   });
   return (
-    fiveHundred
-      ? <div> Отказано в доступе</div>
-      : <div />
+
+    <div>
+      {' '}
+      {fiveHundred}
+    </div>
 
   );
 }
