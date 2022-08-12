@@ -1,16 +1,9 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-
-const useAuth = () => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    return true;
-  }
-  return false;
-};
+import { useAppSelector } from '../../hooks/redux';
 
 function ProtectedRoutes() {
-  const isAuth = useAuth();
+  const { isAuth } = useAppSelector((store) => store.user);
 
   return isAuth ? <Outlet /> : <Navigate to="/login" />;
 }

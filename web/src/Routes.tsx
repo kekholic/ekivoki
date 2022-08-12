@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Navigate, Route, Routes,
 } from 'react-router-dom';
@@ -13,8 +13,23 @@ import InnerContent from './components/InnerContent/InnerContent';
 import PersonalPage from './components/PersonalPage/PersonalPage';
 import ProtectedRoutes from './components/ProtectedRoutes/ProtectedRoutes';
 import PublicRoutes from './components/PublicRoutes/PublicRoutes';
+import { useAppDispatch } from './hooks/redux';
+import { getInit } from './store/reducers/authSlice';
 
 function MainRoutes() {
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      const user = localStorage.getItem('user') || `{
+        "appruvedMail": false,
+        "email": '',
+        "id": 0,
+        "username": '',
+      }`;
+      dispatch(getInit(JSON.parse(user)));
+    }
+  }, []);
+
   return (
     <div>
       <Routes>
