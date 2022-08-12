@@ -10,9 +10,9 @@
   background-size: cover;
   margin-left: auto;
   margin-right: auto;
-  border-top: solid 1px rgba(255,255,255,.5);
-  border-radius: 5px;
-  box-shadow: 0px 2px 7px rgb(0 0 0 / 20%);
+  border-top: solid 0.1vh rgba(255,255,255,.5);
+  border-radius: 0.5vh;
+  box-shadow: 0px 0.2vh 0.7vh rgb(0 0 0 / 20%);
   overflow: hidden;
   transition: all .5s ease
 }
@@ -29,18 +29,18 @@
 .label{
   padding-left: 1vw;
   text-align: start;
-  font-size: 15px;
+  font-size: 1.5vh;
   font-family: 'Open Sans', sans-serif;
   color: rgba(255,255,255,.7);
 }
 
 input{
       width: 100%;
-    height: 3vh;
-    padding-left: 15px;
+    height: 3.3vh;
+    padding-left: 1.5vw;
     border: none;
-    border-radius: 20px;
-    margin-bottom: 20px;
+    border-radius: 2vh;
+    margin-bottom: 2vh;
     background: rgba(255,255,255,.2);
     color: #fff;
 }
@@ -51,10 +51,10 @@ input:focus{
 
 .authButton{
   width: 100%;
-  height: 3vh;
+  height: 3.3vh;
   border: none;
-  border-radius: 20px;
-  font-size: 15px;
+  border-radius: 2vh;
+  font-size: 1.5vh;
   background: rgba(16,89,255, 1);
   color: rgba(255,255,255, 1);
   transition: 0.2s;
@@ -62,11 +62,11 @@ input:focus{
 
 .authButton:hover{
   background: rgba(16,89,255, 1);
-  transform: translateY(-5px);
-  box-shadow: 0 7px 0 rgb(11, 66, 192);
+  transform: translateY(-0.5vh);
+  box-shadow: 0 0.7vh 0 rgb(11, 66, 192);
 }
 
 .authButton:active{
-  transform: translateY(-2px);
-  box-shadow: 0 3px 0 rgb(11, 66, 192);
+  transform: translateY(-0.2vh);
+  box-shadow: 0 0.3vh 0 rgb(11, 66, 192);
 }
