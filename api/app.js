@@ -42,6 +42,7 @@ app.use(cookieParser());
 
 const authRouter = require('./src/routes/authRouter');
 const gameRouter = require('./src/routes/gameRouter');
+const ACTIONS = require('./wsforchat/actions');
 // const authMiddleware = require('./src/middlewares/authMiddleware');
 // const gameService = require('./src/service/gameService');
 
@@ -85,43 +86,123 @@ app.use('/game', gameRouter);
 //     }
 //   });
 // };
-io.on('connection', (socket) => {
-  console.log('socket connection', socket.id);
-  socket.on('join_room', (msg) => {
-    console.log(msg);
-    socket.join(msg.id);
-    socket.to(msg.id).emit('resive_message', msg);
-  });
-  socket.on('send_message', (msg) => {
-    socket.to(msg.id).emit('resive_message', msg);
-  });
-  // const message = JSON.parse(msg);
-  /* switch (message.method) {
-      case 'connection':
-        gameService.gameConnections(ws, mesg);
-        break;
-      case 'draw':
-        // broadcastConnection(ws, mesg);
-        break;
-
-      default:
-        break;
-    } */
-  // socket.broadcast.emit('resive_message', msg);
-});
-
-// const connectionHandler = (ws, msg) => {
-//   ws.id = msg.id;
-//   broadcastConnection(ws, msg);
-// };
-
-// const broadcastConnection = (ws, msg) => {
-//   aWss.clients.forEach((client) => {
-//     client.send(JSON.stringify(msg));
-//     if (client.id === msg.id) {
-//     }
+// io.on('connection', (socket) => {
+//   console.log('socket connection', socket.id);
+//   socket.on('join_room', (msg) => {
+//     console.log(msg);
+//     socket.join(msg.id);
+//     socket.to(msg.id).emit('resive_message', msg);
 //   });
-// };
+//   socket.on('send_message', (msg) => {
+//     socket.to(msg.id).emit('resive_message', msg);
+//   });
+//   // const message = JSON.parse(msg);
+//   /* switch (message.method) {
+//       case 'connection':
+//         gameService.gameConnections(ws, mesg);
+//         break;
+//       case 'draw':
+//         // broadcastConnection(ws, mesg);
+//         break;
+
+//       default:
+//         break;
+//     } */
+//   // socket.broadcast.emit('resive_message', msg);
+// });
+
+// // const connectionHandler = (ws, msg) => {
+// //   ws.id = msg.id;
+// //   broadcastConnection(ws, msg);
+// // };
+
+// // const broadcastConnection = (ws, msg) => {
+// //   aWss.clients.forEach((client) => {
+// //     client.send(JSON.stringify(msg));
+// //     if (client.id === msg.id) {
+// //     }
+// //   });
+// // };
+
+io.on('connection', (socket) => {
+  // shareRoomsInfo();
+  console.log('socket connection');
+  socket.on('OlologMessage', (data) => {
+    console.log(data.message);
+    console.log(data.roomID);
+    const clients = Array.from(io.sockets.adapter.rooms.get(data.roomID) || []);
+    console.log(clients);
+    clients.forEach((client) => {
+      console.log(client);
+      socket.emit('OloloAnswer', {
+        answer: 'Ti dibil',
+      });
+    });
+  });
+  socket.on(ACTIONS.JOIN, (config) => {
+    const { room: roomID } = config;
+    console.log(config);
+    const { rooms: joinedRooms } = socket;
+
+    if (Array.from(joinedRooms).includes(roomID)) {
+      return console.warn(`Already joined to ${roomID}`);
+    }
+
+    const clients = Array.from(io.sockets.adapter.rooms.get(roomID) || []);
+
+    clients.forEach((clientID) => {
+      io.to(clientID).emit(ACTIONS.ADD_PEER, {
+        peerID: socket.id,
+        createOffer: false,
+      });
+
+      socket.emit(ACTIONS.ADD_PEER, {
+        peerID: clientID,
+        createOffer: true,
+      });
+    });
+
+    socket.join(roomID);
+    // shareRoomsInfo();
+  });
+
+  function leaveRoom() {
+    const { rooms } = socket;
+    Array.from(rooms)
+      .forEach((roomID) => {
+        const clients = Array.from(io.sockets.adapter.rooms.get(roomID) || []);
+        clients.forEach((clientID) => {
+          io.to(clientID).emit(ACTIONS.REMOVE_PEER, {
+            peerID: socket.id,
+          });
+
+          socket.emit(ACTIONS.REMOVE_PEER, {
+            peerID: clientID,
+          });
+        });
+
+        socket.leave(roomID);
+      });
+    // shareRoomsInfo();
+  }
+
+  socket.on(ACTIONS.LEAVE, leaveRoom);
+  socket.on('disconnecting', leaveRoom);
+
+  socket.on(ACTIONS.RELAY_SDP, ({ peerID, sessionDescription }) => {
+    io.to(peerID).emit(ACTIONS.SESSION_DESCRIPTION, {
+      peerID: socket.id,
+      sessionDescription,
+    });
+  });
+
+  socket.on(ACTIONS.RELAY_ICE, ({ peerID, iceCandidate }) => {
+    io.to(peerID).emit(ACTIONS.ICE_CANDIDATE, {
+      peerID: socket.id,
+      iceCandidate,
+    });
+  });
+});
 
 app.use(errorMiddleware);
 server.listen(PORT, async () => {

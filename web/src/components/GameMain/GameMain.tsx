@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   // StaticRouter,
-  useParams
+  useParams,
 } from 'react-router-dom';
 import io from 'socket.io-client';
 // import { createModuleResolutionCache } from 'typescript';
@@ -12,6 +12,7 @@ import {
 } from '../../store/reducers/actionCreators';
 import CameraContainer from '../CameraContainer/CameraContainer';
 import QuestionCard from '../QuestionCard/QuestionCard';
+import VideoComponent from '../WebChat/VideoComponent';
 
 type Props = {};
 
@@ -46,23 +47,32 @@ export default function GameMain({ }: Props) {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    console.log('pfkegf');
-    socket.emit('join_room', {
-      id,
-      method: 'connection',
-      user,
+    socket.emit('OlologMessage', {
+      roomID: id,
+      message: 'Hello',
     });
-    socket.on('resive_message', (data) => {
-      if (data.method === 'connection') {
-        dispatch(incrementCountPlayers({
-          gameId: id,
-          userId: data.user.id,
-          userName: data.user.username,
-        }));
-      }
-      // const msg = JSON.parse(data);
-      console.log('msg: ', data);
+    // console.log('zahel');
+
+    socket.on('OloloAnswer', (data) => {
+      console.log('d=v gaim main', data);
     });
+    // console.log('pfkegf');
+    // socket.emit('join_room', {
+    //   id,
+    //   method: 'connection',
+    //   user,
+    // });
+    // socket.on('resive_message', (data) => {
+    //   if (data.method === 'connection') {
+    //     dispatch(incrementCountPlayers({
+    //       gameId: id,
+    //       userId: data.user.id,
+    //       userName: data.user.username,
+    //     }));
+    //   }
+    //   // const msg = JSON.parse(data);
+    //   console.log('msg: ', data);
+    // });
     // const socket = new WebSocket(`ws://localhost:4000/game/${id}`);
     // socket.onopen = () => {
     //   console.log('Подключение установлено');
@@ -108,7 +118,9 @@ export default function GameMain({ }: Props) {
   const howManyPlayers = 6; // TODO с бэка
   return (
     <>
-      <CameraContainer />
+      {id && <VideoComponent roomID={id} />}
+
+      {/* <CameraContainer /> */}
       <div className="placeQuestion">
         <button type="submit">Назвать слово!</button>
         <QuestionCard />
