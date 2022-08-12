@@ -2,11 +2,12 @@ import React from 'react';
 import './Button.module.css';
 
 interface Props {
-  children: string;
+  text: string;
 }
 
 export default function Button(props: Props) {
+  const { text } = props;
   return (
-    <button type="submit">{props.children}</button>
+    <button type="submit">{text}</button>
   );
 }

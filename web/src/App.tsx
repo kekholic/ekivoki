@@ -8,11 +8,13 @@ import MainRoutes from './Routes';
 function App() {
   return (
     <BrowserRouter>
-      <header>
+      <header className="header">
         <NavBar />
       </header>
-      <main>
+      <main className="main">
+
         <MainRoutes />
+
       </main>
     </BrowserRouter>
   );

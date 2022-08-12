@@ -1,4 +1,4 @@
-button {
+Button {
   background-color: rgb(21, 147, 214);
   cursor: pointer;
   box-shadow: 0 6px 6px rgb(0 0 0 / 35%);
@@ -11,7 +11,7 @@ button {
   height: 100%;
   color: #fff;
   text-align: center;
-  font-size: 22px;
+  font-size: 32px;
   box-shadow: 0 6px 6px rgb(0 0 0 / 35%);
   border-radius: 12px;
   padding: 5px;

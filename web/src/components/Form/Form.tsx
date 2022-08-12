@@ -1,9 +1,8 @@
 // NOTE: CHECK SUBMIT HANDLER DOUBLE TYPES
 import React, { ReactElement, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks/redux';
-
 import { getAuth } from '../../store/reducers/actionCreators';
+import style from './Form.module.css';
 
 interface IProps {
   auth: boolean;
@@ -26,12 +25,6 @@ export default function Form({ auth }: IProps): ReactElement {
     }
   }, [input]);
 
-  // useEffect(() => {
-  //   if (localStorage.getItem('token')) {
-  //     navigate('/game/start');
-  //   }
-  // }, [localStorage]);
-
   const submitHandler = (e: React.SyntheticEvent): void => {
     e.preventDefault();
     const target = e.target as typeof e.target & {
@@ -46,24 +39,26 @@ export default function Form({ auth }: IProps): ReactElement {
   };
 
   return (
-    <form onSubmit={submitHandler}>
-      {auth
+    <div className={style.form}>
+      <form onSubmit={submitHandler}>
+        {auth
         && (
           <label htmlFor="username">
             Username:
             <input type="text" name="username" />
           </label>
         )}
-      <label htmlFor="email">
-        Mail:
-        <input type="text" name="email" />
-      </label>
-      <label htmlFor="password">
-        Password:
-        <input type="password" name="password" />
-      </label>
-      <br />
-      <button type="submit">Submit</button>
-    </form>
+        <label htmlFor="email">
+          Mail:
+          <input type="text" name="email" />
+        </label>
+        <label htmlFor="password">
+          Password:
+          <input type="password" name="password" />
+        </label>
+        <br />
+        <button type="submit">Submit</button>
+      </form>
+    </div>
   );
 }

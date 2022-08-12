@@ -31,7 +31,7 @@ function MainRoutes() {
   }, []);
 
   return (
-    <div>
+    <div className="container">
       <Routes>
         <Route path="/" element={<ProtectedRoutes />}>
           <Route path="/" element={<InnerContent />}>

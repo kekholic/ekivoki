@@ -1,23 +1,39 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { useAppDispatch } from '../../hooks/redux';
+import { Link } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { getLogout } from '../../store/reducers/actionCreators';
+import style from './NavBar.module.css';
 
 export default function NavBar() {
+  const { isAuth } = useAppSelector((store) => store.user);
   const dispatch = useAppDispatch();
   const logoutHendler = () => {
     dispatch(getLogout());
   };
 
   return (
-    <>
-      <NavLink to="/register">Registration</NavLink>
-      <NavLink to="/login">Login</NavLink>
-      <NavLink to="/canvas">Paint</NavLink>
-      <NavLink to="/personal">Personal</NavLink>
-      <NavLink to="/game/start">game start</NavLink>
-      <button type="submit" onClick={() => logoutHendler()}>logout</button>
+    <div className={style.header__row}>
+      <div className={style.header__container}>
+        <div className={style.header_logo}> ЭКИВОКИ</div>
+        <div className={style.haeder_menu}>
+          {isAuth
+            ? (
+              <>
+                <Link className={style.link} to="/canvas">Рисовать</Link>
+                <Link className={style.link} to="/personal">Профиль</Link>
+                <Link className={style.link} to="/game/start">Начать</Link>
+                <button type="submit" className={style.link} onClick={() => logoutHendler()}>Выйти</button>
+              </>
+            )
+            : (
+              <>
+                <Link className={style.link} to="/register">Зарегистрироваться</Link>
+                <Link className={style.link} to="/login">Войти</Link>
+              </>
+            )}
+        </div>
 
-    </>
+      </div>
+    </div>
   );
 }
