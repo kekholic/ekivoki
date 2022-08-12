@@ -2,7 +2,7 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IUser } from '../../models/IUser';
-import { getAuth, getLogout, getInit } from './actionCreators';
+import { getAuth, getLogout } from './actionCreators';
 
 interface UserState {
   user: IUser;
@@ -64,20 +64,6 @@ export const authSlice = createSlice({
       state.error = action.payload;
     },
 
-    // init reducers
-    [getInit.fulfilled.type]: (state, action: PayloadAction<IUser>) => {
-      state.isLoading = false;
-      state.error = '';
-      state.user = action.payload;
-      state.isAuth = true;
-    },
-    [getInit.pending.type]: (state) => {
-      state.isLoading = true;
-    },
-    [getInit.rejected.type]: (state, action: PayloadAction<string>) => {
-      state.isLoading = false;
-      state.error = action.payload;
-    },
   },
 });
 
