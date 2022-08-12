@@ -8,6 +8,7 @@ import {
   getGame,
   incrementCountPlayers,
 } from '../../../store/reducers/actionCreators';
+import { choiceGame } from '../../../store/reducers/gameSlice';
 
 type Props = {};
 
@@ -31,6 +32,7 @@ export default function GameList({}: Props) {
         userName: user.username,
       })
     );
+    dispatch(choiceGame(game));
     navigate(`/game/${game.id}`);
   };
 

@@ -3,7 +3,9 @@ const tokenService = require('../service/tokenService');
 
 module.exports = function authMiddleware(req, res, next) {
   try {
+    console.log('aaaaa')
     const authorizationHeader = req.headers.authorization;
+    console.log('authorizationHeader: ', authorizationHeader);
     if (!authorizationHeader) {
       return next(ApiError.UnauthorizedError());
     }
@@ -14,6 +16,7 @@ module.exports = function authMiddleware(req, res, next) {
     }
 
     const userData = tokenService.validateAccessToken(accessToken);
+    console.log('userData: ', userData);
     if (!userData) {
       return next(ApiError.UnauthorizedError());
     }

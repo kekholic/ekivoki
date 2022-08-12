@@ -6,8 +6,10 @@ export default function GameStart() {
     <>
       <div>GameStart</div>
       <div>
+
         <Link to="/game/start/new">New game</Link>
         <Link to="/game/start/list">Connect to the game</Link>
+
       </div>
       <Outlet />
     </>

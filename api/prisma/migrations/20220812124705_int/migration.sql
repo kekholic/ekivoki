@@ -33,6 +33,8 @@ CREATE TABLE "Game" (
     "password" TEXT,
     "countPlayers" INTEGER NOT NULL DEFAULT 0,
     "maxPlayers" INTEGER NOT NULL,
+    "isPanding" BOOLEAN NOT NULL,
+    "isdone" BOOLEAN NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
