@@ -6,8 +6,9 @@ const prisma = new PrismaClient();
 
 class GameController {
   async createGame(req, res, next) {
-    const { title, password, maxPlayers, countPlayers, id, username } =
-      req.body;
+    const {
+      title, password, maxPlayers, countPlayers, id, username,
+    } = req.body;
 
     try {
       const newGame = await prisma.game.create({
@@ -20,6 +21,7 @@ class GameController {
           isdone: false,
         },
       });
+      console.log(newGame);
 
       const userNgames = await prisma.userNGame.create({
         data: {
@@ -73,9 +75,9 @@ class GameController {
     }
   }
 
-  async endGame(req, res, next) {}
+  async endGame(req, res, next) { }
 
-  async startGame(req, res, next) {}
+  async startGame(req, res, next) { }
 
   async start(ws, req) {
     ws.on('message', (msg) => {

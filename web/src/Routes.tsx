@@ -5,6 +5,7 @@ import {
 import Login from './components/Auth/Login/Login';
 import Registration from './components/Auth/Registration/Registration';
 import Canvas from './components/Canvas/Canvas.jsx';
+import GameInit from './components/GameInit/GameInit';
 import GameMain from './components/GameMain/GameMain';
 import GameList from './components/GameStart/GameList/GameList';
 import GameStart from './components/GameStart/GameStart';
@@ -37,7 +38,7 @@ function MainRoutes() {
           <Route path="/" element={<InnerContent />}>
             <Route path="/" element={<Navigate replace to="/game/start" />} />
             <Route path="/game/start" element={<GameStart />}>
-              <Route path="/game/start/new" element={<NewGameSettings />} />
+              <Route path="/game/start/new" element={<GameInit />} />
               <Route path="/game/start/list" element={<GameList />} />
             </Route>
             <Route path="/personal" element={<PersonalPage />} />

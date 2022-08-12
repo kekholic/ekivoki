@@ -29,7 +29,7 @@ export const getLogout = createAsyncThunk('auth/getLogOut', async (_, thunkAPI) 
   }
 });
 
-export const createGame = createAsyncThunk('game/createGame', async (data: IGame, thunkAPI) => {
+export const createGame = createAsyncThunk('game/createGame', async (data: any, thunkAPI) => {
   try {
     const res = await $api
       .post<IDataGame>('/game', data);

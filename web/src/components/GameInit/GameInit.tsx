@@ -13,14 +13,14 @@ export default function GameInit() {
   const navigate = useNavigate();
   const game = useAppSelector((store) => store.game);
   const { user } = useAppSelector((store) => store.user);
-  
+
   const [input, setInput] = useState({
     title: '',
     password: '',
     maxPlayers: 6,
     countPlayers: 0,
   });
-  
+
   const submitHandler = (e: React.SyntheticEvent): void => {
     e.preventDefault();
     const target = e.target as typeof e.target & {
@@ -38,11 +38,11 @@ export default function GameInit() {
       countPlayers: 1,
     });
   };
-  
+
   useEffect(() => {
     if (input.title) {
       console.log('user: ', user);
-      dispatch(createGame({ ...input, ...user.user }));
+      dispatch(createGame({ ...input, ...user }));
     }
   }, [input]);
 
@@ -61,18 +61,18 @@ export default function GameInit() {
           submitHandler(e);
         }}
       >
-        <input type='text' name='title' />
-        <input type='password' name='password' />
+        <input type="text" name="title" />
+        <input type="password" name="password" />
 
-        <select name='maxPlayers'>
-          <option value='1'>1</option>
-          <option value='2'>2</option>
-          <option value='3'>3</option>
-          <option value='4'>4</option>
-          <option value='5'>5</option>
-          <option value='6'>6</option>
+        <select name="maxPlayers">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
         </select>
-        <button type='submit'>создать игру</button>
+        <button type="submit">создать игру</button>
       </form>
     </div>
   );

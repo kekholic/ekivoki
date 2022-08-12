@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { StaticRouter, useParams } from 'react-router-dom';
+import {
+  // StaticRouter,
+  useParams
+} from 'react-router-dom';
 import io from 'socket.io-client';
-import { createModuleResolutionCache } from 'typescript';
+// import { createModuleResolutionCache } from 'typescript';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
   incrementCountPlayers,
-  startGame,
+  // startGame,
 } from '../../store/reducers/actionCreators';
 import CameraContainer from '../CameraContainer/CameraContainer';
 import QuestionCard from '../QuestionCard/QuestionCard';
@@ -35,7 +38,7 @@ const socket = io(`${process.env.REACT_APP_API_URL}`, options);
   game,
 }); */
 
-export default function GameMain({}: Props) {
+export default function GameMain({ }: Props) {
   const [start, setStart] = useState(false);
   const { user } = useAppSelector((store) => store.user);
   const { game } = useAppSelector((store) => store.game);
