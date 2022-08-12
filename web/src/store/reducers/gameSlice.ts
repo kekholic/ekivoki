@@ -48,10 +48,11 @@ export const gameSlice = createSlice({
   },
     extraReducers: {
       // register new game
-    [createGame.fulfilled.type]: (state, action: PayloadAction<IGame>) => {
+    [createGame.fulfilled.type]: (state, action: PayloadAction<any>) => {
       state.isLoading = false;
       state.error = '';
-      state.game = action.payload;
+      state.game = action.payload.game;
+      state.playersPriority.push(action.payload.user);
     },
     [createGame.pending.type]: (state) => {
       state.isLoading = true;
@@ -125,5 +126,6 @@ export const gameSlice = createSlice({
     // нажал вступить в игру у тебя обновился стейт с игрой
   },
 });
+export const { choiceGame } = gameSlice.actions;
 
 export default gameSlice.reducer;

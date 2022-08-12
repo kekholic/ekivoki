@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import GameInit from '../GameInit/GameInit';
 import GameList from './GameList/GameList';
 import NewGameSettings from './NewGameSettings/NewGameSettings';
 
@@ -22,7 +23,7 @@ export default function GameStart() {
       <div>
         <button type="submit" onClick={onStartHandler}>New game</button>
         <button type="submit" onClick={onGameListHandler}>Connect to the game</button>
-        {settings && <NewGameSettings />}
+        {settings && <GameInit />}
         {game && <GameList />}
       </div>
     </>

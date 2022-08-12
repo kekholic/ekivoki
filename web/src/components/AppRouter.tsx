@@ -8,8 +8,7 @@ import ErrorPage from './ErrorPage/ErrorPage';
 import { privateRoutes, publicRoutes } from './Routes/Routes';
 
 function AppRouter() {
-  // const isAuth = useAppSelector((user) => user.user.isAuth);
-  const isAuth = true;
+  const isAuth = useAppSelector((user) => user.user.isAuth);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
