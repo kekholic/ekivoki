@@ -1,1 +1,1 @@
-welcome to Ekivoki!
+Welcome to ekivoki!

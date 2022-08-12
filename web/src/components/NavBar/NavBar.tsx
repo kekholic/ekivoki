@@ -17,6 +17,7 @@ export default function NavBar() {
       <NavLink to="/personal">Personal</NavLink>
       <NavLink to="/game/start">game start</NavLink>
       <button type="submit" onClick={() => logoutHendler()}>logout</button>
+
     </>
   );
 }

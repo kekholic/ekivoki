@@ -26,7 +26,14 @@ const initialState: UserState = {
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    getInit(state, action: PayloadAction<IUser>) {
+      state.isLoading = false;
+      state.isAuth = true;
+      state.error = '';
+      state.user = action.payload;
+    },
+  },
   extraReducers: {
     // register and login reducers
     [getAuth.fulfilled.type]: (state, action: PayloadAction<IUser>) => {
@@ -75,3 +82,4 @@ export const authSlice = createSlice({
 });
 
 export default authSlice.reducer;
+export const { getInit } = authSlice.actions;

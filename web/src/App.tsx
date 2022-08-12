@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import './App.css';
 
 import NavBar from './components/NavBar/NavBar';
-import AppRouter from './components/AppRouter';
+import MainRoutes from './Routes';
 
 function App() {
   return (
@@ -12,7 +12,7 @@ function App() {
         <NavBar />
       </header>
       <main>
-        <AppRouter />
+        <MainRoutes />
       </main>
     </BrowserRouter>
   );
