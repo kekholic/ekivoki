@@ -1,30 +1,56 @@
+/* eslint-disable comma-dangle */
 // import axios from 'axios';
 import React, { SyntheticEvent, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
+import { useAppDispatch, useAppSelector } from '../../../hooks/redux';
+import { IGame } from '../../../models/IGame';
+import {
+  getGame,
+  incrementCountPlayers,
+} from '../../../store/reducers/actionCreators';
 
-type Props = {}
+type Props = {};
 
-export default function GameList({ }: Props) {
-  const [gameList, setGameList] = useState(['']);
+export default function GameList({}: Props) {
+  const [value, setValue] = useState('');
+  const { games } = useAppSelector((store) => store.allGame);
+  const { user } = useAppSelector((store) => store.user);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   // TODO:
   // запрос с базы данных активных игр!
   useEffect(() => {
-    const games = ['Первая', 'Вторая', 'Третья'];
-    setGameList(games);
+    dispatch(getGame());
   }, []);
 
-  const handleClick = (e: React.SyntheticEvent) => {
-    console.log(e.target);
+  const handleClick = (game: IGame) => {
+    dispatch(
+      incrementCountPlayers({
+        ...game,
+        userId: user.id,
+        userName: user.username,
+      })
+    );
+    navigate(`/game/${game.id}`);
   };
 
   return (
     <>
-      {gameList.map((game: any) => (
-        <div
-          key={game}
-          onClick={handleClick}
-        >
-          {' '}
-          {game}
+      {games.map((game) => (
+        <div key={game.id}>
+          <p>{game.title}</p>
+          <input
+            value={value}
+            type="text"
+            name="password"
+            placeholder="Введите пароль"
+            onChange={(e) => {
+              setValue(e.target.value);
+            }}
+          />
+          <button type="submit" onClick={() => handleClick(game)}>
+            Выбрать игру
+          </button>
         </div>
       ))}
     </>

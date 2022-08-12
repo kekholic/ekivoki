@@ -66,6 +66,7 @@ const broadcastConnection = (ws, msg) => {
     }
   });
 };
+console.log('test');
 
 app.use(errorMiddleware);
 app.listen(PORT, async () => {

@@ -1,9 +1,9 @@
 export interface IGame {
-  id: number,
+  id?: number,
   title: string,
   password?: string,
   countPlayers: number,
   maxPlayers: number,
-  isPanding: boolean,
-  isdone: boolean,
+  isPanding?: boolean,
+  isdone?: boolean,
 }

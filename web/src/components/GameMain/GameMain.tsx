@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import CameraContainer from '../CameraContainer/CameraContainer';
 import QuestionCard from '../QuestionCard/QuestionCard';
@@ -16,6 +16,10 @@ type Props = {}
 export default function GameMain({ }: Props) {
   const { id } = useParams();
   console.log('params', id);
+
+  useEffect(() => {
+
+  }, []);
 
   const howManyPlayers = 6; // TODO с бэка
   return (

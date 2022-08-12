@@ -3,6 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import $api from '../../http';
 import { IData } from '../../models/IData';
 import { IDataGame } from '../../models/IDataGame';
+import { IGame } from '../../models/IGame';
 
 export const getAuth = createAsyncThunk('auth/getAuth', async (data: any, thunkAPI) => {
   try {
@@ -28,7 +29,7 @@ export const getLogout = createAsyncThunk('auth/getLogOut', async (_, thunkAPI) 
   }
 });
 
-export const createGame = createAsyncThunk('game/createGame', async (data: Object, thunkAPI) => {
+export const createGame = createAsyncThunk('game/createGame', async (data: IGame, thunkAPI) => {
   try {
     const res = await $api
       .post<IDataGame>('/game', data);
@@ -86,4 +87,10 @@ export const endGame = createAsyncThunk('game/endGame', async (data: Object, thu
   } catch (err) {
     return thunkAPI.rejectWithValue('Ошибка');
   }
+});
+
+export const getInit = createAsyncThunk('auth/init', async (_, thunkAPI) => {
+  const temp = localStorage.getItem('user');
+  console.log('PARSIROVANO', JSON.parse(temp));
+  if (localStorage.getItem('token')) return JSON.parse(temp);
 });

@@ -13,7 +13,7 @@ import {
 interface GameState {
   game: IGame;
   isCanvas: boolean;
-  playersPriority: Array<number | null | Object>;
+  playersPriority: Array< Object>;
   isHost: number | null;
   progress: Array<Object>;
   isLoading: boolean;
@@ -46,8 +46,8 @@ export const gameSlice = createSlice({
       state.game = action.payload;
     },
   },
-  extraReducers: {
-    // register new game
+    extraReducers: {
+      // register new game
     [createGame.fulfilled.type]: (state, action: PayloadAction<IGame>) => {
       state.isLoading = false;
       state.error = '';
