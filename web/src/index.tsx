@@ -9,7 +9,7 @@ import reportWebVitals from './reportWebVitals';
 import store from './store/store';
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement,
+  document.getElementById('wrapper') as HTMLElement,
 );
 root.render(
   <Provider store={store}>

@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+.authForm{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  width: 25vw;
+  background:  linear-gradient( rgb(35 48 85 / 75%), rgba(35,43,85,0.95));
+  background-size: cover;
+  margin-left: auto;
+  margin-right: auto;
+  border-top: solid 0.1vh rgba(255,255,255,.5);
+  border-radius: 0.5vh;
+  box-shadow: 0px 0.2vh 0.7vh rgb(0 0 0 / 20%);
+  overflow: hidden;
+  transition: all .5s ease
+}
+
+.submitForm{
+  height: 100%;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5vh;
+}
+
+.label{
+  padding-left: 1vw;
+  text-align: start;
+  font-size: 1.5vh;
+  font-family: 'Open Sans', sans-serif;
+  color: rgba(255,255,255,.7);
+}
+
+input{
+      width: 100%;
+    height: 3.3vh;
+    padding-left: 1.5vw;
+    border: none;
+    border-radius: 2vh;
+    margin-bottom: 2vh;
+    background: rgba(255,255,255,.2);
+    color: #fff;
+}
+
+input:focus{
+    background: rgba(255, 255, 255, 0.47);
+}
+
+.authButton{
+  width: 100%;
+  height: 3.3vh;
+  border: none;
+  border-radius: 2vh;
+  font-size: 1.5vh;
+  background: rgba(16,89,255, 1);
+  color: rgba(255,255,255, 1);
+  transition: 0.2s;
+}
+
+.authButton:hover{
+  background: rgba(16,89,255, 1);
+  transform: translateY(-0.5vh);
+  box-shadow: 0 0.7vh 0 rgb(11, 66, 192);
+}
+
+.authButton:active{
+  transform: translateY(-0.2vh);
+  box-shadow: 0 0.3vh 0 rgb(11, 66, 192);
+}
