@@ -88,9 +88,3 @@ export const endGame = createAsyncThunk('game/endGame', async (data: Object, thu
     return thunkAPI.rejectWithValue('Ошибка');
   }
 });
-
-export const getInit = createAsyncThunk('auth/init', async (_, thunkAPI) => {
-  const temp = localStorage.getItem('user');
-  console.log('PARSIROVANO', JSON.parse(temp));
-  if (localStorage.getItem('token')) return JSON.parse(temp);
-});

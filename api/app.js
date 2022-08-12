@@ -110,6 +110,19 @@ io.on('connection', (socket) => {
   // socket.broadcast.emit('resive_message', msg);
 });
 
+// const connectionHandler = (ws, msg) => {
+//   ws.id = msg.id;
+//   broadcastConnection(ws, msg);
+// };
+
+// const broadcastConnection = (ws, msg) => {
+//   aWss.clients.forEach((client) => {
+//     client.send(JSON.stringify(msg));
+//     if (client.id === msg.id) {
+//     }
+//   });
+// };
+
 app.use(errorMiddleware);
 server.listen(PORT, async () => {
   console.log(`Сервер запущен на порте ${PORT}! `);
