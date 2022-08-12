@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 // NOTE: CHECK SUBMIT HANDLER DOUBLE TYPES
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useAppDispatch } from '../../hooks/redux';
@@ -39,25 +40,28 @@ export default function Form({ auth }: IProps): ReactElement {
   };
 
   return (
-    <div className={style.form}>
-      <form onSubmit={submitHandler}>
+    <div className={style.authForm}>
+      <form className={style.submitForm} onSubmit={submitHandler}>
         {auth
         && (
-          <label htmlFor="username">
-            Username:
-            <input type="text" name="username" />
-          </label>
+          <>
+            <label className={style.label} htmlFor="username">Имя</label>
+            <input type="text" name="username" id="username" />
+          </>
         )}
-        <label htmlFor="email">
-          Mail:
-          <input type="text" name="email" />
-        </label>
-        <label htmlFor="password">
-          Password:
-          <input type="password" name="password" />
-        </label>
-        <br />
-        <button type="submit">Submit</button>
+        <label className={style.label} htmlFor="email">Email</label>
+        <input type="text" name="email" id="email" />
+        <label className={style.label} htmlFor="password">Пароль</label>
+        <input type="password" name="password" id="password" />
+        {auth
+          ? (
+            <>
+              <label className={style.label} htmlFor="repeatPassword">Повторите пароль</label>
+              <input type="password" name="repeatPassword" id="repeatPassword" />
+              <button className={style.authButton} type="submit">Зарегистрироваться</button>
+            </>
+          )
+          : <button className={style.authButton} type="submit">Войти</button>}
       </form>
     </div>
   );
