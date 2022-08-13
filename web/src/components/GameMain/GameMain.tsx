@@ -20,7 +20,7 @@ const options = {
   'force new connection': true,
   reconnecctionAttempts: 'infinity',
   timeout: 10000,
-  transport: ['websocket'],
+  transport: ['websocket', 'polling'],
 };
 
 const socket = io(`${process.env.REACT_APP_API_URL}`, options);
@@ -102,7 +102,7 @@ export default function GameMain({ }: Props) {
     //       break;
     //   }
     // };
-  }, []);
+  }, [socket]);
   useEffect(() => {
     // console.log('countPlayers', game.countPlayers);
   }, [game]);

@@ -15,7 +15,7 @@ const server = require('http').createServer(app);
 
 const io = require('socket.io')(server, {
   cors: {
-    origin: '*',
+    origin: 'http://localhost:3000',
   },
 });
 
@@ -127,20 +127,10 @@ app.use('/game', gameRouter);
 io.on('connection', (socket) => {
   // shareRoomsInfo();
   console.log('socket connection');
-  socket.on('OlologMessage', (data) => {
-    console.log(data.message);
-    console.log(data.roomID);
-    const clients = Array.from(io.sockets.adapter.rooms.get(data.roomID) || []);
-    console.log(clients);
-    clients.forEach((client) => {
-      console.log(client);
-      socket.emit('OloloAnswer', {
-        answer: 'Ti dibil',
-      });
-    });
-  });
+
   socket.on(ACTIONS.JOIN, (config) => {
     const { room: roomID } = config;
+    console.log(roomID, 'roomID2222');
     console.log(config);
     const { rooms: joinedRooms } = socket;
 
@@ -163,7 +153,58 @@ io.on('connection', (socket) => {
     });
 
     socket.join(roomID);
-    // shareRoomsInfo();
+
+    // setTimeout(() => {
+    //   // io.to(roomID).emit('OloloAnswer', {
+    //   //   answer: '123',
+    //   // });
+    //   console.log(io.sockets.adapter.rooms.has(roomID), 'boolean');
+    //   io.to('9').emit('OloloAnswer', 'test');
+    // }, 3000);
+    // // console.log(Array.from(io.sockets.adapter.rooms.get(roomID)), 'lOOOOOOOOOOOl');
+    // // socket.emit('OloloAnswer', { roomID, answer: 'Ti dibil' });
+    // // io.sockets.in(roomID).emit('OloloAnswer', 'You are in room');
+    // // socket.emit('OloloAnswer', roomID);
+    // Array.from(io.sockets.adapter.rooms.get(roomID));
+  });
+
+  socket.on('OlologMessage', (data) => {
+    console.log(data.message);
+    console.log(data.roomID);
+
+    console.log(socket.id, 'socket/.id');
+    setTimeout(() => {
+      // io.to(roomID).emit('OloloAnswer', {
+      //   answer: '123',
+      // });
+      // console.log(io.sockets.adapter.rooms.has(data.roomID), 'boolean');
+      // console.log(socket);
+      // console.log(socket.to(data.roomID).adapter.rooms, 'lollllllllllll');
+      // io.to(data.roomID).emit('OloloAnswer', 'xuy');
+      const allUsersRoom = Array.from(socket.to(data.roomID).adapter.rooms.get(data.roomID));
+      console.log(socket.id);
+      allUsersRoom.forEach((user) => {
+        console.log(user, ' uSSSSSSSSSSSSSSSSSSSSSSSEEEEEEEEEEEEEEER');
+        io.to(user).emit('OloloAnswer', {
+          peerID: user,
+          msg: 'xuy',
+        });
+      });
+      // socket.emit('OloloAnswer', 'test');
+    }, 3000);
+    // console.log(Array.from(io.sockets.adapter.rooms.get(roomID)), 'lOOOOOOOOOOOl');
+    // socket.emit('OloloAnswer', { roomID, answer: 'Ti dibil' });
+    // io.sockets.in(roomID).emit('OloloAnswer', 'You are in room');
+    // socket.emit('OloloAnswer', roomID);
+
+    // io.in(socket.id).emit('OloloAnswer', {
+    //   answer: 'Ti dibil',
+    // });
+
+    // console.log(io.sockets.adapter.rooms.get(data.roomID), 'lOOOOOOOOOOOl2');
+    // io.in('9').emit('OloloAnswer', {
+    //   answer: 'Ti dibil',
+    // });
   });
 
   function leaveRoom() {
@@ -180,7 +221,6 @@ io.on('connection', (socket) => {
             peerID: clientID,
           });
         });
-
         socket.leave(roomID);
       });
     // shareRoomsInfo();
@@ -194,6 +234,8 @@ io.on('connection', (socket) => {
       peerID: socket.id,
       sessionDescription,
     });
+    console.log(peerID, 'peerIDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD');
+    // console.log(roomID, 'roomID')
   });
 
   socket.on(ACTIONS.RELAY_ICE, ({ peerID, iceCandidate }) => {
