@@ -180,16 +180,15 @@ io.on('connection', (socket) => {
       // console.log(io.sockets.adapter.rooms.has(data.roomID), 'boolean');
       // console.log(socket);
       // console.log(socket.to(data.roomID).adapter.rooms, 'lollllllllllll');
-      // io.to(data.roomID).emit('OloloAnswer', 'xuy');
-      const allUsersRoom = Array.from(socket.to(data.roomID).adapter.rooms.get(data.roomID));
+      io.to(data.roomID).emit('OloloAnswer', 'xuy');
+      // const allUsersRoom = Array.from(socket.to(data.roomID).adapter.rooms.get(data.roomID));
       console.log(socket.id);
-      allUsersRoom.forEach((user) => {
-        console.log(user, ' uSSSSSSSSSSSSSSSSSSSSSSSEEEEEEEEEEEEEEER');
-        io.to(user).emit('OloloAnswer', {
-          peerID: user,
-          msg: 'xuy',
-        });
-      });
+      // allUsersRoom.forEach((user) => {
+      //   io.to(user).emit('OloloAnswer', {
+      //     peerID: user,
+      //     msg: 'xuy',
+      //   });
+      // });
       // socket.emit('OloloAnswer', 'test');
     }, 3000);
     // console.log(Array.from(io.sockets.adapter.rooms.get(roomID)), 'lOOOOOOOOOOOl');
@@ -234,7 +233,7 @@ io.on('connection', (socket) => {
       peerID: socket.id,
       sessionDescription,
     });
-    console.log(peerID, 'peerIDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD');
+    // console.log(peerID, 'peerIDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD');
     // console.log(roomID, 'roomID')
   });
 

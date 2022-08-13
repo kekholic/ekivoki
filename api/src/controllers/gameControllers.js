@@ -6,8 +6,9 @@ const prisma = new PrismaClient();
 
 class GameController {
   async createGame(req, res, next) {
-    const { title, password, maxPlayers, countPlayers, id, username } =
-      req.body;
+    const {
+      title, password, maxPlayers, countPlayers, id, username,
+    } = req.body;
     console.log(req.body);
     try {
       const newGame = await prisma.game.create({
@@ -55,11 +56,11 @@ class GameController {
   async connectionGame(req, res, next) {
     const { id, user } = req.body;
     console.log('eq.body: ', req.body);
-    const game = await prisma.game.findUnique({ where: { id } });
-    console.log('game: ', game);
+    const gameBD = await prisma.game.findUnique({ where: { id } });
+    console.log('game: ', gameBD);
     const userNGame = await prisma.userNGame.create({
       data: {
-        gameId: game.id,
+        gameId: gameBD.id,
         userId: user.id,
       },
     });
@@ -79,7 +80,20 @@ class GameController {
         },
       },
     });
-    console.log('stateGame: ', stateGame.user);
+
+    const userList = stateGame.UserNGame.reduce((acc, curr) => {
+      acc.push(curr.User);
+      return acc;
+    }, []);
+    userList.sort((prev, curr) => prev.id - curr.id);
+    const game = {
+      game: gameBD,
+      isCanvas: false,
+      playersPriority: userList,
+      isHost: null,
+      progress: [],
+    };
+    res.json(game);
   }
 
   async addGame(req, res, next) {
@@ -102,9 +116,9 @@ class GameController {
     }
   }
 
-  async endGame(req, res, next) {}
+  async endGame(req, res, next) { }
 
-  async startGame(req, res, next) {}
+  async startGame(req, res, next) { }
 
   async start(ws, req) {
     ws.on('message', (msg) => {

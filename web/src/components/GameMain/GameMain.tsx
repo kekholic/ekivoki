@@ -1,29 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   // StaticRouter,
   useParams,
 } from 'react-router-dom';
-import io from 'socket.io-client';
+// import io from 'socket.io-client';
 // import { createModuleResolutionCache } from 'typescript';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import socket from '../../socket';
 import {
   incrementCountPlayers,
   // startGame,
 } from '../../store/reducers/actionCreators';
-import CameraContainer from '../CameraContainer/CameraContainer';
+// import CameraContainer from '../CameraContainer/CameraContainer';
 import QuestionCard from '../QuestionCard/QuestionCard';
 import VideoComponent from '../WebChat/VideoComponent';
 
-type Props = {};
-
-const options = {
-  'force new connection': true,
-  reconnecctionAttempts: 'infinity',
-  timeout: 10000,
-  transport: ['websocket', 'polling'],
-};
-
-const socket = io(`${process.env.REACT_APP_API_URL}`, options);
+// const options = {
+//   'force new connection': true,
+//   reconnecctionAttempts: 'infinity',
+//   timeout: 10000,
+//   transport: ['websocket'],
+// };
 
 // TODO:
 // отрисовка шаблона: камеры, место для карточки с вопросом, место для боарда.
@@ -39,8 +36,8 @@ const socket = io(`${process.env.REACT_APP_API_URL}`, options);
   game,
 }); */
 
-export default function GameMain({ }: Props) {
-  const [start, setStart] = useState(false);
+export default function GameMain() {
+  // const [start, setStart] = useState(false);
   const { user } = useAppSelector((store) => store.user);
   const { game } = useAppSelector((store) => store);
   const { id } = useParams();
@@ -118,15 +115,11 @@ export default function GameMain({ }: Props) {
     // console.log('countPlayers', game.countPlayers);
   }, [game]);
 
-  useEffect(() => {
-    // dispatch(startGame({ gameId: id, isPanding: false }));
-  }, [start]);
-
   // рукопожатие сокет
   // побмен юзером
   // добавление в гейм стейт
   // удаление при выходе
-  const howManyPlayers = 6; // TODO с бэка
+  // const howManyPlayers = 6; // TODO с бэка
   return (
     <>
       {id && <VideoComponent roomID={id} />}
