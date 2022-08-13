@@ -3,10 +3,9 @@ import {
   // StaticRouter,
   useParams,
 } from 'react-router-dom';
-import io from 'socket.io-client';
+// import io from 'socket.io-client';
 // import { createModuleResolutionCache } from 'typescript';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import socket from '../../socket';
 import {
   incrementCountPlayers,
   // startGame,
@@ -17,14 +16,14 @@ import VideoComponent from '../WebChat/VideoComponent';
 
 type Props = {};
 
-// const options = {
-//   'force new connection': true,
-//   reconnecctionAttempts: 'infinity',
-//   timeout: 10000,
-//   transport: ['websocket', 'polling'],
-// };
+const options = {
+  'force new connection': true,
+  reconnecctionAttempts: 'infinity',
+  timeout: 10000,
+  transport: ['websocket', 'polling'],
+};
 
-// const socket = io(`${process.env.REACT_APP_API_URL}`, options);
+const socket = io(`${process.env.REACT_APP_API_URL}`, options);
 
 // TODO:
 // отрисовка шаблона: камеры, место для карточки с вопросом, место для боарда.
@@ -40,23 +39,32 @@ type Props = {};
   game,
 }); */
 
-export default function GameMain({ }: Props) {
+export default function GameMain() {
   const [start, setStart] = useState(false);
+  const [questionCard, setQuestionCard] = useState(false);
   const { user } = useAppSelector((store) => store.user);
-  const { game } = useAppSelector((store) => store.game);
+  const { game } = useAppSelector((store) => store);
   const { id } = useParams();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    socket.emit('OlologMessage', {
-      roomID: id,
-      message: 'Hello',
+    sendMessageGameState(game, id, user);
+    // socket.emit('game', {
+    //   game,
+    //   roomID: id,
+    //   user,
+    //   method: 'initState',
+    // });
+    socket.on('gameAnswers', (msg) => {
+      switch (msg.method) {
+        case 'initState':
+          dispatch(updateGameState(msg.game));
+          break;
+        default:
+          break;
+      }
     });
     // console.log('zahel');
-
-    socket.on('OloloAnswer', (data) => {
-      console.log('d=v gaim main', data);
-    });
     // console.log('pfkegf');
     // socket.emit('join_room', {
     //   id,
@@ -104,28 +112,45 @@ export default function GameMain({ }: Props) {
     //   }
     // };
   }, [socket]);
-  useEffect(() => {
-    // console.log('countPlayers', game.countPlayers);
-  }, [game]);
 
   useEffect(() => {
-    // dispatch(startGame({ gameId: id, isPanding: false }));
-  }, [start]);
+    if (game.game.countPlayers === game.game.maxPlayers) {
+      setStart(true);
+      // dispatchEvent(getQuestion());
+    }
+  }, [game]);
+  const hendlerStart = () => {
+    dispatch(startGame({ id: game.game.id, isPanding: false }));
+    setQuestionCard(true);
+    setStart(false);
+    sendMessageGameState(game, id, user);
+  };
 
   // рукопожатие сокет
   // побмен юзером
   // добавление в гейм стейт
   // удаление при выходе
-  const howManyPlayers = 6; // TODO с бэка
+  // const howManyPlayers = 6; // TODO с бэка
   return (
     <>
       {id && <VideoComponent roomID={id} />}
 
       {/* <CameraContainer /> */}
-      <div className="placeQuestion">
-        <button type="submit">Назвать слово!</button>
-        <QuestionCard />
-      </div>
+      {questionCard && (
+        <div className='placeQuestion'>
+          <button type='submit'>Назвать слово!</button>
+          <QuestionCard />
+        </div>
+      )}
+      {start &&
+        (start && user.id === game.isHost ? (
+          <button onClick={hendlerStart} type='submit'>
+            Начать игру
+          </button>
+        ) : (
+          <p>ХОСТ не начал игру</p>
+        ))}
+      {game.game.isPanding && <p>Ждем Игроков ...</p>}
     </>
   );
 }

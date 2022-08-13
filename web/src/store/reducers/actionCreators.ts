@@ -3,7 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import $api from '../../http';
 import { IData } from '../../models/IData';
 import { IDataGame } from '../../models/IDataGame';
-import { IGame } from '../../models/IGame';
+
 
 export const getAuth = createAsyncThunk('auth/getAuth', async (data: any, thunkAPI) => {
   try {
@@ -84,6 +84,16 @@ export const endGame = createAsyncThunk('game/endGame', async (data: Object, thu
     const res = await $api
       .patch('/game/end', data);// подготовить к отправке обьект с данными { gameId, ipanding: false}
     return res.data; // с бэка статус
+  } catch (err) {
+    return thunkAPI.rejectWithValue('Ошибка');
+  }
+});
+
+export const playersConnection = createAsyncThunk('game/playersConnection', async (data: Object, thunkAPI) => {
+  try {
+    const res = await $api
+      .post('/game/connections', data);// подготовить к отправке обьект с данными { gameId, user}
+    return res.data; // с бэка {new game}
   } catch (err) {
     return thunkAPI.rejectWithValue('Ошибка');
   }

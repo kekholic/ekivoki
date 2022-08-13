@@ -7,13 +7,14 @@ import {
   decrementCountPlayers,
   endGame,
   incrementCountPlayers,
+  playersConnection,
   startGame,
 } from './actionCreators';
 
-interface GameState {
+export interface GameState {
   game: IGame;
   isCanvas: boolean;
-  playersPriority: Array< Object>;
+  playersPriority: Array<Object>;
   isHost: number | null;
   progress: Array<Object>;
   isLoading: boolean;
@@ -42,12 +43,12 @@ export const gameSlice = createSlice({
   name: 'game',
   initialState,
   reducers: {
-    choiceGame(state, action: PayloadAction<IGame>) {
-      state.game = action.payload;
+    updateGameState(state, action: PayloadAction<GameState>) {
+      state = action.payload;
     },
   },
-    extraReducers: {
-      // register new game
+  extraReducers: {
+    // register new game
     [createGame.fulfilled.type]: (state, action: PayloadAction<any>) => {
       state.isLoading = false;
       state.error = '';
@@ -63,7 +64,7 @@ export const gameSlice = createSlice({
     },
     [incrementCountPlayers.fulfilled.type]: (
       state,
-      action: PayloadAction<Object>
+      action: PayloadAction<Object>,
     ) => {
       state.isLoading = false;
       state.error = '';
@@ -75,7 +76,7 @@ export const gameSlice = createSlice({
     },
     [incrementCountPlayers.rejected.type]: (
       state,
-      action: PayloadAction<string>
+      action: PayloadAction<string>,
     ) => {
       state.isLoading = false;
       state.error = action.payload;
@@ -91,7 +92,7 @@ export const gameSlice = createSlice({
     },
     [decrementCountPlayers.rejected.type]: (
       state,
-      action: PayloadAction<string>
+      action: PayloadAction<string>,
     ) => {
       state.isLoading = false;
       state.error = action.payload;
@@ -120,12 +121,27 @@ export const gameSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
+    [playersConnection.fulfilled.type]: (state, action: PayloadAction<GameState>) => {
+      state.game = action.payload.game;
+      state.playersPriority = action.payload.playersPriority;
+      state.isHost = action.payload.isHost;
+      state.error = '';
+      state.isLoading = false;
+    },
+    [playersConnection.pending.type]: (state) => {
+      state.isLoading = true;
+    },
+    [playersConnection.rejected.type]: (state, action: PayloadAction<string>) => {
+      state.isLoading = false;
+
+      state.error = action.payload;
+    },
     // 1 изменять поле игроков:done
     // 2 отбновлять данные в бд:done
     // 3 обновлять статус игры началась ждем игроков кончилась
     // нажал вступить в игру у тебя обновился стейт с игрой
   },
 });
-export const { choiceGame } = gameSlice.actions;
+export const { updateGameState } = gameSlice.actions;
 
 export default gameSlice.reducer;

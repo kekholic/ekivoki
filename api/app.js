@@ -19,12 +19,7 @@ const io = require('socket.io')(server, {
   },
 });
 
-// const WSServer = require('express-ws')(app);
-
-// module.exports = WSServer;
 const errorMiddleware = require('./src/middlewares/error-middleware');
-
-// const GameController = require('./src/controllers/gameControllers');
 
 const { PORT } = process.env; // получение переменных env
 
@@ -38,13 +33,10 @@ app.use(cors(corsOptions));
 
 app.use(cookieParser());
 
-// const aWss = WSServer.getWss();
-
 const authRouter = require('./src/routes/authRouter');
 const gameRouter = require('./src/routes/gameRouter');
 const ACTIONS = require('./wsforchat/actions');
 // const authMiddleware = require('./src/middlewares/authMiddleware');
-// const gameService = require('./src/service/gameService');
 
 app.use(express.static(path.join(__dirname, 'public'))); // подключение  public директории
 
@@ -153,19 +145,6 @@ io.on('connection', (socket) => {
     });
 
     socket.join(roomID);
-
-    // setTimeout(() => {
-    //   // io.to(roomID).emit('OloloAnswer', {
-    //   //   answer: '123',
-    //   // });
-    //   console.log(io.sockets.adapter.rooms.has(roomID), 'boolean');
-    //   io.to('9').emit('OloloAnswer', 'test');
-    // }, 3000);
-    // // console.log(Array.from(io.sockets.adapter.rooms.get(roomID)), 'lOOOOOOOOOOOl');
-    // // socket.emit('OloloAnswer', { roomID, answer: 'Ti dibil' });
-    // // io.sockets.in(roomID).emit('OloloAnswer', 'You are in room');
-    // // socket.emit('OloloAnswer', roomID);
-    // Array.from(io.sockets.adapter.rooms.get(roomID));
   });
 
   socket.on('OlologMessage', (data) => {
@@ -192,37 +171,23 @@ io.on('connection', (socket) => {
       // });
       // socket.emit('OloloAnswer', 'test');
     }, 3000);
-    // console.log(Array.from(io.sockets.adapter.rooms.get(roomID)), 'lOOOOOOOOOOOl');
-    // socket.emit('OloloAnswer', { roomID, answer: 'Ti dibil' });
-    // io.sockets.in(roomID).emit('OloloAnswer', 'You are in room');
-    // socket.emit('OloloAnswer', roomID);
-
-    // io.in(socket.id).emit('OloloAnswer', {
-    //   answer: 'Ti dibil',
-    // });
-
-    // console.log(io.sockets.adapter.rooms.get(data.roomID), 'lOOOOOOOOOOOl2');
-    // io.in('9').emit('OloloAnswer', {
-    //   answer: 'Ti dibil',
-    // });
   });
 
   function leaveRoom() {
     const { rooms } = socket;
-    Array.from(rooms)
-      .forEach((roomID) => {
-        const clients = Array.from(io.sockets.adapter.rooms.get(roomID) || []);
-        clients.forEach((clientID) => {
-          io.to(clientID).emit(ACTIONS.REMOVE_PEER, {
-            peerID: socket.id,
-          });
-
-          socket.emit(ACTIONS.REMOVE_PEER, {
-            peerID: clientID,
-          });
+    Array.from(rooms).forEach((roomID) => {
+      const clients = Array.from(io.sockets.adapter.rooms.get(roomID) || []);
+      clients.forEach((clientID) => {
+        io.to(clientID).emit(ACTIONS.REMOVE_PEER, {
+          peerID: socket.id,
         });
-        socket.leave(roomID);
+
+        socket.emit(ACTIONS.REMOVE_PEER, {
+          peerID: clientID,
+        });
       });
+      socket.leave(roomID);
+    });
     // shareRoomsInfo();
   }
 
@@ -234,7 +199,7 @@ io.on('connection', (socket) => {
       peerID: socket.id,
       sessionDescription,
     });
-    console.log(peerID, 'peerIDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD');
+    // console.log(peerID, 'peerIDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD');
     // console.log(roomID, 'roomID')
   });
 

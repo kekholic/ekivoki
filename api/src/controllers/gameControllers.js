@@ -6,9 +6,8 @@ const prisma = new PrismaClient();
 
 class GameController {
   async createGame(req, res, next) {
-    const {
-      title, password, maxPlayers, countPlayers, id, username,
-    } = req.body;
+    const { title, password, maxPlayers, countPlayers, id, username } =
+      req.body;
     console.log(req.body);
     try {
       const newGame = await prisma.game.create({
@@ -21,7 +20,6 @@ class GameController {
           isdone: false,
         },
       });
-     
 
       const userNgames = await prisma.userNGame.create({
         data: {
@@ -54,9 +52,52 @@ class GameController {
     }
   }
 
+  async connectionGame(req, res, next) {
+    const { id, user } = req.body;
+    console.log('eq.body: ', req.body);
+    const gameBD = await prisma.game.findUnique({ where: { id } });
+    console.log('game: ', gameBD);
+    delete gameBD.createdAt;
+    delete gameBD.updatedAt;
+    const userNGame = await prisma.userNGame.create({
+      data: {
+        gameId: gameBD.id,
+        userId: user.id,
+      },
+    });
+    console.log('userNGame: ', userNGame);
+    const stateGame = await prisma.game.findUnique({
+      where: { id },
+      include: {
+        UserNGame: {
+          include: {
+            User: {
+              select: {
+                id: true,
+                username: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const userList = stateGame.UserNGame.reduce((acc, curr) => {
+      acc.push(curr.User);
+      return acc;
+    }, []);
+    userList.sort((prev, curr) => prev.id - curr.id);
+    const game = {
+      game: gameBD,
+      playersPriority: userList,
+      progress: [],
+      isHost: userList[0].id,
+    };
+    res.json(game);
+  }
+
   async addGame(req, res, next) {
     const { id, userId, username } = req.body;
-    
 
     try {
       const userNgame = await prisma.userNGame.create({
@@ -75,9 +116,22 @@ class GameController {
     }
   }
 
-  async endGame(req, res, next) { }
+  async endGame(req, res, next) {}
 
-  async startGame(req, res, next) { }
+  async startGame(req, res, next) {
+    const { id, isPanding } = req.body;
+    try {
+      const game = await prisma.game.update({
+        where: { id },
+        data: {
+          isPanding,
+        },
+      });
+      res.sendStatus(200);
+    } catch (error) {
+      next(error);
+    }
+  }
 
   async start(ws, req) {
     ws.on('message', (msg) => {
