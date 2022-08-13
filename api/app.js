@@ -113,7 +113,7 @@ app.use('/game', gameRouter);
 // //     client.send(JSON.stringify(msg));
 // //     if (client.id === msg.id) {
 // //     }
-// //   });
+// //   })
 // // };
 
 io.on('connection', (socket) => {
@@ -147,11 +147,14 @@ io.on('connection', (socket) => {
     socket.join(roomID);
   });
 
-  socket.on('OlologMessage', (data) => {
-    console.log(data.message);
-    console.log(data.roomID);
-
-    console.log(socket.id, 'socket/.id');
+  socket.on('game', (msg) => {
+    switch (msg.method) {
+      case 'initState':
+        socket.to(msg.roomID).emit('gameAnswers', msg);
+        break;
+      default:
+        break;
+    }
     setTimeout(() => {
       // io.to(roomID).emit('OloloAnswer', {
       //   answer: '123',
@@ -159,7 +162,7 @@ io.on('connection', (socket) => {
       // console.log(io.sockets.adapter.rooms.has(data.roomID), 'boolean');
       // console.log(socket);
       // console.log(socket.to(data.roomID).adapter.rooms, 'lollllllllllll');
-      io.to(data.roomID).emit('OloloAnswer', 'xuy');
+      // io.to(data.roomID).emit('OloloAnswer', 'xuy');
       // const allUsersRoom = Array.from(socket.to(data.roomID).adapter.rooms.get(data.roomID));
       // console.log(socket.id);
       // allUsersRoom.forEach((user) => {

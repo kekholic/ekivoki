@@ -31,7 +31,8 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.isAuth = true;
       state.error = '';
-      state.user = action.payload;
+      console.log('action.payload: ', {...action.payload});
+      state.user = { ...action.payload };
     },
   },
   extraReducers: {

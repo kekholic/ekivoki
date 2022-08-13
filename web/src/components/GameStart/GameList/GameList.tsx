@@ -13,7 +13,7 @@ export default function GameList() {
   const [value, setValue] = useState('');
   const { games } = useAppSelector((store) => store.allGame);
   const { game } = useAppSelector((store) => store);
-  const { user } = useAppSelector((store) => store.user);
+  const user = useAppSelector((store) => store.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   // TODO:
@@ -23,7 +23,7 @@ export default function GameList() {
   }, []);
 
   const handleClick = (gameInner: IGame) => {
-    dispatch(playersConnection({ id: gameInner.id, user }));
+    dispatch(playersConnection({ id: gameInner.id, user: user.user }));
     // dispatch(choiceGame(game));
   };
 
@@ -33,7 +33,7 @@ export default function GameList() {
 
   return (
     <>
-      {games.map((gameInner) => (
+      {games.map((gameInner:IGame) => (
         <div key={gameInner.id}>
           <p>{gameInner.title}</p>
           <input

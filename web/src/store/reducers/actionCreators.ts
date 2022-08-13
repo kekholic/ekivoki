@@ -14,7 +14,7 @@ export const getAuth = createAsyncThunk(
       );
       localStorage.setItem('token', res.data.accessToken);
       localStorage.setItem('user', JSON.stringify(res.data.user));
-      return res.data;
+      return res.data.user;
     } catch (err) {
       return thunkAPI.rejectWithValue('Ошибка');
     }
@@ -109,7 +109,7 @@ export const endGame = createAsyncThunk(
 
 export const playersConnection = createAsyncThunk(
   'game/playersConnection',
-  async (data: Object, thunkAPI) => {
+  async (data: any, thunkAPI) => {
     try {
       const res = await $api.post('/game/connections', data); // подготовить к отправке обьект с данными { gameId, user}
       return res.data; // с бэка {new game}

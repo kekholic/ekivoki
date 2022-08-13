@@ -44,7 +44,12 @@ export const gameSlice = createSlice({
   initialState,
   reducers: {
     updateGameState(state, action: PayloadAction<GameState>) {
-      state = action.payload;
+      state.game = action.payload.game;
+      state.isCanvas = false;
+      state.playersPriority = action.payload.playersPriority;
+      state.isHost = action.payload.isHost;
+      state.isLoading = false;
+      state.error = '';
     },
   },
   extraReducers: {
