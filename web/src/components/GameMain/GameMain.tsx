@@ -6,24 +6,15 @@ import {
 // import io from 'socket.io-client';
 // import { createModuleResolutionCache } from 'typescript';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { sendMessageGameState } from '../../lib/game/gameUpdate';
+import socket from '../../socket';
 import {
-  incrementCountPlayers,
+  startGame,
   // startGame,
 } from '../../store/reducers/actionCreators';
-import CameraContainer from '../CameraContainer/CameraContainer';
+import { updateGameState } from '../../store/reducers/gameSlice';
 import QuestionCard from '../QuestionCard/QuestionCard';
 import VideoComponent from '../WebChat/VideoComponent';
-
-type Props = {};
-
-const options = {
-  'force new connection': true,
-  reconnecctionAttempts: 'infinity',
-  timeout: 10000,
-  transport: ['websocket', 'polling'],
-};
-
-const socket = io(`${process.env.REACT_APP_API_URL}`, options);
 
 // TODO:
 // отрисовка шаблона: камеры, место для карточки с вопросом, место для боарда.
@@ -137,14 +128,14 @@ export default function GameMain() {
 
       {/* <CameraContainer /> */}
       {questionCard && (
-        <div className='placeQuestion'>
-          <button type='submit'>Назвать слово!</button>
+        <div className="placeQuestion">
+          <button type="submit">Назвать слово!</button>
           <QuestionCard />
         </div>
       )}
-      {start &&
-        (start && user.id === game.isHost ? (
-          <button onClick={hendlerStart} type='submit'>
+      {start
+        && (start && user.id === game.isHost ? (
+          <button onClick={hendlerStart} type="submit">
             Начать игру
           </button>
         ) : (

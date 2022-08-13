@@ -9,9 +9,7 @@ import {
   playersConnection,
 } from '../../../store/reducers/actionCreators';
 
-type Props = {};
-
-export default function GameList({}: Props) {
+export default function GameList() {
   const [value, setValue] = useState('');
   const { games } = useAppSelector((store) => store.allGame);
   const { game } = useAppSelector((store) => store);

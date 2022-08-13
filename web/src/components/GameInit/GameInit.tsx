@@ -1,11 +1,9 @@
 /* eslint-disable comma-dangle */
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { setTimeout } from 'timers/promises';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
   createGame,
-  incrementCountPlayers,
 } from '../../store/reducers/actionCreators';
 
 export default function GameInit() {
@@ -43,7 +41,7 @@ export default function GameInit() {
     if (input.title) {
       console.log('user: ', user);
       // const userObj = user.user
-      dispatch(createGame({...input, ...user }));
+      dispatch(createGame({ ...input, ...user }));
     }
   }, [input]);
 
