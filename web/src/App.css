@@ -46,6 +46,11 @@ body{
   background-size: cover;
 }
 
+.container{
+  width: 80%;
+  height: 100%;
+}
+
 .wrapper {
   min-height: 100%;
   display: flex;
