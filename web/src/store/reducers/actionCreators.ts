@@ -3,7 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import $api from '../../http';
 import { IData } from '../../models/IData';
 import { IDataGame } from '../../models/IDataGame';
-import { IGame } from '../../models/IGame';
+
 
 export const getAuth = createAsyncThunk('auth/getAuth', async (data: any, thunkAPI) => {
   try {

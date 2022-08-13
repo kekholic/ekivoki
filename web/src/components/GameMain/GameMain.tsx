@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   // StaticRouter,
   useParams,
@@ -6,11 +6,10 @@ import {
 // import io from 'socket.io-client';
 // import { createModuleResolutionCache } from 'typescript';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { sendMessageGameState } from '../../lib/game/gameUpdate';
 import socket from '../../socket';
-import {
-  incrementCountPlayers,
-  // startGame,
-} from '../../store/reducers/actionCreators';
+import { startGame } from '../../store/reducers/actionCreators';
+import { updateGameState } from '../../store/reducers/gameSlice';
 // import CameraContainer from '../CameraContainer/CameraContainer';
 import QuestionCard from '../QuestionCard/QuestionCard';
 import VideoComponent from '../WebChat/VideoComponent';
@@ -37,33 +36,31 @@ import VideoComponent from '../WebChat/VideoComponent';
 }); */
 
 export default function GameMain() {
-  // const [start, setStart] = useState(false);
+  const [start, setStart] = useState(false);
+  const [questionCard, setQuestionCard] = useState(false);
   const { user } = useAppSelector((store) => store.user);
   const { game } = useAppSelector((store) => store);
   const { id } = useParams();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    socket.emit('gameConnection', {
-      roomID: id,
-      user,
-      method: 'firstInit',
-    });
-    // console.log('zahel');
-
-    socket.on('gameConnectionAnswer', (msg) => {
-      if (game.playersPriority.indexOf(user.id) === 0) {
-        dispatch(incrementCountPlayers({ userId: msg.user.id, username: msg.user.username }));
-        if (!game.isLoading) {
-          socket.emit('newStateGame', {
-            roomID: id,
-            game,
-            user,
-            method: 'choiseGameState',
-          });
-        }
+    sendMessageGameState(game, id, user);
+    // socket.emit('game', {
+    //   game,
+    //   roomID: id,
+    //   user,
+    //   method: 'initState',
+    // });
+    socket.on('gameAnswers', (msg) => {
+      switch (msg.method) {
+        case 'initState':
+          dispatch(updateGameState(msg.game));
+          break;
+        default:
+          break;
       }
     });
+    // console.log('zahel');
     // console.log('pfkegf');
     // socket.emit('join_room', {
     //   id,
@@ -111,9 +108,19 @@ export default function GameMain() {
     //   }
     // };
   }, [socket]);
+
   useEffect(() => {
-    // console.log('countPlayers', game.countPlayers);
+    if (game.game.countPlayers === game.game.maxPlayers) {
+      setStart(true);
+      // dispatchEvent(getQuestion());
+    }
   }, [game]);
+  const hendlerStart = () => {
+    dispatch(startGame({ id: game.game.id, isPanding: false }));
+    setQuestionCard(true);
+    setStart(false);
+    sendMessageGameState(game, id, user);
+  };
 
   // рукопожатие сокет
   // побмен юзером
@@ -125,10 +132,21 @@ export default function GameMain() {
       {id && <VideoComponent roomID={id} />}
 
       {/* <CameraContainer /> */}
-      <div className="placeQuestion">
-        <button type="submit">Назвать слово!</button>
-        <QuestionCard />
-      </div>
+      {questionCard && (
+        <div className='placeQuestion'>
+          <button type='submit'>Назвать слово!</button>
+          <QuestionCard />
+        </div>
+      )}
+      {start &&
+        (start && user.id === game.isHost ? (
+          <button onClick={hendlerStart} type='submit'>
+            Начать игру
+          </button>
+        ) : (
+          <p>ХОСТ не начал игру</p>
+        ))}
+      {game.game.isPanding && <p>Ждем Игроков ...</p>}
     </>
   );
 }

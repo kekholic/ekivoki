@@ -1,19 +1,15 @@
 /* eslint-disable comma-dangle */
 // import axios from 'axios';
-import React, { SyntheticEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux';
 import { IGame } from '../../../models/IGame';
 import {
   getGame,
-  incrementCountPlayers,
   playersConnection,
 } from '../../../store/reducers/actionCreators';
-import { choiceGame } from '../../../store/reducers/gameSlice';
 
 type Props = {};
-
-let aaap = false;
 
 export default function GameList({}: Props) {
   const [value, setValue] = useState('');
@@ -31,7 +27,6 @@ export default function GameList({}: Props) {
   const handleClick = (gameInner: IGame) => {
     dispatch(playersConnection({ id: gameInner.id, user }));
     // dispatch(choiceGame(game));
-    aaap = true;
   };
 
   useEffect(() => {
@@ -45,14 +40,14 @@ export default function GameList({}: Props) {
           <p>{gameInner.title}</p>
           <input
             value={value}
-            type='text'
-            name='password'
-            placeholder='Введите пароль'
+            type="text"
+            name="password"
+            placeholder="Введите пароль"
             onChange={(e) => {
               setValue(e.target.value);
             }}
           />
-          <button type='submit' onClick={() => handleClick(gameInner)}>
+          <button type="submit" onClick={() => handleClick(gameInner)}>
             Выбрать игру
           </button>
         </div>
