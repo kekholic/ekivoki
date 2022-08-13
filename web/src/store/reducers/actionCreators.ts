@@ -14,7 +14,7 @@ export const getAuth = createAsyncThunk(
       );
       localStorage.setItem('token', res.data.accessToken);
       localStorage.setItem('user', JSON.stringify(res.data.user));
-      return res.data;
+      return res.data.user;
     } catch (err) {
       return thunkAPI.rejectWithValue('Ошибка');
     }

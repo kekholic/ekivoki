@@ -150,7 +150,7 @@ io.on('connection', (socket) => {
   socket.on('game', (msg) => {
     switch (msg.method) {
       case 'initState':
-        io.to(msg.roomID).emit('gameAnswers', msg);
+        socket.to(msg.roomID).emit('gameAnswers', msg);
         break;
       default:
         break;

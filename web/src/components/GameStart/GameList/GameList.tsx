@@ -23,7 +23,7 @@ export default function GameList() {
   }, []);
 
   const handleClick = (gameInner: IGame) => {
-    dispatch(playersConnection({ id: gameInner.id, user: user.user.user }));
+    dispatch(playersConnection({ id: gameInner.id, user: user.user }));
     // dispatch(choiceGame(game));
   };
 
