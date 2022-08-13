@@ -58,6 +58,8 @@ class GameController {
     console.log('eq.body: ', req.body);
     const gameBD = await prisma.game.findUnique({ where: { id } });
     console.log('game: ', gameBD);
+    delete gameBD.createdAt;
+    delete gameBD.updatedAt;
     const userNGame = await prisma.userNGame.create({
       data: {
         gameId: gameBD.id,
@@ -88,9 +90,7 @@ class GameController {
     userList.sort((prev, curr) => prev.id - curr.id);
     const game = {
       game: gameBD,
-      isCanvas: false,
       playersPriority: userList,
-      isHost: null,
       progress: [],
     };
     res.json(game);

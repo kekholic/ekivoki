@@ -14,7 +14,7 @@ import {
 interface GameState {
   game: IGame;
   isCanvas: boolean;
-  playersPriority: Array< Object>;
+  playersPriority: Array<Object>;
   isHost: number | null;
   progress: Array<Object>;
   isLoading: boolean;
@@ -47,8 +47,8 @@ export const gameSlice = createSlice({
       state.game = action.payload;
     },
   },
-    extraReducers: {
-      // register new game
+  extraReducers: {
+    // register new game
     [createGame.fulfilled.type]: (state, action: PayloadAction<any>) => {
       state.isLoading = false;
       state.error = '';
@@ -64,7 +64,7 @@ export const gameSlice = createSlice({
     },
     [incrementCountPlayers.fulfilled.type]: (
       state,
-      action: PayloadAction<Object>
+      action: PayloadAction<Object>,
     ) => {
       state.isLoading = false;
       state.error = '';
@@ -76,7 +76,7 @@ export const gameSlice = createSlice({
     },
     [incrementCountPlayers.rejected.type]: (
       state,
-      action: PayloadAction<string>
+      action: PayloadAction<string>,
     ) => {
       state.isLoading = false;
       state.error = action.payload;
@@ -92,7 +92,7 @@ export const gameSlice = createSlice({
     },
     [decrementCountPlayers.rejected.type]: (
       state,
-      action: PayloadAction<string>
+      action: PayloadAction<string>,
     ) => {
       state.isLoading = false;
       state.error = action.payload;
@@ -122,7 +122,9 @@ export const gameSlice = createSlice({
       state.error = action.payload;
     },
     [playersConnection.fulfilled.type]: (state, action: PayloadAction<GameState>) => {
-      state = action.payload;
+      state.game = action.payload.game;
+      state.playersPriority = action.payload.playersPriority;
+
       state.error = '';
       state.isLoading = false;
     },
@@ -131,6 +133,7 @@ export const gameSlice = createSlice({
     },
     [playersConnection.rejected.type]: (state, action: PayloadAction<string>) => {
       state.isLoading = false;
+
       state.error = action.payload;
     },
     // 1 изменять поле игроков:done

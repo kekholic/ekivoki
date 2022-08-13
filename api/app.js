@@ -19,12 +19,7 @@ const io = require('socket.io')(server, {
   },
 });
 
-// const WSServer = require('express-ws')(app);
-
-// module.exports = WSServer;
 const errorMiddleware = require('./src/middlewares/error-middleware');
-
-// const GameController = require('./src/controllers/gameControllers');
 
 const { PORT } = process.env; // получение переменных env
 
@@ -38,13 +33,10 @@ app.use(cors(corsOptions));
 
 app.use(cookieParser());
 
-// const aWss = WSServer.getWss();
-
 const authRouter = require('./src/routes/authRouter');
 const gameRouter = require('./src/routes/gameRouter');
 const ACTIONS = require('./wsforchat/actions');
 // const authMiddleware = require('./src/middlewares/authMiddleware');
-// const gameService = require('./src/service/gameService');
 
 app.use(express.static(path.join(__dirname, 'public'))); // подключение  public директории
 
@@ -153,19 +145,6 @@ io.on('connection', (socket) => {
     });
 
     socket.join(roomID);
-
-    // setTimeout(() => {
-    //   // io.to(roomID).emit('OloloAnswer', {
-    //   //   answer: '123',
-    //   // });
-    //   console.log(io.sockets.adapter.rooms.has(roomID), 'boolean');
-    //   io.to('9').emit('OloloAnswer', 'test');
-    // }, 3000);
-    // // console.log(Array.from(io.sockets.adapter.rooms.get(roomID)), 'lOOOOOOOOOOOl');
-    // // socket.emit('OloloAnswer', { roomID, answer: 'Ti dibil' });
-    // // io.sockets.in(roomID).emit('OloloAnswer', 'You are in room');
-    // // socket.emit('OloloAnswer', roomID);
-    // Array.from(io.sockets.adapter.rooms.get(roomID));
   });
 
   socket.on('OlologMessage', (data) => {
@@ -174,36 +153,10 @@ io.on('connection', (socket) => {
 
     console.log(socket.id, 'socket/.id');
     setTimeout(() => {
-      // io.to(roomID).emit('OloloAnswer', {
-      //   answer: '123',
-      // });
-      // console.log(io.sockets.adapter.rooms.has(data.roomID), 'boolean');
-      // console.log(socket);
-      // console.log(socket.to(data.roomID).adapter.rooms, 'lollllllllllll');
       io.to(data.roomID).emit('OloloAnswer', 'xuy');
-      // const allUsersRoom = Array.from(socket.to(data.roomID).adapter.rooms.get(data.roomID));
+
       console.log(socket.id);
-      // allUsersRoom.forEach((user) => {
-      //   io.to(user).emit('OloloAnswer', {
-      //     peerID: user,
-      //     msg: 'xuy',
-      //   });
-      // });
-      // socket.emit('OloloAnswer', 'test');
     }, 3000);
-    // console.log(Array.from(io.sockets.adapter.rooms.get(roomID)), 'lOOOOOOOOOOOl');
-    // socket.emit('OloloAnswer', { roomID, answer: 'Ti dibil' });
-    // io.sockets.in(roomID).emit('OloloAnswer', 'You are in room');
-    // socket.emit('OloloAnswer', roomID);
-
-    // io.in(socket.id).emit('OloloAnswer', {
-    //   answer: 'Ti dibil',
-    // });
-
-    // console.log(io.sockets.adapter.rooms.get(data.roomID), 'lOOOOOOOOOOOl2');
-    // io.in('9').emit('OloloAnswer', {
-    //   answer: 'Ti dibil',
-    // });
   });
 
   function leaveRoom() {
