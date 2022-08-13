@@ -18,7 +18,7 @@ html,body{
 	width: 100%;
 	font-size: 100%;
 	line-height: 1;
-	font-size: 1.4vh;
+	font-size: 14px;
 	-ms-text-size-adjust: 100%;
 	-moz-text-size-adjust: 100%;
 	-webkit-text-size-adjust: 100%;
@@ -39,6 +39,9 @@ h1,h2,h3,h4,h5,h6{font-size: inherit;font-weight: inherit;}
 html,
 body {
   height: 100%;
+}
+
+body{
   background: url(../public/image/background1.jpg) no-repeat center center fixed;
   background-size: cover;
 }
@@ -46,15 +49,25 @@ body {
 .wrapper {
   min-height: 100%;
   display: flex;
-  text-align: center;
   flex-direction: column;
 }
 
 
 .main {
-  height: calc(100vh - 12.5vh);
-  display:inline-flex;
+  height: calc(100vh - 88px);
+  display:flex;
   justify-content: center;
   align-items: center;
-  flex-grow: 1;
+}
+
+@media (max-width: 768px){
+  .container{
+    width: 80%;
+  }
+}
+
+@media (max-width: 568px){
+  .container{
+    width: 90%;
+  }
 }
