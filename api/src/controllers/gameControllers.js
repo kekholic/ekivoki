@@ -54,11 +54,17 @@ class GameController {
 
   async connectionGame(req, res, next) {
     const { id, user } = req.body;
-    console.log('eq.body: ', req.body);
-    const gameBD = await prisma.game.findUnique({ where: { id } });
-    console.log('game: ', gameBD);
+    const gameBD = await prisma.game.update({
+      where: { id },
+      data: {
+        countPlayers: {
+          increment: 1,
+        },
+      },
+    });
     delete gameBD.createdAt;
     delete gameBD.updatedAt;
+    console.log('gameBD: ', gameBD);
     const userNGame = await prisma.userNGame.create({
       data: {
         gameId: gameBD.id,

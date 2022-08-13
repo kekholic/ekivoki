@@ -108,13 +108,16 @@ export default function GameMain() {
     if (game.game.countPlayers === game.game.maxPlayers) {
       setStart(true);
       // dispatchEvent(getQuestion());
+      if (user.id === game.isHost) {
+        sendMessageGameState(game, id, user);
+      }
     }
   }, [game]);
+
   const hendlerStart = () => {
     dispatch(startGame({ id: game.game.id, isPanding: false }));
-    setQuestionCard(true);
     setStart(false);
-    sendMessageGameState(game, id, user);
+    setQuestionCard(true);
   };
 
   // рукопожатие сокет
@@ -133,15 +136,15 @@ export default function GameMain() {
           <QuestionCard />
         </div>
       )}
-      {start
-        && (start && user.id === game.isHost ? (
+      {game.game.isPanding && start
+        && ((start && user.id === game.isHost) ? (
           <button onClick={hendlerStart} type="submit">
             Начать игру
           </button>
         ) : (
           <p>ХОСТ не начал игру</p>
         ))}
-      {game.game.isPanding && <p>Ждем Игроков ...</p>}
+      {!start && game.game.isPanding && <p>Ждем Игроков ...</p>}
     </>
   );
 }
