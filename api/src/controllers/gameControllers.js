@@ -17,11 +17,8 @@ class GameController {
           password,
           maxPlayers: +maxPlayers,
           countPlayers,
-          isPanding: true,
-          isdone: false,
         },
       });
-     
 
       const userNgames = await prisma.userNGame.create({
         data: {
@@ -45,9 +42,7 @@ class GameController {
 
   async searchGame(req, res, next) {
     try {
-      const allGame = await prisma.game.findMany({
-        where: { isPanding: true },
-      });
+      const allGame = await gameService.searchGame();
       res.json(allGame);
     } catch (error) {
       next(error);
@@ -56,7 +51,6 @@ class GameController {
 
   async addGame(req, res, next) {
     const { id, userId, username } = req.body;
-    
 
     try {
       const userNgame = await prisma.userNGame.create({
@@ -70,6 +64,16 @@ class GameController {
         userId: userNgame.userId,
         username,
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async checkStatusGame(req, res, next) {
+    const { id } = req.body;
+    try {
+      const status = await gameService.checkStatusGame(id);
+      res.json({ status });
     } catch (error) {
       next(error);
     }

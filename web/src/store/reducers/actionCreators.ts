@@ -88,3 +88,5 @@ export const endGame = createAsyncThunk('game/endGame', async (data: Object, thu
     return thunkAPI.rejectWithValue('Ошибка');
   }
 });
+
+

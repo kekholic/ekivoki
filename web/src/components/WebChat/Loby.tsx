@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { v4 } from 'uuid';
 import { useNavigate } from 'react-router';
 import socket from '../../socket';
-import ACTIONS from '../../socket/actions';
+import ACTIONS from '../../actions/wsActions';
 
 export default function Loby() {
   const [sRooms, setRooms] = useState([]);

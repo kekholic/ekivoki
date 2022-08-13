@@ -42,7 +42,9 @@ app.use(cookieParser());
 
 const authRouter = require('./src/routes/authRouter');
 const gameRouter = require('./src/routes/gameRouter');
-const ACTIONS = require('./wsforchat/actions');
+const ACTIONS = require('./src/actions/wsActions');
+const gameControllers = require('./src/controllers/gameControllers');
+const gameService = require('./src/service/gameService');
 // const authMiddleware = require('./src/middlewares/authMiddleware');
 // const gameService = require('./src/service/gameService');
 
@@ -96,8 +98,8 @@ app.use('/game', gameRouter);
 //   socket.on('send_message', (msg) => {
 //     socket.to(msg.id).emit('resive_message', msg);
 //   });
-//   // const message = JSON.parse(msg);
-//   /* switch (message.method) {
+//   const message = JSON.parse(msg);
+//    switch (message.method) {
 //       case 'connection':
 //         gameService.gameConnections(ws, mesg);
 //         break;
@@ -107,26 +109,47 @@ app.use('/game', gameRouter);
 
 //       default:
 //         break;
-//     } */
-//   // socket.broadcast.emit('resive_message', msg);
+//     }
+//   socket.broadcast.emit('resive_message', msg);
 // });
 
-// // const connectionHandler = (ws, msg) => {
-// //   ws.id = msg.id;
-// //   broadcastConnection(ws, msg);
-// // };
+// const connectionHandler = (ws, msg) => {
+//   ws.id = msg.id;
+//   broadcastConnection(ws, msg);
+// };
 
-// // const broadcastConnection = (ws, msg) => {
-// //   aWss.clients.forEach((client) => {
-// //     client.send(JSON.stringify(msg));
-// //     if (client.id === msg.id) {
-// //     }
-// //   });
-// // };
+// const broadcastConnection = (ws, msg) => {
+//   aWss.clients.forEach((client) => {
+//     client.send(JSON.stringify(msg));
+//     if (client.id === msg.id) {
+//     }
+//   });
+// };
+
+async function getClientRooms() {
+  const { rooms } = io.sockets.adapter;
+  
+  const allgamePading = await gameService.searchGame();
+
+  const arrGame = Array.from(rooms.keys());
+  
+  const newarrGame = allgamePading.filter((game) => arrGame.includes(String(game.id)));
+
+  return newarrGame;
+}
+
+async function shareRoomsInfo() {
+  io.emit(ACTIONS.SHARE_ROOMS, {
+    rooms: await getClientRooms(),
+  });
+}
 
 io.on('connection', (socket) => {
-  // shareRoomsInfo();
+  shareRoomsInfo();
   console.log('socket connection');
+  socket.on(ACTIONS.SHARE_ROOMS, () => {
+    shareRoomsInfo();
+  });
 
   socket.on(ACTIONS.JOIN, (config) => {
     const { room: roomID } = config;
@@ -153,7 +176,7 @@ io.on('connection', (socket) => {
     });
 
     socket.join(roomID);
-
+    shareRoomsInfo();
     // setTimeout(() => {
     //   // io.to(roomID).emit('OloloAnswer', {
     //   //   answer: '123',
@@ -223,7 +246,7 @@ io.on('connection', (socket) => {
         });
         socket.leave(roomID);
       });
-    // shareRoomsInfo();
+    shareRoomsInfo();
   }
 
   socket.on(ACTIONS.LEAVE, leaveRoom);

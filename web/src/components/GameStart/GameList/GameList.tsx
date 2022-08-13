@@ -4,6 +4,8 @@ import React, { SyntheticEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux';
 import { IGame } from '../../../models/IGame';
+import socket from '../../../socket';
+import ACTIONS from '../../../actions/wsActions';
 import {
   getGame,
   incrementCountPlayers,
@@ -24,6 +26,18 @@ export default function GameList({}: Props) {
     dispatch(getGame());
   }, []);
 
+  const [activeLobby, setActiveLobby] = useState([]);
+
+  useEffect(() => {
+    socket.on(ACTIONS.SHARE_ROOMS, ({ rooms = [] }) => {
+      setActiveLobby(rooms);
+    });
+  }, []);
+
+  useEffect(() => {
+    socket.emit(ACTIONS.SHARE_ROOMS);
+  }, []);
+
   const handleClick = (game: IGame) => {
     dispatch(
       incrementCountPlayers({
@@ -38,7 +52,7 @@ export default function GameList({}: Props) {
 
   return (
     <>
-      {games.map((game) => (
+      {activeLobby.map((game) => (
         <div key={game.id}>
           <p>{game.title}</p>
           <input
