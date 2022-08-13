@@ -12,9 +12,9 @@ function App() {
         <NavBar />
       </header>
       <main className="main">
-
-        <MainRoutes />
-
+        <div className="container">
+          <MainRoutes />
+        </div>
       </main>
     </BrowserRouter>
   );
