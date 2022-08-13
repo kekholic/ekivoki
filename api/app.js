@@ -153,28 +153,41 @@ io.on('connection', (socket) => {
 
     console.log(socket.id, 'socket/.id');
     setTimeout(() => {
+      // io.to(roomID).emit('OloloAnswer', {
+      //   answer: '123',
+      // });
+      // console.log(io.sockets.adapter.rooms.has(data.roomID), 'boolean');
+      // console.log(socket);
+      // console.log(socket.to(data.roomID).adapter.rooms, 'lollllllllllll');
       io.to(data.roomID).emit('OloloAnswer', 'xuy');
-
-      console.log(socket.id);
+      // const allUsersRoom = Array.from(socket.to(data.roomID).adapter.rooms.get(data.roomID));
+      // console.log(socket.id);
+      // allUsersRoom.forEach((user) => {
+      //   console.log(user, ' uSSSSSSSSSSSSSSSSSSSSSSSEEEEEEEEEEEEEEER');
+      //   io.to(user).emit('OloloAnswer', {
+      //     peerID: user,
+      //     msg: 'xuy',
+      //   });
+      // });
+      // socket.emit('OloloAnswer', 'test');
     }, 3000);
   });
 
   function leaveRoom() {
     const { rooms } = socket;
-    Array.from(rooms)
-      .forEach((roomID) => {
-        const clients = Array.from(io.sockets.adapter.rooms.get(roomID) || []);
-        clients.forEach((clientID) => {
-          io.to(clientID).emit(ACTIONS.REMOVE_PEER, {
-            peerID: socket.id,
-          });
-
-          socket.emit(ACTIONS.REMOVE_PEER, {
-            peerID: clientID,
-          });
+    Array.from(rooms).forEach((roomID) => {
+      const clients = Array.from(io.sockets.adapter.rooms.get(roomID) || []);
+      clients.forEach((clientID) => {
+        io.to(clientID).emit(ACTIONS.REMOVE_PEER, {
+          peerID: socket.id,
         });
-        socket.leave(roomID);
+
+        socket.emit(ACTIONS.REMOVE_PEER, {
+          peerID: clientID,
+        });
       });
+      socket.leave(roomID);
+    });
     // shareRoomsInfo();
   }
 

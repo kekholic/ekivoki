@@ -6,20 +6,24 @@ import {
 // import io from 'socket.io-client';
 // import { createModuleResolutionCache } from 'typescript';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { sendMessageGameState } from '../../lib/game/gameUpdate';
-import socket from '../../socket';
-import { startGame } from '../../store/reducers/actionCreators';
-import { updateGameState } from '../../store/reducers/gameSlice';
-// import CameraContainer from '../CameraContainer/CameraContainer';
+import {
+  incrementCountPlayers,
+  // startGame,
+} from '../../store/reducers/actionCreators';
+import CameraContainer from '../CameraContainer/CameraContainer';
 import QuestionCard from '../QuestionCard/QuestionCard';
 import VideoComponent from '../WebChat/VideoComponent';
 
-// const options = {
-//   'force new connection': true,
-//   reconnecctionAttempts: 'infinity',
-//   timeout: 10000,
-//   transport: ['websocket'],
-// };
+type Props = {};
+
+const options = {
+  'force new connection': true,
+  reconnecctionAttempts: 'infinity',
+  timeout: 10000,
+  transport: ['websocket', 'polling'],
+};
+
+const socket = io(`${process.env.REACT_APP_API_URL}`, options);
 
 // TODO:
 // отрисовка шаблона: камеры, место для карточки с вопросом, место для боарда.

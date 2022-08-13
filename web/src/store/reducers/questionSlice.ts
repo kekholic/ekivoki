@@ -1,2 +1,2 @@
-const questionSlice = () => { };
+const questionSlice = () => {};
 export default questionSlice;

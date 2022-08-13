@@ -41,23 +41,26 @@ export default function Form({ auth }: IProps): ReactElement {
 
   return (
     <div className={style.authForm}>
+      {auth
+        ? <h1 className={style.formTitle}>Зарегистрироваться</h1>
+        : <h1 className={style.formTitle}>Войти</h1>}
       <form className={style.submitForm} onSubmit={submitHandler}>
         {auth
         && (
           <>
             <label className={style.label} htmlFor="username">Имя</label>
-            <input type="text" name="username" id="username" />
+            <input className={style.authInput} type="text" name="username" id="username" />
           </>
         )}
         <label className={style.label} htmlFor="email">Email</label>
-        <input type="text" name="email" id="email" />
+        <input className={style.authInput} type="text" name="email" id="email" />
         <label className={style.label} htmlFor="password">Пароль</label>
-        <input type="password" name="password" id="password" />
+        <input className={style.authInput} type="password" name="password" id="password" />
         {auth
           ? (
             <>
               <label className={style.label} htmlFor="repeatPassword">Повторите пароль</label>
-              <input type="password" name="repeatPassword" id="repeatPassword" />
+              <input className={style.authInput} type="password" name="repeatPassword" id="repeatPassword" />
               <button className={style.authButton} type="submit">Зарегистрироваться</button>
             </>
           )

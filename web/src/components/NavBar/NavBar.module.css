@@ -5,51 +5,55 @@
 
 .header__container{
   display: flex;
-  height: 12.5vh;
   margin: 0 auto;
   align-items: center;
-  justify-content: space-around;
-  max-width: 80%;
+  justify-content: space-between;
+  max-width: 1400px;
+  padding: 20px 15px 0;
 }
 
 
 .link{
-  padding: 1.2vw 2vw;
+  padding: 12px 20px;
   text-decoration: none;
   font-family: 'Montserrat';
-  box-shadow: 0 0.6vh 0.6vh rgb(0 0 0 / 35%);
+  box-shadow: 0 6px 6px rgb(0 0 0 / 35%);
   font-style: normal;
   font-weight: 700;
-  font-size: 3.2vh;
+  font-size: 32px;
   color: #F8F8F8;
   background: #206EB0;
-  border-radius: 1.2vh;
-  letter-spacing: 0.2vw;
+  border-radius: 12px;
+  letter-spacing: 2px;
   transition: 0.2s;
+}
+
+.link + .link {
+  margin-left: 20px;
 }
 
 .link:hover{
   background: #459be1;
-  transform: translateY(-0.5vh);
-  box-shadow: 0 0.7vh 0 #0c426f;
+  transform: translateY(-5px);
+  box-shadow: 0 7px 0 #0c426f;
 }
 
 .link:active{
-  transform: translateY(-0.2vh);
-  box-shadow: 0 0.3vh 0 #0c426f;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 0 #0c426f;
 }
 
 .header_logo{
-  text-shadow:0vh 0.3vh 0 rgb(0,0,0),0vh -0.1vh 0 rgb(0,0,0),0.1vh 0vh 0 rgb(0,0,0),-0.1vh 0vh 0 rgb(0,0,0),0.1vh 0.1vh 0 rgb(0,0,0),0.1vh -0.1vh 0 rgb(0,0,0),-0.1vh 0.1vh 0 rgb(0,0,0),-0.1vh -0.1vh 0 rgb(0,0,0);
-  -webkit-text-shadow:0vh 0.3vh 0 rgb(0,0,0),0vh -0.1vh 0 rgb(0,0,0),0.1vh 0vh 0 rgb(0,0,0),-0.1vh 0vh 0 rgb(0,0,0),0.1vh 0.1vh 0 rgb(0,0,0),0.1vh -0.1vh 0 rgb(0,0,0),-0.1vh 0.1vh 0 rgb(0,0,0),-0.1vh -0.1vh 0 rgb(0,0,0);
-  -moz-text-shadow:0vh 0.1vh 0 rgb(0,0,0),0vh -0.1vh 0 rgb(0,0,0),0.1vh 0vh 0 rgb(0,0,0),-0.1vh 0vh 0 rgb(0,0,0),0.1vh 0.1vh 0 rgb(0,0,0),0.1vh -0.1vh 0 rgb(0,0,0),-0.1vh 0.1vh 0 rgb(0,0,0),-0.1vh -0.1vh 0 rgb(0,0,0);
-  font-size: 6.8vh;
+  text-shadow:0px 3px 0 rgb(0,0,0),0px -1px 0 rgb(0,0,0),1px 0px 0 rgb(0,0,0),-1px 0px 0 rgb(0,0,0),1px 1px 0 rgb(0,0,0),1px -1px 0 rgb(0,0,0),-1px 1px 0 rgb(0,0,0),-1px -1px 0 rgb(0,0,0);
+  -webkit-text-shadow:0px 3px 0 rgb(0,0,0),0px -1px 0 rgb(0,0,0),1px 0px 0 rgb(0,0,0),-1px 0px 0 rgb(0,0,0),1px 1px 0 rgb(0,0,0),1px -1px 0 rgb(0,0,0),-1px 1px 0 rgb(0,0,0),-1px -1px 0 rgb(0,0,0);
+  -moz-text-shadow:0px 1px 0 rgb(0,0,0),0px -1px 0 rgb(0,0,0),1px 0px 0 rgb(0,0,0),-1px 0px 0 rgb(0,0,0),1px 1px 0 rgb(0,0,0),1px -1px 0 rgb(0,0,0),-1px 1px 0 rgb(0,0,0),-1px -1px 0 rgb(0,0,0);
+  font-size: 68px;
   color:rgb(255, 255, 255);
   font-family: 'Caveat', cursive;
+  display: block;
   }
 
 .haeder_menu{
   display: flex;
   justify-content: start;
-  gap: 9%;
 }
