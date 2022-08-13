@@ -42,7 +42,8 @@ export default function GameInit() {
   useEffect(() => {
     if (input.title) {
       console.log('user: ', user);
-      dispatch(createGame({ ...input, ...user }));
+      // const userObj = user.user
+      dispatch(createGame({...input, ...user }));
     }
   }, [input]);
 
