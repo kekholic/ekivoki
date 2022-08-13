@@ -7,6 +7,7 @@ import {
   decrementCountPlayers,
   endGame,
   incrementCountPlayers,
+  playersConnection,
   startGame,
 } from './actionCreators';
 
@@ -117,6 +118,18 @@ export const gameSlice = createSlice({
       state.isLoading = true;
     },
     [endGame.rejected.type]: (state, action: PayloadAction<string>) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    [playersConnection.fulfilled.type]: (state, action: PayloadAction<GameState>) => {
+      state = action.payload;
+      state.error = '';
+      state.isLoading = false;
+    },
+    [playersConnection.pending.type]: (state) => {
+      state.isLoading = true;
+    },
+    [playersConnection.rejected.type]: (state, action: PayloadAction<string>) => {
       state.isLoading = false;
       state.error = action.payload;
     },

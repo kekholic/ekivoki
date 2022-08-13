@@ -42,19 +42,30 @@ const socket = io(`${process.env.REACT_APP_API_URL}`, options);
 export default function GameMain({ }: Props) {
   const [start, setStart] = useState(false);
   const { user } = useAppSelector((store) => store.user);
-  const { game } = useAppSelector((store) => store.game);
+  const { game } = useAppSelector((store) => store);
   const { id } = useParams();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    socket.emit('OlologMessage', {
+    socket.emit('gameConnection', {
       roomID: id,
-      message: 'Hello',
+      user,
+      method: 'firstInit',
     });
     // console.log('zahel');
 
-    socket.on('OloloAnswer', (data) => {
-      console.log('d=v gaim main', data);
+    socket.on('gameConnectionAnswer', (msg) => {
+      if (game.playersPriority.indexOf(user.id) === 0) {
+        dispatch(incrementCountPlayers({ userId: msg.user.id, username: msg.user.username }));
+        if (!game.isLoading) {
+          socket.emit('newStateGame', {
+            roomID: id,
+            game,
+            user,
+            method: 'choiseGameState',
+          });
+        }
+      }
     });
     // console.log('pfkegf');
     // socket.emit('join_room', {
