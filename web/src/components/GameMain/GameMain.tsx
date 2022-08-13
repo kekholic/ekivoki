@@ -6,6 +6,7 @@ import {
 import io from 'socket.io-client';
 // import { createModuleResolutionCache } from 'typescript';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import socket from '../../socket';
 import {
   incrementCountPlayers,
   // startGame,
@@ -16,14 +17,14 @@ import VideoComponent from '../WebChat/VideoComponent';
 
 type Props = {};
 
-const options = {
-  'force new connection': true,
-  reconnecctionAttempts: 'infinity',
-  timeout: 10000,
-  transport: ['websocket', 'polling'],
-};
+// const options = {
+//   'force new connection': true,
+//   reconnecctionAttempts: 'infinity',
+//   timeout: 10000,
+//   transport: ['websocket', 'polling'],
+// };
 
-const socket = io(`${process.env.REACT_APP_API_URL}`, options);
+// const socket = io(`${process.env.REACT_APP_API_URL}`, options);
 
 // TODO:
 // отрисовка шаблона: камеры, место для карточки с вопросом, место для боарда.
