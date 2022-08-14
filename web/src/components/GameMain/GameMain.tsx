@@ -2,15 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
-  sendMessageGameState,
-  tryAnswer,
-  updateQuestionState,
-  updateVisibleState,
+  // sendMessageGameState,
+  sendNewGameState,
+  // tryAnswer,
+  // updateQuestionState,
+  // updateVisibleState,
 } from '../../lib/game/gameUpdate';
 import socket from '../../socket';
-import { getCard } from '../../store/reducers/actionCreators';
-import { updateGameState } from '../../store/reducers/gameSlice';
-import { newQuestionState } from '../../store/reducers/questionSlice';
+import { updateCanSendStatus } from '../../store/reducers/authSlice';
+// import { getCard } from '../../store/reducers/actionCreators';
+import { playerJoinedUpdateState, updateGameState } from '../../store/reducers/gameSlice';
+// import { updateGameState } from '../../store/reducers/gameSlice';
+// import { newQuestionState } from '../../store/reducers/questionSlice';
 import ModalAnswerCard from '../ModalAnswerCard/ModalAnswerCard';
 import QuestionCard from '../QuestionCard/QuestionCard';
 import VideoComponent from '../WebChat/VideoComponent';
@@ -30,100 +33,125 @@ import VideoComponent from '../WebChat/VideoComponent';
 }); */
 
 export default function GameMain() {
-  const [visible, setVisible] = useState({
-    start: false,
-    waiting: true,
-    questionCard: false,
-    visibleHostButton: false,
-    dontHost: false,
-    count: true,
-  });
+  // const [visible, setVisible] = useState({
+  //   start: false,
+  //   waiting: true,
+  //   questionCard: false,
+  //   visibleHostButton: false,
+  //   dontHost: false,
+  //   count: true,
+  // });
+
   const [variableUser, setVariableUser] = useState({
     modalVisibly: false,
     currentUserIdForAnswer: null,
     currentUsernameForAnswer: '',
   });
-  const { user } = useAppSelector((store) => store.user);
+  const user = useAppSelector((store) => store.user);
   const { game } = useAppSelector((store) => store);
   const question = useAppSelector((store) => store.question);
   const { id } = useParams();
   const dispatch = useAppDispatch();
 
+  const oldIsHost = game.isHost;
+
   useEffect(() => {
-    sendMessageGameState(game, id, user);
-    socket.on('gameAnswers', (msg) => {
-      switch (msg.method) {
-        case 'initState':
-          dispatch(updateGameState(msg.game));
-          break;
-        case 'visibleState':
-          console.log('msg.visible:', msg.visible);
-          setVisible({ ...msg.visible });
-          break;
-        case 'questionState':
-          dispatch(newQuestionState(msg.question));
-          break;
-        case 'tryAnswer':
-          setVariableUser((prev) => ({
-            ...prev,
-            modalVisibly: true,
-            currentUserIdForAnswer: msg.user.id,
-            currentUsernameForAnswer: msg.user.username,
-          }));
-          break;
-        case 'wrongAnswer':
-          setVariableUser({
-            modalVisibly: false,
-            currentUserIdForAnswer: null,
-            currentUsernameForAnswer: '',
-          });
-          break;
-        default:
-          break;
+    // sendMessageGameState(game, id, user);
+
+    socket.on('playerJoined', (player) => {
+      if (user.canSendMessage) {
+        dispatch(playerJoinedUpdateState(player));
       }
     });
+
+    socket.on('sendNewGameStateBack', (msg) => {
+      dispatch(updateGameState(msg.game));
+    });
+    // socket.on('gameAnswers', (msg) => {
+    //   switch (msg.method) {
+    //     case 'initState':
+    //       dispatch(updateGameState(msg.game));
+    //       break;
+    // case 'visibleState':
+    //   console.log('msg.visible:', msg.visible);
+    //   setVisible({ ...msg.visible });
+    //   break;
+    // case 'questionState':
+    //   dispatch(newQuestionState(msg.question));
+    //   break;
+    // case 'tryAnswer':
+    //   setVariableUser((prev) => ({
+    //     ...prev,
+    //     modalVisibly: true,
+    //     currentUserIdForAnswer: msg.user.id,
+    //     currentUsernameForAnswer: msg.user.username,
+    //   }));
+    //   break;
+    // case 'wrongAnswer':
+    //   setVariableUser({
+    //     modalVisibly: false,
+    //     currentUserIdForAnswer: null,
+    //     currentUsernameForAnswer: '',
+    //   });
+    //   break;
+    //     default:
+    //       break;
+    //   }
+    // });
   }, [socket]);
 
   useEffect(() => {
-    if (visible.start && visible.count) {
-      if (user.id === game.isHost) {
-        console.log('setVisibleHostButton: ');
-        setVisible((prev) => ({
-          ...prev,
-          visibleHostButton: true,
-          count: false,
-        }));
-      } else {
-        setVisible((prev) => ({ ...prev, dontHost: true }));
+    if (user.canSendMessage) {
+      sendNewGameState(game, String(game.game.id));
+      if (user.user.id !== game.isHost) {
+        dispatch(updateCanSendStatus(false));
       }
     }
-  }, [visible.start]);
-
-  useEffect(() => {
-    if (game.game.countPlayers === game.game.maxPlayers) {
-      console.log('Зашли епта');
-      setVisible((prev) => ({
-        ...prev,
-        waiting: false,
-        start: true,
-      }));
-      console.log(visible);
-      if (user.id === game.isHost) {
-        sendMessageGameState(game, id, user);
-        dispatch(getCard({ id: question.id }));
-      }
+    if (user.user.id === game.isHost) {
+      dispatch(updateCanSendStatus(true));
     }
   }, [game]);
 
-  useEffect(() => {
-    if (user.id === game.isHost) {
-      updateQuestionState(question, id);
-    }
-  }, [question]);
+  // useEffect(() => {
+  //   if (visible.start && visible.count) {
+  //     if (user.id === game.isHost) {
+  //       console.log('setVisibleHostButton: ');
+  //       setVisible((prev) => ({
+  //         ...prev,
+  //         visibleHostButton: true,
+  //         count: false,
+  //       }));
+  //     } else {
+  //       setVisible((prev) => ({ ...prev, dontHost: true }));
+  //     }
+  //   }
+  // }, [visible.start]);
 
-  const submitHandlerAnswer = () => {
-    tryAnswer(user, id);
-  };
+  // useEffect(() => {
+  //   if (game.game.countPlayers === game.game.maxPlayers) {
+  //     console.log('Зашли епта');
+  //     setVisible((prev) => ({
+  //       ...prev,
+  //       waiting: false,
+  //       start: true,
+  //     }));
+  //     console.log(visible);
+  //     if (user.id === game.isHost) {
+  //       sendMessageGameState(game, id, user);
+  //       dispatch(getCard({ id: question.id }));
+  //     }
+  //   }
+  // }, [game]);
+
+  // useEffect(() => {
+  //   if (user.id === game.isHost) {
+  //     updateQuestionState(question, id);
+  //   }
+  // }, [question]);
+
+  // const submitHandlerAnswer = () => {
+  //   tryAnswer(user, id);
+  // };
 
   // const hendlerStart = () => {
   //   dispatch(startGame({ id: game.game.id, isPanding: false }));
@@ -139,22 +167,22 @@ export default function GameMain() {
   //   updateVisibleState(visible, id);
   // };
 
-  useEffect(() => {
-    updateVisibleState(visible, id);
-  }, [visible.questionCard]);
+  // useEffect(() => {
+  //   updateVisibleState(visible, id);
+  // }, [visible.questionCard]);
 
   return (
     <>
       {id && <VideoComponent roomID={id} />}
 
       {/* {visible.questionCard && ( */}
-      <div className='placeQuestion'>
-        {user.id === game.isHost ? (
+      <div className="placeQuestion">
+        {user.user.id === game.isHost ? (
           <p>{question.questionForHost}</p>
         ) : (
           <>
             <p>{question.questionForPlayers}</p>
-            <button onClick={submitHandlerAnswer} type='submit'>
+            <button type="submit">
               Назвать слово!
             </button>
           </>

@@ -6,9 +6,10 @@ const prisma = new PrismaClient();
 
 class GameController {
   async createGame(req, res, next) {
-    const { title, password, maxPlayers, countPlayers, id, username } =
-      req.body;
-    console.log("create game:",req.body);
+    const {
+      title, password, maxPlayers, countPlayers, id, username,
+    } = req.body;
+
     try {
       const newGame = await prisma.game.create({
         data: {
@@ -20,6 +21,8 @@ class GameController {
           isdone: false,
         },
       });
+      delete newGame.createdAt;
+      delete newGame.updatedAt;
 
       const userNgames = await prisma.userNGame.create({
         data: {
@@ -27,14 +30,27 @@ class GameController {
           userId: id,
         },
       });
+
+      const questions = await prisma.card.findMany({
+        select: {
+          id: true,
+          questionForPlayers: true,
+          questionForHost: true,
+          type: true,
+        },
+      });
+      console.log('QUESTIONS', questions);
       const resp = {
         game: {},
         user: {},
+        questions: {},
       };
 
       resp.game = newGame;
       resp.user.username = username;
       resp.user.userId = id;
+      resp.questions = questions;
+      resp.questions.current = 1;
       res.json(resp);
     } catch (error) {
       next(error);
@@ -54,7 +70,6 @@ class GameController {
 
   async connectionGame(req, res, next) {
     const { id, user } = req.body;
-    console.log("connectionGame game:",req.body);
     const gameBD = await prisma.game.update({
       where: { id },
       data: {
@@ -65,14 +80,14 @@ class GameController {
     });
     delete gameBD.createdAt;
     delete gameBD.updatedAt;
-    console.log('gameBD: ', gameBD);
+
     const userNGame = await prisma.userNGame.create({
       data: {
         gameId: gameBD.id,
         userId: user.id,
       },
     });
-    console.log('userNGame: ', userNGame);
+
     const stateGame = await prisma.game.findUnique({
       where: { id },
       include: {
@@ -124,7 +139,7 @@ class GameController {
     }
   }
 
-  async endGame(req, res, next) {}
+  async endGame(req, res, next) { }
 
   async startGame(req, res, next) {
     const { id, isPanding } = req.body;

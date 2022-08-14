@@ -3,16 +3,18 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux';
+import { connectedToTheGame } from '../../../lib/game/gameUpdate';
 import { IGame } from '../../../models/IGame';
+// import socket from '../../../socket';
 import {
   getGame,
-  playersConnection,
+  // playersConnection,
 } from '../../../store/reducers/actionCreators';
 
 export default function GameList() {
   const [value, setValue] = useState('');
   const { games } = useAppSelector((store) => store.allGame);
-  const { game } = useAppSelector((store) => store);
+  // const { game } = useAppSelector((store) => store);
   const user = useAppSelector((store) => store.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -23,17 +25,18 @@ export default function GameList() {
   }, []);
 
   const handleClick = (gameInner: IGame) => {
-    dispatch(playersConnection({ id: gameInner.id, user: user.user }));
-    // dispatch(choiceGame(game));
+    // dispatch(playersConnection({ id: gameInner.id, user: user.user }));
+    connectedToTheGame(String(gameInner.id), user.user);
+    navigate(`/game/${gameInner.id}`);
   };
 
-  useEffect(() => {
-    if (game.playersPriority.length > 1) navigate(`/game/${game.game.id}`);
-  }, [game]);
+  // useEffect(() => {
+  //   if (game.playersPriority.length > 1);
+  // }, [game]);
 
   return (
     <>
-      {games.map((gameInner:IGame) => (
+      {games.map((gameInner: IGame) => (
         <div key={gameInner.id}>
           <p>{gameInner.title}</p>
           <input

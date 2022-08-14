@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import { useDispatch } from 'react-redux';
+// import { useDispatch } from 'react-redux';
 import allGamesSlice from './reducers/allGamesSlice';
 
 // import authReducer from './reducers/authReducer';

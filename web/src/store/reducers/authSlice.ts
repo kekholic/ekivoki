@@ -9,6 +9,7 @@ interface UserState {
   isAuth: boolean;
   isLoading: boolean;
   error: string;
+  canSendMessage: boolean;
 }
 
 const initialState: UserState = {
@@ -18,6 +19,7 @@ const initialState: UserState = {
     id: 0,
     username: '',
   },
+  canSendMessage: false,
   isAuth: false,
   isLoading: false,
   error: '',
@@ -31,8 +33,10 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.isAuth = true;
       state.error = '';
-      console.log('action.payload: ', {...action.payload});
       state.user = { ...action.payload };
+    },
+    updateCanSendStatus(state, action: PayloadAction<boolean>) {
+      state.canSendMessage = action.payload;
     },
   },
   extraReducers: {
@@ -69,4 +73,4 @@ export const authSlice = createSlice({
 });
 
 export default authSlice.reducer;
-export const { getInit } = authSlice.actions;
+export const { getInit, updateCanSendStatus } = authSlice.actions;

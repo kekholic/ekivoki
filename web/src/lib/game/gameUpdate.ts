@@ -66,3 +66,23 @@ export function wrongAnswer(
     method: 'wrongAnswer',
   });
 }
+
+export function connectedToTheGame(
+  id: string | undefined,
+  user: IUser,
+): void {
+  socket.emit('playerJoined', {
+    roomID: id,
+    user,
+  });
+}
+
+export function sendNewGameState(
+  game: GameState,
+  id: string | undefined,
+): void {
+  socket.emit('sendNewGameState', {
+    game,
+    roomID: id,
+  });
+}
