@@ -66,10 +66,9 @@ CREATE TABLE "Collection" (
 CREATE TABLE "Card" (
     "id" SERIAL NOT NULL,
     "collectionId" INTEGER NOT NULL,
-    "title" TEXT NOT NULL,
-    "questions" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
-    "answer" TEXT,
+    "questionForPlayers" TEXT NOT NULL,
+    "questionForHost" TEXT NOT NULL,
+    "type" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

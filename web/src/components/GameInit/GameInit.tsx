@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { createGame } from '../../store/reducers/actionCreators';
+import { updateCanSendStatus } from '../../store/reducers/authSlice';
 
 export default function GameInit() {
   const dispatch = useAppDispatch();
@@ -33,13 +34,14 @@ export default function GameInit() {
       maxPlayers,
       countPlayers: 1,
     });
+    dispatch(updateCanSendStatus(true));
   };
 
   useEffect(() => {
     if (input.title) {
-      console.log('userasasasasasasasasasassa: ', user.user);
-      // const userObj = user.user
-      dispatch(createGame({ ...input, ...user.user }));
+      dispatch(createGame({
+        ...input, ...user.user,
+      }));
     }
   }, [input]);
 
@@ -49,8 +51,6 @@ export default function GameInit() {
     }
   }, [game]);
 
-  // редирект в комнату игры?
-
   return (
     <div>
       <form
@@ -58,18 +58,18 @@ export default function GameInit() {
           submitHandler(e);
         }}
       >
-        <input type='text' name='title' />
-        <input type='password' name='password' />
+        <input type="text" name="title" />
+        <input type="password" name="password" />
 
-        <select name='maxPlayers'>
-          <option value='1'>1</option>
-          <option value='2'>2</option>
-          <option value='3'>3</option>
-          <option value='4'>4</option>
-          <option value='5'>5</option>
-          <option value='6'>6</option>
+        <select name="maxPlayers">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
         </select>
-        <button type='submit'>создать игру</button>
+        <button type="submit">создать игру</button>
       </form>
     </div>
   );

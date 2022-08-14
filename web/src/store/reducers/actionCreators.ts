@@ -42,7 +42,7 @@ export const createGame = createAsyncThunk(
       const res = await $api.post<IDataGame>('/game', data);
       return res.data;
     } catch (err) {
-      return thunkAPI.rejectWithValue('Ошибка');
+      return thunkAPI.rejectWithValue(err);
     }
   },
 );
@@ -113,6 +113,19 @@ export const playersConnection = createAsyncThunk(
     try {
       const res = await $api.post('/game/connections', data); // подготовить к отправке обьект с данными { gameId, user}
       return res.data; // с бэка {new game}
+    } catch (err) {
+      return thunkAPI.rejectWithValue('Ошибка');
+    }
+  },
+);
+
+export const getCard = createAsyncThunk(
+  'question/getCard',
+  async (data: any, thunkAPI) => {
+    try {
+      const res = await $api.post('/question', data); // подготовить к отправке обьект с данными { question.id }
+      console.log(res.data, 'getCard****************************');
+      return res.data; // {question} из бд
     } catch (err) {
       return thunkAPI.rejectWithValue('Ошибка');
     }
