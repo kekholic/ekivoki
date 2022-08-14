@@ -4,8 +4,8 @@ export interface IQuestions {
 }
 
 interface IList {
-  questionForHost?: string,
-  questionForPlayers?: string,
-  id?: number,
-  type?: number
+  questionForHost: string,
+  questionForPlayers: string,
+  id: number,
+  type: number
 }

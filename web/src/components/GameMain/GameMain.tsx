@@ -1,6 +1,9 @@
+/* eslint-disable no-plusplus */
+/* eslint-disable no-param-reassign */
 /* eslint-disable max-len */
 import React, {
-  useEffect, useState,
+  useEffect,
+  useState,
   //  useState
 } from 'react';
 import { useParams } from 'react-router-dom';
@@ -17,7 +20,11 @@ import {
 import socket from '../../socket';
 import { updateCanSendStatus } from '../../store/reducers/authSlice';
 // import { getCard } from '../../store/reducers/actionCreators';
-import { playerJoinedUpdateState, updateGameState } from '../../store/reducers/gameSlice';
+import {
+  correctAnswer,
+  playerJoinedUpdateState,
+  updateGameState,
+} from '../../store/reducers/gameSlice';
 // import { updateGameState } from '../../store/reducers/gameSlice';
 // import { newQuestionState } from '../../store/reducers/questionSlice';
 // import ModalAnswerCard from '../ModalAnswerCard/ModalAnswerCard';
@@ -49,6 +56,17 @@ export default function GameMain() {
   // const question = useAppSelector((store) => store.question);
   const { id } = useParams();
   const dispatch = useAppDispatch();
+
+  const findIndex = (): number => {
+    let ind = 0;
+    for (let i = 0; i < game.questions.list.length; i++) {
+      if (game.questions.list[i].id === game.questions.current) {
+        ind = i;
+        break;
+      }
+    }
+    return ind;
+  };
 
   useEffect(() => {
     // sendMessageGameState(game, id, user);
@@ -111,56 +129,70 @@ export default function GameMain() {
     modalCloseNo(String(game.game.id));
   };
   const yesHandler = () => {
+    // если кубик изменит отфильтровать ти и  найти следующий вопрос с таким типом
+    let current = 0;
+    for (let i = 0; i < game.questions.list.length; i++) {
+      if (game.questions.list[i].id === game.questions.current) {
+        current = game.questions.list[i + 1]?.id || game.questions.list[0].id;
+      }
+    }
+
+    let isHost = 0;
+
+    for (let i = 0; i < game.playersPriority.length; i++) {
+      if (game.playersPriority[i].userId === game.isHost) {
+        isHost = game.playersPriority[i + 1]?.userId
+          || game.playersPriority[0]?.userId;
+      }
+    }
+    const progress = {
+      userId: modal.userId,
+      score: game.progress[modal.userId] ? game.progress[modal.userId] : 0,
+    };
+    progress.score += game.questions.list[findIndex()].type;
+
+    dispatch(correctAnswer({ progress, isHost, current }));
+
     setModal({
       visible: false,
       username: '',
       userId: 0,
     });
     modalCloseNo(String(game.game.id));
-    const temp = game.questions.current;
-    const currQ = game.questions.list.indexOf((obj) => obj.id === temp);
-    const nextQ = game.questions.list[currQ + 1] ? game.questions.list[currQ + 1] : game.questions.list[0];
-    const curr = game.playersPriority.indexOf(user.user.id);
-    const next = game.playersPriority[curr + 1] ? game.playersPriority[curr + 1] : game.playersPriority[0];
-
-    dispatch(correctAnswer());
   };
+
+
 
   return (
     <>
       {id && <VideoComponent roomID={id} />}
       {modal.visible && (
         <div>
-          {user.canSendMessage
-            ? (
-              <>
-                <p>
-                  {' '}
-                  {modal.username}
-                  {' '}
-                  верно ответил на вопрос?
-                </p>
-                <button onClick={yesHandler}>Да</button>
-                <button onClick={noHandler}>Нет</button>
-              </>
-            ) : (2)}
+          {user.canSendMessage ? (
+            <>
+              <p>
+                {' '}
+                {modal.username}
+                {' '}
+                верно ответил на вопрос?
+              </p>
+              <button onClick={yesHandler}>Да</button>
+              <button onClick={noHandler}>Нет</button>
+            </>
+          ) : (
+            2
+          )}
         </div>
       )}
       {!game.game.isPanding
         && (user.canSendMessage ? (
-          <p>
-            {game.questions.list[game.questions.current].questionForHost}
-          </p>
+          <p>{game.questions.list[findIndex()].questionForHost}</p>
         ) : (
           <>
-            <p>
-              {game.questions.list[game.questions.current].questionForPlayers}
-            </p>
+            <p>{game.questions.list[findIndex()].questionForPlayers}</p>
             <button onClick={giveAnswer}>Дать ответ</button>
-
           </>
         ))}
     </>
-
   );
 }
