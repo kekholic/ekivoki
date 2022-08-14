@@ -18,14 +18,9 @@ export interface GameState {
   isCanvas: boolean;
   playersPriority: Array<Object>;
   isHost: number;
-  progress: Array<Object>;
+  progress: Object;
   isLoading: boolean;
   error: string;
-}
-
-interface IJoinedPlayer {
-  playersPriority: Object[];
-  isHost: number;
 }
 
 const initialState: GameState = {
@@ -39,13 +34,18 @@ const initialState: GameState = {
     isdone: false,
   },
   questions: {
-    list: [{}],
+    list: [{
+      questionForHost: '',
+      questionForPlayers: '',
+      id: 0,
+      type: 0,
+    }],
     current: 0,
   },
   isCanvas: false,
   playersPriority: [],
   isHost: 0,
-  progress: [],
+  progress: {},
   isLoading: false,
   error: '',
 };
@@ -58,7 +58,8 @@ export const gameSlice = createSlice({
       console.log(action.payload, 'ACTION PAYLOAD');
 
       state.game = { ...action.payload.game };
-      state.questions = { ...action.payload.questions };
+      state.questions.list = [...action.payload.questions.list];
+      state.questions.current = action.payload.questions.current;
       state.isCanvas = false;
       state.playersPriority = action.payload.playersPriority;
 
@@ -68,9 +69,14 @@ export const gameSlice = createSlice({
     },
     playerJoinedUpdateState(state, action: PayloadAction<any>) {
       state.game.countPlayers += 1;
-      console.log(action.payload);
-      state.playersPriority.push({ userId: action.payload.id, username: action.payload.username });
+      const temp = { username: action.payload.username, userId: action.payload.id };
+      state.playersPriority.push(temp);
       state.isHost = (state.isHost > action.payload.id) ? action.payload.id : state.isHost;
+      state.game.isPanding = state.game.countPlayers !== state.game.maxPlayers;
+    },
+    correctAnswer(state, action: PayloadAction<any>) {
+      state.progress = { ...state.progress, [action.payload.userId]: action.payload.score };
+      // todo : isHost, currentquestions change
     },
 
   },
@@ -80,10 +86,9 @@ export const gameSlice = createSlice({
       state.isLoading = false;
       state.error = '';
       state.game = action.payload.game;
-      // console.log('AAAAAAAAAAAAAAA', action.payload);
 
       state.isHost = action.payload.user.userId;
-      state.questions = { ...action.payload.questions };
+      state.questions.list = [...action.payload.questions];
       state.playersPriority.push(action.payload.user);
     },
     [createGame.pending.type]: (state) => {
@@ -173,6 +178,6 @@ export const gameSlice = createSlice({
     // нажал вступить в игру у тебя обновился стейт с игрой
   },
 });
-export const { updateGameState, playerJoinedUpdateState } = gameSlice.actions;
+export const { updateGameState, playerJoinedUpdateState, correctAnswer } = gameSlice.actions;
 
 export default gameSlice.reducer;

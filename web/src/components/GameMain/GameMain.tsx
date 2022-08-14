@@ -1,7 +1,13 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable max-len */
+import React, {
+  useEffect, useState,
+  //  useState
+} from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
+  modalAnswer,
+  modalCloseNo,
   // sendMessageGameState,
   sendNewGameState,
   // tryAnswer,
@@ -14,8 +20,8 @@ import { updateCanSendStatus } from '../../store/reducers/authSlice';
 import { playerJoinedUpdateState, updateGameState } from '../../store/reducers/gameSlice';
 // import { updateGameState } from '../../store/reducers/gameSlice';
 // import { newQuestionState } from '../../store/reducers/questionSlice';
-import ModalAnswerCard from '../ModalAnswerCard/ModalAnswerCard';
-import QuestionCard from '../QuestionCard/QuestionCard';
+// import ModalAnswerCard from '../ModalAnswerCard/ModalAnswerCard';
+// import QuestionCard from '../QuestionCard/QuestionCard';
 import VideoComponent from '../WebChat/VideoComponent';
 
 // TODO:
@@ -33,27 +39,16 @@ import VideoComponent from '../WebChat/VideoComponent';
 }); */
 
 export default function GameMain() {
-  // const [visible, setVisible] = useState({
-  //   start: false,
-  //   waiting: true,
-  //   questionCard: false,
-  //   visibleHostButton: false,
-  //   dontHost: false,
-  //   count: true,
-  // });
-
-  const [variableUser, setVariableUser] = useState({
-    modalVisibly: false,
-    currentUserIdForAnswer: null,
-    currentUsernameForAnswer: '',
+  const [modal, setModal] = useState({
+    visible: false,
+    username: '',
+    userId: 0,
   });
   const user = useAppSelector((store) => store.user);
   const { game } = useAppSelector((store) => store);
-  const question = useAppSelector((store) => store.question);
+  // const question = useAppSelector((store) => store.question);
   const { id } = useParams();
   const dispatch = useAppDispatch();
-
-  const oldIsHost = game.isHost;
 
   useEffect(() => {
     // sendMessageGameState(game, id, user);
@@ -67,37 +62,23 @@ export default function GameMain() {
     socket.on('sendNewGameStateBack', (msg) => {
       dispatch(updateGameState(msg.game));
     });
-    // socket.on('gameAnswers', (msg) => {
-    //   switch (msg.method) {
-    //     case 'initState':
-    //       dispatch(updateGameState(msg.game));
-    //       break;
-    // case 'visibleState':
-    //   console.log('msg.visible:', msg.visible);
-    //   setVisible({ ...msg.visible });
-    //   break;
-    // case 'questionState':
-    //   dispatch(newQuestionState(msg.question));
-    //   break;
-    // case 'tryAnswer':
-    //   setVariableUser((prev) => ({
-    //     ...prev,
-    //     modalVisibly: true,
-    //     currentUserIdForAnswer: msg.user.id,
-    //     currentUsernameForAnswer: msg.user.username,
-    //   }));
-    //   break;
-    // case 'wrongAnswer':
-    //   setVariableUser({
-    //     modalVisibly: false,
-    //     currentUserIdForAnswer: null,
-    //     currentUsernameForAnswer: '',
-    //   });
-    //   break;
-    //     default:
-    //       break;
-    //   }
-    // });
+
+    socket.on('modalAnswerOpen', (msg) => {
+      setModal({
+        visible: true,
+        username: msg.username,
+        userId: msg.userId,
+      });
+    });
+
+    socket.on('modalCloseFromBack', (msg) => {
+      console.log('zashloOOOOOOOOOOOOOOOOOOOOOOOO');
+      setModal({
+        visible: false,
+        username: '',
+        userId: 0,
+      });
+    });
   }, [socket]);
 
   useEffect(() => {
@@ -112,98 +93,74 @@ export default function GameMain() {
     }
   }, [game]);
 
-  // useEffect(() => {
-  //   if (visible.start && visible.count) {
-  //     if (user.id === game.isHost) {
-  //       console.log('setVisibleHostButton: ');
-  //       setVisible((prev) => ({
-  //         ...prev,
-  //         visibleHostButton: true,
-  //         count: false,
-  //       }));
-  //     } else {
-  //       setVisible((prev) => ({ ...prev, dontHost: true }));
-  //     }
-  //   }
-  // }, [visible.start]);
+  const giveAnswer = () => {
+    modalAnswer(String(game.game.id), user.user.username, user.user.id);
+    setModal({
+      visible: true,
+      username: user.user.username || 'username',
+      userId: user.user.id,
+    });
+  };
 
-  // useEffect(() => {
-  //   if (game.game.countPlayers === game.game.maxPlayers) {
-  //     console.log('Зашли епта');
-  //     setVisible((prev) => ({
-  //       ...prev,
-  //       waiting: false,
-  //       start: true,
-  //     }));
-  //     console.log(visible);
-  //     if (user.id === game.isHost) {
-  //       sendMessageGameState(game, id, user);
-  //       dispatch(getCard({ id: question.id }));
-  //     }
-  //   }
-  // }, [game]);
+  const noHandler = () => {
+    setModal({
+      visible: false,
+      username: '',
+      userId: 0,
+    });
+    modalCloseNo(String(game.game.id));
+  };
+  const yesHandler = () => {
+    setModal({
+      visible: false,
+      username: '',
+      userId: 0,
+    });
+    modalCloseNo(String(game.game.id));
+    const temp = game.questions.current;
+    const currQ = game.questions.list.indexOf((obj) => obj.id === temp);
+    const nextQ = game.questions.list[currQ + 1] ? game.questions.list[currQ + 1] : game.questions.list[0];
+    const curr = game.playersPriority.indexOf(user.user.id);
+    const next = game.playersPriority[curr + 1] ? game.playersPriority[curr + 1] : game.playersPriority[0];
 
-  // useEffect(() => {
-  //   if (user.id === game.isHost) {
-  //     updateQuestionState(question, id);
-  //   }
-  // }, [question]);
-
-  // const submitHandlerAnswer = () => {
-  //   tryAnswer(user, id);
-  // };
-
-  // const hendlerStart = () => {
-  //   dispatch(startGame({ id: game.game.id, isPanding: false }));
-
-  //   setVisible((prev) => ({
-  //     ...prev,
-  //     start: false,
-  //     questionCard: true,
-  //     dontHost: false,
-  //     visibleHostButton: false,
-  //   }));
-  //   console.log(visible);
-  //   updateVisibleState(visible, id);
-  // };
-
-  // useEffect(() => {
-  //   updateVisibleState(visible, id);
-  // }, [visible.questionCard]);
+    dispatch(correctAnswer());
+  };
 
   return (
     <>
       {id && <VideoComponent roomID={id} />}
-
-      {/* {visible.questionCard && ( */}
-      <div className="placeQuestion">
-        {user.user.id === game.isHost ? (
-          <p>{question.questionForHost}</p>
+      {modal.visible && (
+        <div>
+          {user.canSendMessage
+            ? (
+              <>
+                <p>
+                  {' '}
+                  {modal.username}
+                  {' '}
+                  верно ответил на вопрос?
+                </p>
+                <button onClick={yesHandler}>Да</button>
+                <button onClick={noHandler}>Нет</button>
+              </>
+            ) : (2)}
+        </div>
+      )}
+      {!game.game.isPanding
+        && (user.canSendMessage ? (
+          <p>
+            {game.questions.list[game.questions.current].questionForHost}
+          </p>
         ) : (
           <>
-            <p>{question.questionForPlayers}</p>
-            <button type="submit">
-              Назвать слово!
-            </button>
-          </>
-        )}
+            <p>
+              {game.questions.list[game.questions.current].questionForPlayers}
+            </p>
+            <button onClick={giveAnswer}>Дать ответ</button>
 
-        <QuestionCard />
-        {variableUser.modalVisibly && (
-          <ModalAnswerCard
-            variableUser={variableUser}
-            setVariableUser={setVariableUser}
-          />
-        )}
-      </div>
-      {/* )} */}
-      {/*       {visible.visibleHostButton && (
-        <button onClick={hendlerStart} type='submit'>
-          Начать игру
-        </button>
-      )}
-      {visible.dontHost && <p>ХОСТ не начал игру</p>}
-      {visible.waiting && <p>Ждем Игроков ...</p>} */}
+          </>
+        ))}
     </>
+
   );
 }

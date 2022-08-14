@@ -86,3 +86,23 @@ export function sendNewGameState(
     roomID: id,
   });
 }
+
+export function modalAnswer(
+  id: string | undefined,
+  username: string | undefined,
+  userId: number | undefined,
+): void {
+  socket.emit('modalAnswer', {
+    roomID: id,
+    username,
+    userId,
+  });
+}
+
+export function modalCloseNo(
+  id: string | undefined,
+): void {
+  socket.emit('modalClose', {
+    roomID: id,
+  });
+}

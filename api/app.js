@@ -176,8 +176,15 @@ io.on('connection', (socket) => {
     socket.to(msg.roomID).emit('playerJoined', msg.user);
   });
   socket.on('sendNewGameState', (msg) => {
-    console.log(msg.roomID);
     setTimeout(() => { socket.to(msg.roomID).emit('sendNewGameStateBack', msg); }, 2000);
+  });
+
+  socket.on('modalAnswer', (msg) => {
+    socket.to(msg.roomID).emit('modalAnswerOpen', msg);
+  });
+
+  socket.on('modalClose', (msg) => {
+    socket.to(msg.roomID).emit('modalCloseFromBack', '');
   });
 
   function leaveRoom() {
