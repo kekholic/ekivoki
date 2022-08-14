@@ -2,8 +2,11 @@
 import '../../App.css';
 import React, { useEffect, useRef } from 'react';
 import CanvasContainer from '../CanvasContainer/CanvasContainer.jsx';
+import socket from '../../socket';
+import { useAppSelector } from '../../hooks/redux';
 
 export default function Canvas() {
+  const game = useAppSelector((store) => store.game);
   const id = Math.random();
   const CANVAS_REF = useRef(null);
 
@@ -12,7 +15,7 @@ export default function Canvas() {
   const drawHandler = (msg) => {
     const canvas = CANVAS_REF.current;
     console.log('isDrawing: ', isDrawing);
-    if (canvas && isDrawing.current === false && msg.id !== id) {
+    if (canvas && isDrawing.current === false) {
       const context = canvas.getContext('2d');
       if (msg.figure.START) {
         context.beginPath();
@@ -42,14 +45,23 @@ export default function Canvas() {
     return { eventOffsetX, eventOffsetY };
   }
 
-  function startDrawing(event, socket) {
+  function startDrawing(event) {
     isDrawing.current = true;
     const canvas = CANVAS_REF.current;
     const context = canvas.getContext('2d');
     console.log('STARt');
     context.beginPath();
     const { eventOffsetX, eventOffsetY } = getCanvasOffset(event);
-    socket.send(
+    socket.emit('draw_server', {
+      roomID: String(game.game.id),
+      figure: {
+        START: 'START',
+        x: eventOffsetX,
+        y: eventOffsetY,
+      },
+    });
+
+    /* socket.send(
       JSON.stringify({
         method: 'draw',
         id,
@@ -58,20 +70,27 @@ export default function Canvas() {
           x: eventOffsetX,
           y: eventOffsetY,
         },
-      }),
-    );
+      })
+    ); */
     context.lineTo(eventOffsetX, eventOffsetY);
     event.preventDefault();
   }
 
-  function draw(event, socket) {
+  function draw(event) {
     if (isDrawing.current) {
       const canvas = CANVAS_REF.current;
       const context = canvas.getContext('2d');
       const { eventOffsetX, eventOffsetY } = getCanvasOffset(event);
       console.log(eventOffsetX, eventOffsetY);
       // console.log(event);
-      socket.send(
+      socket.emit('draw_server', {
+        roomID: String(game.game.id),
+        figure: {
+          x: eventOffsetX,
+          y: eventOffsetY,
+        },
+      });
+      /* socket.send(
         JSON.stringify({
           method: 'draw',
           id,
@@ -79,8 +98,8 @@ export default function Canvas() {
             x: eventOffsetX,
             y: eventOffsetY,
           },
-        }),
-      );
+        })
+      ); */
       context.lineTo(eventOffsetX, eventOffsetY);
 
       context.strokeStyle = 'black';
@@ -92,20 +111,27 @@ export default function Canvas() {
     event.preventDefault();
   }
 
-  function stopDrawing(event, socket) {
+  function stopDrawing(event) {
     if (isDrawing.current) {
       const canvas = CANVAS_REF.current;
       const context = canvas.getContext('2d');
       console.log('STOP');
-      socket.send(
+
+      socket.emit('draw_server', {
+        roomID: String(game.game.id),
+        figure: {
+          STOP: 'STOP',
+        },
+      });
+      /* socket.send(
         JSON.stringify({
           method: 'draw',
           id,
           figure: {
             STOP: 'STOP',
           },
-        }),
-      );
+        })
+      ); */
 
       context.stroke();
       context.closePath();
@@ -115,7 +141,10 @@ export default function Canvas() {
   }
 
   useEffect(() => {
-    const socket = new WebSocket('ws://localhost:4000/canvas');
+    socket.on('draw', (msg) => {
+      drawHandler(msg);
+    });
+    /* const socket = new WebSocket('ws://localhost:4000/canvas');
     socket.onopen = () => {
       console.log('Подключение установлено');
       socket.send(
@@ -139,7 +168,7 @@ export default function Canvas() {
         default:
           break;
       }
-    };
+    }; */
 
     const canvas = CANVAS_REF.current;
     console.log('canvas: ', canvas);
@@ -147,16 +176,10 @@ export default function Canvas() {
     canvas.height = 600;
 
     if (canvas) {
-      canvas.addEventListener('mousedown', (event) => {
-        startDrawing(event, socket);
-      });
-      canvas.addEventListener('mousemove', (event) => draw(event, socket));
-      canvas.addEventListener('mouseup', (event) => {
-        stopDrawing(event, socket);
-      });
-      canvas.addEventListener('mouseout', (event) => {
-        stopDrawing(event, socket);
-      });
+      canvas.addEventListener('mousedown', startDrawing);
+      canvas.addEventListener('mousemove', draw);
+      canvas.addEventListener('mouseup', stopDrawing);
+      canvas.addEventListener('mouseout', stopDrawing);
 
       return () => {
         canvas.removeEventListener('mousedown', startDrawing);
