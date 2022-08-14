@@ -118,3 +118,16 @@ export const playersConnection = createAsyncThunk(
     }
   },
 );
+
+export const getCard = createAsyncThunk(
+  'question/getCard',
+  async (data: any, thunkAPI) => {
+    try {
+      const res = await $api.post('/question', data); // подготовить к отправке обьект с данными { question.id }
+      console.log(res.data, 'getCard****************************')
+      return res.data; // {question} из бд
+    } catch (err) {
+      return thunkAPI.rejectWithValue('Ошибка');
+    }
+  },
+);

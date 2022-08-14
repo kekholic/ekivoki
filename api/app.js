@@ -36,6 +36,7 @@ app.use(cookieParser());
 const authRouter = require('./src/routes/authRouter');
 const gameRouter = require('./src/routes/gameRouter');
 const ACTIONS = require('./wsforchat/actions');
+const questionRouter = require('./src/routes/questionRouter');
 // const authMiddleware = require('./src/middlewares/authMiddleware');
 
 app.use(express.static(path.join(__dirname, 'public'))); // подключение  public директории
@@ -47,6 +48,7 @@ app.use(express.json()); // парсинг post запросов в json.
 
 app.use('/auth', authRouter);
 app.use('/game', gameRouter);
+app.use('/question', questionRouter);
 
 // app.ws('/game/:id', GameController.start);
 
@@ -152,28 +154,21 @@ io.on('connection', (socket) => {
       case 'initState':
         socket.to(msg.roomID).emit('gameAnswers', msg);
         break;
+      case 'visibleState':
+        socket.to(msg.roomID).emit('gameAnswers', msg);
+        break;
+      case 'questionState':
+        socket.to(msg.roomID).emit('gameAnswers', msg);
+        break;
+      case 'tryAnswer':
+        socket.to(msg.roomID).emit('gameAnswers', msg);
+        break;
+      case 'wrongAnswer':
+        socket.to(msg.roomID).emit('gameAnswers', msg);
+        break;
       default:
         break;
     }
-    setTimeout(() => {
-      // io.to(roomID).emit('OloloAnswer', {
-      //   answer: '123',
-      // });
-      // console.log(io.sockets.adapter.rooms.has(data.roomID), 'boolean');
-      // console.log(socket);
-      // console.log(socket.to(data.roomID).adapter.rooms, 'lollllllllllll');
-      // io.to(data.roomID).emit('OloloAnswer', 'xuy');
-      // const allUsersRoom = Array.from(socket.to(data.roomID).adapter.rooms.get(data.roomID));
-      // console.log(socket.id);
-      // allUsersRoom.forEach((user) => {
-      //   console.log(user, ' uSSSSSSSSSSSSSSSSSSSSSSSEEEEEEEEEEEEEEER');
-      //   io.to(user).emit('OloloAnswer', {
-      //     peerID: user,
-      //     msg: 'xuy',
-      //   });
-      // });
-      // socket.emit('OloloAnswer', 'test');
-    }, 3000);
   });
 
   function leaveRoom() {
