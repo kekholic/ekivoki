@@ -76,6 +76,29 @@ export const gameSlice = createSlice({
       state.isLoading = false;
       state.error = '';
     },
+    hostLeaveUpdate(state, action: PayloadAction<any>) {
+      // console.log(action.payload, 'ACTION PAYLOAD');
+
+      state.game = { ...action.payload.game.game };
+      state.questions.list = [...action.payload.game.questions.list];
+      state.questions.current = action.payload.game.questions.current;
+      state.isCanvas = false;
+      state.playersPriority = action.payload.game.playersPriority.filter(
+        (el: IplayersPriority) => el.userId !== action.payload.userId,
+      );
+      state.progress = action.payload.game.progress;
+      state.isHost = action.payload.isHost;
+      state.isLoading = false;
+      state.error = '';
+    },
+    playersLeaveUpdate(state, action: PayloadAction<any>) {
+      // console.log(action.payload, 'ACTION PAYLOAD');
+      state.playersPriority = state.playersPriority.filter(
+        (el) => el.userId !== action.payload.userId,
+      );
+      state.isLoading = false;
+      state.error = '';
+    },
     playerJoinedUpdateState(state, action: PayloadAction<any>) {
       state.game.countPlayers += 1;
       // console.log('action: ', action.payload);
@@ -84,8 +107,7 @@ export const gameSlice = createSlice({
         userId: action.payload.id,
       };
       state.playersPriority.push(temp);
-      state.isHost =
-        state.isHost > action.payload.id ? action.payload.id : state.isHost;
+      state.isHost = state.isHost > action.payload.id ? action.payload.id : state.isHost;
       state.game.isPanding = state.game.countPlayers !== state.game.maxPlayers;
     },
     correctAnswer(state, action: PayloadAction<any>) {
@@ -118,7 +140,7 @@ export const gameSlice = createSlice({
     },
     [incrementCountPlayers.fulfilled.type]: (
       state,
-      action: PayloadAction<IplayersPriority>
+      action: PayloadAction<IplayersPriority>,
     ) => {
       state.isLoading = false;
       state.error = '';
@@ -130,7 +152,7 @@ export const gameSlice = createSlice({
     },
     [incrementCountPlayers.rejected.type]: (
       state,
-      action: PayloadAction<string>
+      action: PayloadAction<string>,
     ) => {
       state.isLoading = false;
       state.error = action.payload;
@@ -146,7 +168,7 @@ export const gameSlice = createSlice({
     },
     [decrementCountPlayers.rejected.type]: (
       state,
-      action: PayloadAction<string>
+      action: PayloadAction<string>,
     ) => {
       state.isLoading = false;
       state.error = action.payload;
@@ -177,7 +199,7 @@ export const gameSlice = createSlice({
     },
     [playersConnection.fulfilled.type]: (
       state,
-      action: PayloadAction<GameState>
+      action: PayloadAction<GameState>,
     ) => {
       state.game = action.payload.game;
       state.playersPriority = action.payload.playersPriority;
@@ -190,7 +212,7 @@ export const gameSlice = createSlice({
     },
     [playersConnection.rejected.type]: (
       state,
-      action: PayloadAction<string>
+      action: PayloadAction<string>,
     ) => {
       state.isLoading = false;
 
@@ -202,7 +224,12 @@ export const gameSlice = createSlice({
     // нажал вступить в игру у тебя обновился стейт с игрой
   },
 });
-export const { updateGameState, playerJoinedUpdateState, correctAnswer } =
-  gameSlice.actions;
+export const {
+  updateGameState,
+  playerJoinedUpdateState,
+  correctAnswer,
+  hostLeaveUpdate,
+  playersLeaveUpdate,
+} = gameSlice.actions;
 
 export default gameSlice.reducer;
