@@ -54,27 +54,29 @@ export default function GameInit() {
 
   return (
     <form className={style.settingsForm} onSubmit={(e) => { submitHandler(e); }}>
-      <h1 className={style.createTitle}>Создать лобби</h1>
-      <ul>
-        <li>1) Введите название игры</li>
-        <li>2) Введите пароль игры</li>
-        <li>3) Выберите количество участников</li>
-        <li>4) Начинайте играть!</li>
+      <h1 className={style.settingsTitle}>Создать лобби</h1>
+      <ul className={style.settingsUl}>
+        <li className={style.settingsLi}>1) Введите название игры</li>
+        <li className={style.settingsLi}>2) Введите пароль игры</li>
+        <li className={style.settingsLi}>3) Выберите количество участников</li>
+        <li className={style.settingsLi}>4) Начинайте играть!</li>
       </ul>
-      <div>
-        <input type="text" name="title" placeholder="Название лобби" />
-        <input type="password" name="password" placeholder="Пароль лобби" />
-        <select name="maxPlayers">
-          <option selected disabled>Коль-во игроков</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-        </select>
+      <div className={style.settingsFormDiv}>
+        <input className={style.settingsInput} type="text" name="title" placeholder="Название лобби" />
+        <input className={style.settingsInput} type="text" name="password" placeholder="Пароль лобби" />
+        <div className={style.settingsSelect}>
+          <select name="maxPlayers">
+            <option selected disabled>Коль-во игроков</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+          </select>
+        </div>
       </div>
-      <button type="submit">создать игру</button>
+      <button className={style.settingsSubmit} type="submit">создать игру</button>
     </form>
   );
 }
