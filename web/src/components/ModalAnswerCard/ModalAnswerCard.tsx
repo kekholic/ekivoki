@@ -1,10 +1,11 @@
+/* eslint-disable no-plusplus */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/require-default-props */
 import React, { Dispatch, ReactElement, useEffect } from 'react';
 import style from './ModalAnswerCard.module.css';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { modalCloseNo, wrongAnswer } from '../../lib/game/gameUpdate';
+import { modalCloseNo } from '../../lib/game/gameUpdate';
 import { correctAnswer } from '../../store/reducers/gameSlice';
 
 // interface IvariableUser {

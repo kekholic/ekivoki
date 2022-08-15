@@ -208,7 +208,6 @@ io.on('connection', (socket) => {
 
   // вход игрока в существующую игру:
   socket.on('playerJoined', (msg) => {
-    console.log(msg.roomID);
     socket.to(msg.roomID).emit('playerJoined', msg.user);
   });
   socket.on('sendNewGameState', (msg) => {
@@ -226,9 +225,22 @@ io.on('connection', (socket) => {
   });
 
   socket.on('draw_server', (msg) => {
-    console.log('2', msg.figure);
-    console.log('msg.roomID: ', msg.roomID);
     socket.to(msg.roomID).emit('draw', msg);
+  });
+
+  socket.on('boardVisible', (msg) => {
+    console.log('msg.roomID: ', msg.roomID);
+    io.to(msg.roomID).emit('OpenBoard', msg);
+  });
+
+  socket.on('exit_game_host', (msg) => {
+    console.log('msg.roomID: ', msg.roomID);
+    io.to(msg.roomID).emit('exit_game_host', msg);
+  });
+
+  socket.on('exit_game', (msg) => {
+    console.log('msg.roomID: ', msg.roomID);
+    io.to(msg.roomID).emit('exit_game', msg);
   });
 
   function leaveRoom() {
