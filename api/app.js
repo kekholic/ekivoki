@@ -117,6 +117,16 @@ app.use('/question', questionRouter);
 //   });
 // };
 
+// удаляет раз в пол часа все нестартовавшие игры в статусе created
+async function clearVoidRooms() {
+  const clearInterval = setInterval(async () => {
+    const dateNow = new Date();
+    await gameService.deletGamesOnDate(dateNow);
+    console.log('udalil');
+  }, 60 * 30 * 1000);
+}
+clearVoidRooms();
+
 async function getClientRooms() {
   const { rooms } = io.sockets.adapter;
 

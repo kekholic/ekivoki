@@ -15,7 +15,11 @@ export default function checkStatusGame(id: number) {
 
   useEffect(() => {
     getStatusGame()
-      .then((data) => { setStatusGame(data); });
+      .then((data) => {
+        // console.log(data);
+
+        setStatusGame(data);
+      });
   }, [id]);
 
   return statusGame;
