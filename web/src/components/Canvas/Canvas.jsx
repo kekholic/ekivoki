@@ -5,16 +5,16 @@ import CanvasContainer from '../CanvasContainer/CanvasContainer.jsx';
 import socket from '../../socket';
 import { useAppSelector } from '../../hooks/redux';
 
-export default function Canvas() {
+export default function Canvas({ roomID }) {
   const game = useAppSelector((store) => store.game);
-  const id = Math.random();
+  console.log(roomID, typeof roomID);
   const CANVAS_REF = useRef(null);
 
   const isDrawing = useRef(false);
 
   const drawHandler = (msg) => {
+    console.log('msg: ', msg.figure);
     const canvas = CANVAS_REF.current;
-    console.log('isDrawing: ', isDrawing);
     if (canvas && isDrawing.current === false) {
       const context = canvas.getContext('2d');
       if (msg.figure.START) {
@@ -53,7 +53,7 @@ export default function Canvas() {
     context.beginPath();
     const { eventOffsetX, eventOffsetY } = getCanvasOffset(event);
     socket.emit('draw_server', {
-      roomID: String(game.game.id),
+      roomID,
       figure: {
         START: 'START',
         x: eventOffsetX,
@@ -84,7 +84,7 @@ export default function Canvas() {
       console.log(eventOffsetX, eventOffsetY);
       // console.log(event);
       socket.emit('draw_server', {
-        roomID: String(game.game.id),
+        roomID,
         figure: {
           x: eventOffsetX,
           y: eventOffsetY,
@@ -118,7 +118,7 @@ export default function Canvas() {
       console.log('STOP');
 
       socket.emit('draw_server', {
-        roomID: String(game.game.id),
+        roomID,
         figure: {
           STOP: 'STOP',
         },
@@ -142,6 +142,7 @@ export default function Canvas() {
 
   useEffect(() => {
     socket.on('draw', (msg) => {
+      console.log('msg: ', msg.figure);
       drawHandler(msg);
     });
     /* const socket = new WebSocket('ws://localhost:4000/canvas');

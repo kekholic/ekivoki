@@ -189,7 +189,7 @@ export default function GameMain() {
           </>
         ))}
 
-      <Canvas />
+      {id && <Canvas roomID={id} />}
     </>
   );
 }

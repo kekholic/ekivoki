@@ -191,6 +191,7 @@ io.on('connection', (socket) => {
 
   socket.on('draw_server', (msg) => {
     console.log('2', msg.figure);
+    console.log('msg.roomID: ', msg.roomID);
     socket.to(msg.roomID).emit('draw', msg);
   });
 
