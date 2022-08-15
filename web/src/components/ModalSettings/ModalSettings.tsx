@@ -5,11 +5,11 @@ import style from './ModalSettings.module.css';
 
 interface IProps {
   children: any,
-  active:boolean,
+  active: boolean,
   setActive: any,
 }
 
-export default function ModalSettings({ active, setActive, children } : IProps) {
+export default function ModalSettings({ active, setActive, children }: IProps) {
   return (
     <div className={active ? `${style.modal} ${style.modalActive}` : `${style.modal}`} onClick={() => setActive(false)}>
       <div className={active ? `${style.modalContent} ${style.modalContentActive}` : `${style.modalContent}`} onClick={(e) => e.stopPropagation()}>

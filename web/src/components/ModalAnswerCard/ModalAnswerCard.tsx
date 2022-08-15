@@ -138,7 +138,7 @@ export default function ModalAnswerCard(props: IProps): ReactElement {
       <div className={modal.visible ? `${style.modal} ${style.modalActive}` : `${style.modal}`}>
 
         <div
-          className={modal.visible ? `${style.modal__content} ${style.active}` : `${style.modal__content}`}
+          className={modal.visible ? `${style.modalContent} ${style.modalContentActive}` : `${style.modalContent}`}
           onClick={(e) => e.stopPropagation()}
         >
           {' '}

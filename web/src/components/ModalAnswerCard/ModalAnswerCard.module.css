@@ -1,42 +1,32 @@
 .modal {
-  height: 110vh;
+  height: 100vh;
   width: 100vw;
   background-color: rgba(0, 0, 0, 0.4);
   position: fixed;
-  top: -10px;
+  top: 0;
+  left: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0;
   pointer-events: none;
+  opacity: 0;
   transition: 0.5s;
-
 }
 
-.modal.active {
+.modalActive {
   opacity: 1;
   pointer-events: all;
 }
 
-.modal__content {
+.modalContent {
   padding: 20px;
   border-radius: 12px;
-  background-color: white;
+  background-color: #10293A;
   transform: scale(0.5);
-  transition: 0.4s all;
-  width: 80vw;
-
-
-  background: rgb(14, 7, 160);
-  background: radial-gradient(circle, rgba(14, 7, 160, 1) 0%, rgba(4, 4, 85, 1) 100%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #fde682;
-  flex-direction: column;
-  font-size: 40px;
+  width: 40vw;
+  transition: 0.4s;
 }
 
-.modal__content.active {
+.modalContentActive {
   transform: scale(1);
 }
