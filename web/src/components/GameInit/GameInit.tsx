@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { createGame } from '../../store/reducers/actionCreators';
 import { updateCanSendStatus } from '../../store/reducers/authSlice';
+import style from './GameInit.module.css';
 
 export default function GameInit() {
   const dispatch = useAppDispatch();
@@ -52,16 +53,20 @@ export default function GameInit() {
   }, [game]);
 
   return (
-    <div>
-      <form
-        onSubmit={(e) => {
-          submitHandler(e);
-        }}
-      >
-        <input type="text" name="title" />
-        <input type="password" name="password" />
-
+    <form className={style.settingsForm} onSubmit={(e) => { submitHandler(e); }}>
+      <h1 className={style.createTitle}>Создать лобби</h1>
+      <ul>
+        <li>1) Введите название игры</li>
+        <li>2) Введите пароль игры</li>
+        <li>3) Выберите количество участников</li>
+        <li>4) Начинайте играть!</li>
+      </ul>
+      <div>
+        <input type="text" name="title" placeholder="Название лобби" />
+        <input type="password" name="password" placeholder="Пароль лобби" />
         <select name="maxPlayers">
+
+          <option selected disabled>Коль-во игроков</option>
 
           <option value="2">2</option>
           <option value="3">3</option>
@@ -69,8 +74,8 @@ export default function GameInit() {
           <option value="5">5</option>
           <option value="6">6</option>
         </select>
-        <button type="submit">создать игру</button>
-      </form>
-    </div>
+      </div>
+      <button type="submit">создать игру</button>
+    </form>
   );
 }
