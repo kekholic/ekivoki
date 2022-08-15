@@ -222,7 +222,8 @@ export default function GameMain() {
         <Canvas roomID={id} canSendMessage={user.canSendMessage} />
       )}
 
-      {boardVisible && <ModalBoard />}
+      {/* {boardVisible && <ModalBoard />} */}
+      <ModalBoard boardVisible={boardVisible} />
     </>
   );
 }

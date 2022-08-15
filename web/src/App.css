@@ -112,12 +112,23 @@ body {
   flex-direction: column;
 }
 
-
 .main {
   height: calc(100vh - 88px);
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+video {
+  max-width: 30rem;
+  max-height: 20rem;
+}
+
+.container:first-child {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: baseline;
 }
 
 @media (max-width: 768px) {
