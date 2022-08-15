@@ -9,6 +9,7 @@ import React, {
   //  useState
 } from 'react';
 import { useParams } from 'react-router-dom';
+import GAME_STATUS from '../../actions/gameStatus';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import checkStatusGame from '../../hooks/useCheckStatusGame';
 import {
@@ -64,7 +65,7 @@ export default function GameMain() {
   // const question = useAppSelector((store) => store.question);
   const { id } = useParams();
   const dispatch = useAppDispatch();
-  const isDone = checkStatusGame(id);
+  const statusGame = checkStatusGame(Number(id));
 
   const findIndex = (): number => {
     let ind = 0;
@@ -78,10 +79,11 @@ export default function GameMain() {
   };
 
   useEffect(() => {
+    console.log(statusGame);
+    
+  }, [statusGame]);
 
-  }, []);
-
-  if (!isDone) {
+  if (statusGame !== GAME_STATUS.END && statusGame !== GAME_STATUS.IN_PROGRESS) {
     useEffect(() => {
       // sendMessageGameState(game, id, user);
 
@@ -213,12 +215,26 @@ export default function GameMain() {
       </>
     );
   }
-  return (
-    <>
 
-      <h1>Эта игра закончена</h1>
-      <div>перейдите в список игр</div>
+  if (statusGame === GAME_STATUS.END) {
+    return (
+      <>
 
-    </>
-  );
+        <h1>Эта игра закончена</h1>
+        <div>перейдите в список игр</div>
+
+      </>
+    );
+  }
+
+  if (statusGame === GAME_STATUS.IN_PROGRESS) {
+    return (
+      <>
+
+        <h1>Эта игра уже стартовала</h1>
+        <div>перейдите в список игр</div>
+
+      </>
+    );
+  }
 }

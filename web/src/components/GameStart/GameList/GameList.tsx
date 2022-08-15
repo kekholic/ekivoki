@@ -21,9 +21,9 @@ export default function GameList() {
   const navigate = useNavigate();
   // TODO:
   // запрос с базы данных активных игр!
-  useEffect(() => {
-    dispatch(getGame());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(getGame());
+  // }, []);
 
   const [activeLobby, setActiveLobby] = useState([]);
 
@@ -35,6 +35,7 @@ export default function GameList() {
 
   useEffect(() => {
     socket.emit(ACTIONS.SHARE_ROOMS);
+    
   }, []);
 
   const handleClick = (gameInner: IGame) => {

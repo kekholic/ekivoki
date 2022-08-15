@@ -122,11 +122,11 @@ app.use('/question', questionRouter);
 
 async function getClientRooms() {
   const { rooms } = io.sockets.adapter;
-  
-  const allgamePading = await gameService.searchGame();
 
+  const allgamePading = await gameService.searchGame();
+  console.log('allgamePading', allgamePading);
   const arrGame = Array.from(rooms.keys());
-  
+
   const newarrGame = allgamePading.filter((game) => arrGame.includes(String(game.id)));
 
   return newarrGame;

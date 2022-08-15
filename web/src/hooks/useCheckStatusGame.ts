@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import $api from '../http';
 
 export default function checkStatusGame(id: number) {
-  const [isDone, setisDone] = useState(false);
+  const [statusGame, setStatusGame] = useState('');
 
   async function getStatusGame() {
     try {
@@ -10,14 +10,13 @@ export default function checkStatusGame(id: number) {
       return data;
     } catch (error) {
       console.log(error);
-      throw Error;
     }
   }
 
   useEffect(() => {
     getStatusGame()
-      .then((data) => { setisDone(data); });
+      .then((data) => { setStatusGame(data); });
   }, [id]);
 
-  return isDone;
+  return statusGame;
 }
