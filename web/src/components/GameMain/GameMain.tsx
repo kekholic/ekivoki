@@ -26,6 +26,7 @@ import {
   updateGameState,
 } from '../../store/reducers/gameSlice';
 import Canvas from '../Canvas/Canvas';
+import ModalAnswerCard from '../ModalAnswerCard/ModalAnswerCard';
 // import { updateGameState } from '../../store/reducers/gameSlice';
 // import { newQuestionState } from '../../store/reducers/questionSlice';
 // import ModalAnswerCard from '../ModalAnswerCard/ModalAnswerCard';
@@ -121,71 +122,19 @@ export default function GameMain() {
     });
   };
 
-  const noHandler = () => {
-    setModal({
-      visible: false,
-      username: '',
-      userId: 0,
-    });
-    modalCloseNo(String(game.game.id));
-  };
-  const yesHandler = () => {
-    // если кубик изменит отфильтровать ти и  найти следующий вопрос с таким типом
-    let current = 0;
-    for (let i = 0; i < game.questions.list.length; i++) {
-      if (game.questions.list[i].id === game.questions.current) {
-        current = game.questions.list[i + 1]?.id || game.questions.list[0].id;
-      }
-    }
-
-    let isHost = 0;
-
-    for (let i = 0; i < game.playersPriority.length; i++) {
-      if (game.playersPriority[i].userId === game.isHost) {
-        isHost =
-          game.playersPriority[i + 1]?.userId ||
-          game.playersPriority[0]?.userId;
-      }
-    }
-    const progress = {
-      userId: modal.userId,
-      score: game.progress[modal.userId] ? game.progress[modal.userId] : 0,
-    };
-    progress.score += game.questions.list[findIndex()].type;
-
-    dispatch(correctAnswer({ progress, isHost, current }));
-
-    setModal({
-      visible: false,
-      username: '',
-      userId: 0,
-    });
-    modalCloseNo(String(game.game.id));
-  };
-
   return (
     <>
       {id && <VideoComponent roomID={id} />}
-      {modal.visible && (
-        <div>
-          {user.canSendMessage ? (
-            <>
-              <p> {modal.username} верно ответил на вопрос?</p>
-              <button onClick={yesHandler}>Да</button>
-              <button onClick={noHandler}>Нет</button>
-            </>
-          ) : (
-            2
-          )}
-        </div>
-      )}
-      {!game.game.isPanding &&
-        (user.canSendMessage ? (
+
+      {modal.visible && <ModalAnswerCard setModal={setModal} modal={modal} findIndex={findIndex} />}
+
+      {!game.game.isPanding
+        && (user.canSendMessage ? (
           <p>{game.questions.list[findIndex()].questionForHost}</p>
         ) : (
           <>
             <p>{game.questions.list[findIndex()].questionForPlayers}</p>
-            <button onClick={giveAnswer}>Дать ответ</button>
+            <button type="submit" onClick={giveAnswer}>Дать ответ</button>
           </>
         ))}
 

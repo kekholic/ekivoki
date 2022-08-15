@@ -62,7 +62,7 @@ export default function GameInit() {
         <input type="password" name="password" />
 
         <select name="maxPlayers">
-          <option value="1">1</option>
+
           <option value="2">2</option>
           <option value="3">3</option>
           <option value="4">4</option>
