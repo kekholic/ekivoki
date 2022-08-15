@@ -189,7 +189,9 @@ export default function GameMain() {
           </>
         ))}
 
-      {id && <Canvas roomID={id} />}
+      {game.questions.list[findIndex()].type === 3 && (
+        <Canvas roomID={id} canSendMessage={user.canSendMessage} />
+      )}
     </>
   );
 }
