@@ -1,31 +1,38 @@
-import React, { useEffect, useState } from 'react';
-import {
-  // StaticRouter,
-  useParams,
-} from 'react-router-dom';
-import io from 'socket.io-client';
-// import { createModuleResolutionCache } from 'typescript';
+/* eslint-disable no-plusplus */
+/* eslint-disable no-param-reassign */
+/* eslint-disable max-len */
+import React, {
+  useEffect,
+  useState,
+  //  useState
+} from 'react';
+import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import checkStatusGame from '../../hooks/useCheckStatusGame';
-import socket from '../../socket';
 import {
-  incrementCountPlayers,
-  // startGame,
-} from '../../store/reducers/actionCreators';
-import CameraContainer from '../CameraContainer/CameraContainer';
-import QuestionCard from '../QuestionCard/QuestionCard';
+  modalAnswer,
+  modalCloseNo,
+  // sendMessageGameState,
+  sendNewGameState,
+  // tryAnswer,
+  // updateQuestionState,
+  // updateVisibleState,
+} from '../../lib/game/gameUpdate';
+import socket from '../../socket';
+import { updateCanSendStatus } from '../../store/reducers/authSlice';
+// import { getCard } from '../../store/reducers/actionCreators';
+import {
+  correctAnswer,
+  playerJoinedUpdateState,
+  updateGameState,
+} from '../../store/reducers/gameSlice';
+import Canvas from '../Canvas/Canvas';
+import ModalAnswerCard from '../ModalAnswerCard/ModalAnswerCard';
+// import { updateGameState } from '../../store/reducers/gameSlice';
+// import { newQuestionState } from '../../store/reducers/questionSlice';
+// import ModalAnswerCard from '../ModalAnswerCard/ModalAnswerCard';
+// import QuestionCard from '../QuestionCard/QuestionCard';
 import VideoComponent from '../WebChat/VideoComponent';
-
-type Props = {};
-
-// const options = {
-//   'force new connection': true,
-//   reconnecctionAttempts: 'infinity',
-//   timeout: 10000,
-//   transport: ['websocket', 'polling'],
-// };
-
-// const socket = io(`${process.env.REACT_APP_API_URL}`, options);
 
 // TODO:
 // отрисовка шаблона: камеры, место для карточки с вопросом, место для боарда.
@@ -41,13 +48,29 @@ type Props = {};
   game,
 }); */
 
-export default function GameMain({ }: Props) {
-  const [start, setStart] = useState(false);
-  const { user } = useAppSelector((store) => store.user);
-  const { game } = useAppSelector((store) => store.game);
+export default function GameMain() {
+  const [modal, setModal] = useState({
+    visible: false,
+    username: '',
+    userId: 0,
+  });
+  const user = useAppSelector((store) => store.user);
+  const { game } = useAppSelector((store) => store);
+  // const question = useAppSelector((store) => store.question);
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const isDone = checkStatusGame(id);
+
+  const findIndex = (): number => {
+    let ind = 0;
+    for (let i = 0; i < game.questions.list.length; i++) {
+      if (game.questions.list[i].id === game.questions.current) {
+        ind = i;
+        break;
+      }
+    }
+    return ind;
+  };
 
   useEffect(() => {
 
@@ -55,84 +78,76 @@ export default function GameMain({ }: Props) {
 
   if (!isDone) {
     useEffect(() => {
-      socket.emit('OlologMessage', {
-        roomID: id,
-        message: 'Hello',
-      });
-      // console.log('zahel');
+      // sendMessageGameState(game, id, user);
 
-      socket.on('OloloAnswer', (data) => {
-        console.log('d=v gaim main', data);
+      socket.on('playerJoined', (player) => {
+        if (user.canSendMessage) {
+          dispatch(playerJoinedUpdateState(player));
+        }
       });
-      // console.log('pfkegf');
-      // socket.emit('join_room', {
-      //   id,
-      //   method: 'connection',
-      //   user,
-      // });
-      // socket.on('resive_message', (data) => {
-      //   if (data.method === 'connection') {
-      //     dispatch(incrementCountPlayers({
-      //       gameId: id,
-      //       userId: data.user.id,
-      //       userName: data.user.username,
-      //     }));
-      //   }
-      //   // const msg = JSON.parse(data);
-      //   console.log('msg: ', data);
-      // });
-      // const socket = new WebSocket(`ws://localhost:4000/game/${id}`);
-      // socket.onopen = () => {
-      //   console.log('Подключение установлено');
-      //   socket.send(
-      //     JSON.stringify({
-      //       id,
-      //       method: 'connection',
-      //       user,
-      //     })
-      //   );
-      // };
-      // socket.onmessage = (event) => {
-      //   const msg = JSON.parse(event.data);
-      //   switch (msg.method) {
-      //     case 'connection':
-      //       console.log(`пользователь ${msg.user.username} присоединился`);
-      //       dispatch(incrementCountPlayers({ gameId: id, user }));
-      //       if (game.countPlayers === game.maxPlayers) {
-      //         setStart(true);
-      //       }
-      //       break;
 
-      //     case 'draw':
-    //       console.log('ebnytsia');
-    //       break;
-    //     default:
-    //       break;
-    //   }
-    // };
+      socket.on('sendNewGameStateBack', (msg) => {
+        dispatch(updateGameState(msg.game));
+      });
+
+      socket.on('modalAnswerOpen', (msg) => {
+        setModal({
+          visible: true,
+          username: msg.username,
+          userId: msg.userId,
+        });
+      });
+
+      socket.on('modalCloseFromBack', (msg) => {
+        console.log('zashloOOOOOOOOOOOOOOOOOOOOOOOO');
+        setModal({
+          visible: false,
+          username: '',
+          userId: 0,
+        });
+      });
     }, [socket]);
+
     useEffect(() => {
-      // console.log('countPlayers', game.countPlayers);
+      if (user.canSendMessage) {
+        sendNewGameState(game, String(game.game.id));
+        if (user.user.id !== game.isHost) {
+          dispatch(updateCanSendStatus(false));
+        }
+      }
+      if (user.user.id === game.isHost) {
+        dispatch(updateCanSendStatus(true));
+      }
     }, [game]);
 
-    useEffect(() => {
-    // dispatch(startGame({ gameId: id, isPanding: false }));
-    }, [start]);
+    const giveAnswer = () => {
+      modalAnswer(String(game.game.id), user.user.username, user.user.id);
+      setModal({
+        visible: true,
+        username: user.user.username || 'username',
+        userId: user.user.id,
+      });
+    };
 
-    // рукопожатие сокет
-    // побмен юзером
-    // добавление в гейм стейт
-    // удаление при выходе
-    const howManyPlayers = 6; // TODO с бэка
     return (
       <>
         {id && <VideoComponent roomID={id} />}
 
-        {/* <CameraContainer /> */}
-        <div className="placeQuestion">
-          <button type="submit">Назвать слово!</button>
-          <QuestionCard />
-        </div>
+        {modal.visible && <ModalAnswerCard setModal={setModal} modal={modal} findIndex={findIndex} />}
+
+        {!game.game.isPanding
+        && (user.canSendMessage ? (
+          <p>{game.questions.list[findIndex()].questionForHost}</p>
+        ) : (
+          <>
+            <p>{game.questions.list[findIndex()].questionForPlayers}</p>
+            <button type="submit" onClick={giveAnswer}>Дать ответ</button>
+          </>
+        ))}
+
+        {game.questions.list[findIndex()].type === 3 && (
+        <Canvas roomID={id} canSendMessage={user.canSendMessage} />
+        )}
       </>
     );
   }

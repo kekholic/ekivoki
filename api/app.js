@@ -19,12 +19,7 @@ const io = require('socket.io')(server, {
   },
 });
 
-// const WSServer = require('express-ws')(app);
-
-// module.exports = WSServer;
 const errorMiddleware = require('./src/middlewares/error-middleware');
-
-// const GameController = require('./src/controllers/gameControllers');
 
 const { PORT } = process.env; // получение переменных env
 
@@ -38,15 +33,13 @@ app.use(cors(corsOptions));
 
 app.use(cookieParser());
 
-// const aWss = WSServer.getWss();
-
 const authRouter = require('./src/routes/authRouter');
 const gameRouter = require('./src/routes/gameRouter');
 const ACTIONS = require('./src/actions/wsActions');
 const gameControllers = require('./src/controllers/gameControllers');
 const gameService = require('./src/service/gameService');
+const questionRouter = require('./src/routes/questionRouter');
 // const authMiddleware = require('./src/middlewares/authMiddleware');
-// const gameService = require('./src/service/gameService');
 
 app.use(express.static(path.join(__dirname, 'public'))); // подключение  public директории
 
@@ -57,6 +50,7 @@ app.use(express.json()); // парсинг post запросов в json.
 
 app.use('/auth', authRouter);
 app.use('/game', gameRouter);
+app.use('/question', questionRouter);
 
 // app.ws('/game/:id', GameController.start);
 
@@ -98,8 +92,8 @@ app.use('/game', gameRouter);
 //   socket.on('send_message', (msg) => {
 //     socket.to(msg.id).emit('resive_message', msg);
 //   });
-//   const message = JSON.parse(msg);
-//    switch (message.method) {
+//   // const message = JSON.parse(msg);
+//   /* switch (message.method) {
 //       case 'connection':
 //         gameService.gameConnections(ws, mesg);
 //         break;
@@ -109,8 +103,8 @@ app.use('/game', gameRouter);
 
 //       default:
 //         break;
-//     }
-//   socket.broadcast.emit('resive_message', msg);
+//     } */
+//   // socket.broadcast.emit('resive_message', msg);
 // });
 
 // const connectionHandler = (ws, msg) => {
@@ -153,8 +147,7 @@ io.on('connection', (socket) => {
 
   socket.on(ACTIONS.JOIN, (config) => {
     const { room: roomID } = config;
-    console.log(roomID, 'roomID2222');
-    console.log(config);
+
     const { rooms: joinedRooms } = socket;
 
     if (Array.from(joinedRooms).includes(roomID)) {
@@ -191,61 +184,68 @@ io.on('connection', (socket) => {
     // Array.from(io.sockets.adapter.rooms.get(roomID));
   });
 
-  socket.on('OlologMessage', (data) => {
-    console.log(data.message);
-    console.log(data.roomID);
+  // socket.on('game', (msg) => {
+  //   switch (msg.method) {
+  //     case 'initState':
+  //       socket.to(msg.roomID).emit('gameAnswers', msg);
+  //       break;
+  //     case 'visibleState':
+  //       socket.to(msg.roomID).emit('gameAnswers', msg);
+  //       break;
+  //     case 'questionState':
+  //       socket.to(msg.roomID).emit('gameAnswers', msg);
+  //       break;
+  //     case 'tryAnswer':
+  //       socket.to(msg.roomID).emit('gameAnswers', msg);
+  //       break;
+  //     case 'wrongAnswer':
+  //       socket.to(msg.roomID).emit('gameAnswers', msg);
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // });
 
-    console.log(socket.id, 'socket/.id');
+  // вход игрока в существующую игру:
+  socket.on('playerJoined', (msg) => {
+    console.log(msg.roomID);
+    socket.to(msg.roomID).emit('playerJoined', msg.user);
+  });
+  socket.on('sendNewGameState', (msg) => {
     setTimeout(() => {
-      // io.to(roomID).emit('OloloAnswer', {
-      //   answer: '123',
-      // });
-      // console.log(io.sockets.adapter.rooms.has(data.roomID), 'boolean');
-      // console.log(socket);
-      // console.log(socket.to(data.roomID).adapter.rooms, 'lollllllllllll');
-      io.to(data.roomID).emit('OloloAnswer', 'xuy');
-      // const allUsersRoom = Array.from(socket.to(data.roomID).adapter.rooms.get(data.roomID));
-      // console.log(socket.id);
-      // allUsersRoom.forEach((user) => {
-      //   console.log(user, ' uSSSSSSSSSSSSSSSSSSSSSSSEEEEEEEEEEEEEEER');
-      //   io.to(user).emit('OloloAnswer', {
-      //     peerID: user,
-      //     msg: 'xuy',
-      //   });
-      // });
-      // socket.emit('OloloAnswer', 'test');
-    }, 3000);
-    // console.log(Array.from(io.sockets.adapter.rooms.get(roomID)), 'lOOOOOOOOOOOl');
-    // socket.emit('OloloAnswer', { roomID, answer: 'Ti dibil' });
-    // io.sockets.in(roomID).emit('OloloAnswer', 'You are in room');
-    // socket.emit('OloloAnswer', roomID);
+      socket.to(msg.roomID).emit('sendNewGameStateBack', msg);
+    }, 2000);
+  });
 
-    // io.in(socket.id).emit('OloloAnswer', {
-    //   answer: 'Ti dibil',
-    // });
+  socket.on('modalAnswer', (msg) => {
+    socket.to(msg.roomID).emit('modalAnswerOpen', msg);
+  });
 
-    // console.log(io.sockets.adapter.rooms.get(data.roomID), 'lOOOOOOOOOOOl2');
-    // io.in('9').emit('OloloAnswer', {
-    //   answer: 'Ti dibil',
-    // });
+  socket.on('modalClose', (msg) => {
+    socket.to(msg.roomID).emit('modalCloseFromBack', '');
+  });
+
+  socket.on('draw_server', (msg) => {
+    console.log('2', msg.figure);
+    console.log('msg.roomID: ', msg.roomID);
+    socket.to(msg.roomID).emit('draw', msg);
   });
 
   function leaveRoom() {
     const { rooms } = socket;
-    Array.from(rooms)
-      .forEach((roomID) => {
-        const clients = Array.from(io.sockets.adapter.rooms.get(roomID) || []);
-        clients.forEach((clientID) => {
-          io.to(clientID).emit(ACTIONS.REMOVE_PEER, {
-            peerID: socket.id,
-          });
-
-          socket.emit(ACTIONS.REMOVE_PEER, {
-            peerID: clientID,
-          });
+    Array.from(rooms).forEach((roomID) => {
+      const clients = Array.from(io.sockets.adapter.rooms.get(roomID) || []);
+      clients.forEach((clientID) => {
+        io.to(clientID).emit(ACTIONS.REMOVE_PEER, {
+          peerID: socket.id,
         });
-        socket.leave(roomID);
+
+        socket.emit(ACTIONS.REMOVE_PEER, {
+          peerID: clientID,
+        });
       });
+      socket.leave(roomID);
+    });
     shareRoomsInfo();
   }
 
@@ -257,8 +257,6 @@ io.on('connection', (socket) => {
       peerID: socket.id,
       sessionDescription,
     });
-    console.log(peerID, 'peerIDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD');
-    // console.log(roomID, 'roomID')
   });
 
   socket.on(ACTIONS.RELAY_ICE, ({ peerID, iceCandidate }) => {

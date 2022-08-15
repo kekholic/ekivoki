@@ -71,10 +71,9 @@ model Card {
   id           Int        @id @default(autoincrement())
   Collection   Collection @relation(fields: [collectionId], references: [id])
   collectionId Int
-  title        String
-  questions    String
-  type         String
-  answer       String?
+  questionForPlayers        String
+  questionForHost    String
+  type         Int
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
 }

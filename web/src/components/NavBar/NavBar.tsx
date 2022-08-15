@@ -12,8 +12,8 @@ export default function NavBar() {
   };
 
   return (
-    <div className={style.header__row}>
-      <div className={style.header__container}>
+    <div className={style.header__container}>
+      <div className={style.header__row}>
         <Link to="/" className={style.header_logo}>ЭКИВОКИ</Link>
         <div className={style.haeder_menu}>
           {isAuth

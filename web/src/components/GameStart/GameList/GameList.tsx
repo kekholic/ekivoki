@@ -1,23 +1,22 @@
 /* eslint-disable comma-dangle */
 // import axios from 'axios';
-import React, { SyntheticEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux';
+import { connectedToTheGame } from '../../../lib/game/gameUpdate';
 import { IGame } from '../../../models/IGame';
 import socket from '../../../socket';
 import ACTIONS from '../../../actions/wsActions';
 import {
   getGame,
-  incrementCountPlayers,
+  // playersConnection,
 } from '../../../store/reducers/actionCreators';
-import { choiceGame } from '../../../store/reducers/gameSlice';
 
-type Props = {};
-
-export default function GameList({}: Props) {
+export default function GameList() {
   const [value, setValue] = useState('');
   const { games } = useAppSelector((store) => store.allGame);
-  const { user } = useAppSelector((store) => store.user);
+  // const { game } = useAppSelector((store) => store);
+  const user = useAppSelector((store) => store.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   // TODO:
@@ -38,23 +37,21 @@ export default function GameList({}: Props) {
     socket.emit(ACTIONS.SHARE_ROOMS);
   }, []);
 
-  const handleClick = (game: IGame) => {
-    dispatch(
-      incrementCountPlayers({
-        ...game,
-        userId: user.id,
-        userName: user.username,
-      })
-    );
-    dispatch(choiceGame(game));
-    navigate(`/game/${game.id}`);
+  const handleClick = (gameInner: IGame) => {
+    // dispatch(playersConnection({ id: gameInner.id, user: user.user }));
+    connectedToTheGame(String(gameInner.id), user.user);
+    navigate(`/game/${gameInner.id}`);
   };
+
+  // useEffect(() => {
+  //   if (game.playersPriority.length > 1);
+  // }, [game]);
 
   return (
     <>
-      {activeLobby.map((game) => (
-        <div key={game.id}>
-          <p>{game.title}</p>
+      {activeLobby.map((gameInner: IGame) => (
+        <div key={gameInner.id}>
+          <p>{gameInner.title}</p>
           <input
             value={value}
             type="text"
@@ -64,7 +61,7 @@ export default function GameList({}: Props) {
               setValue(e.target.value);
             }}
           />
-          <button type="submit" onClick={() => handleClick(game)}>
+          <button type="submit" onClick={() => handleClick(gameInner)}>
             Выбрать игру
           </button>
         </div>
