@@ -40,7 +40,7 @@ function MainRoutes() {
             <Route path="/game/start/list" element={<GameList />} />
           </Route>
           <Route path="/personal" element={<PersonalPage />} />
-          <Route path="/canvas" element={<Canvas />} />
+          <Route path="/canvas" element={<Canvas roomID={undefined} canSendMessage={undefined} />} />
           <Route path="/game/:id" element={<GameMain />} />
         </Route>
       </Route>

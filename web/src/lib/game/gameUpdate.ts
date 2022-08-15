@@ -47,10 +47,7 @@ export function updateQuestionState(
   });
 }
 
-export function tryAnswer(
-  user: IUser,
-  id: string | undefined,
-): void {
+export function tryAnswer(user: IUser, id: string | undefined): void {
   socket.emit('game', {
     roomID: id,
     user,
@@ -58,19 +55,14 @@ export function tryAnswer(
   });
 }
 
-export function wrongAnswer(
-  id: string | undefined,
-): void {
+export function wrongAnswer(id: string | undefined): void {
   socket.emit('game', {
     roomID: id,
     method: 'wrongAnswer',
   });
 }
 
-export function connectedToTheGame(
-  id: string | undefined,
-  user: IUser,
-): void {
+export function connectedToTheGame(id: string | undefined, user: IUser): void {
   socket.emit('playerJoined', {
     roomID: id,
     user,
@@ -99,10 +91,12 @@ export function modalAnswer(
   });
 }
 
-export function modalCloseNo(
-  id: string | undefined,
-): void {
+export function modalCloseNo(id: string | undefined): void {
   socket.emit('modalClose', {
     roomID: id,
   });
+}
+
+export function BoardVisibleMessage(id: string | undefined): void {
+  socket.emit('boardVisible', { roomID: id });
 }
