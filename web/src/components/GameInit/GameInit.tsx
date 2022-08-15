@@ -65,8 +65,9 @@ export default function GameInit() {
         <input type="text" name="title" placeholder="Название лобби" />
         <input type="password" name="password" placeholder="Пароль лобби" />
         <select name="maxPlayers">
+
           <option selected disabled>Коль-во игроков</option>
-          <option value="1">1</option>
+
           <option value="2">2</option>
           <option value="3">3</option>
           <option value="4">4</option>
