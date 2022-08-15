@@ -39,6 +39,7 @@ const ACTIONS = require('./src/actions/wsActions');
 const gameControllers = require('./src/controllers/gameControllers');
 const gameService = require('./src/service/gameService');
 const questionRouter = require('./src/routes/questionRouter');
+const GAME_STATUS = require('./src/actions/gameStatus');
 // const authMiddleware = require('./src/middlewares/authMiddleware');
 
 app.use(express.static(path.join(__dirname, 'public'))); // подключение  public директории
@@ -124,7 +125,6 @@ async function getClientRooms() {
   const { rooms } = io.sockets.adapter;
 
   const allgamePading = await gameService.searchGame();
-  console.log('allgamePading', allgamePading);
   const arrGame = Array.from(rooms.keys());
 
   const newarrGame = allgamePading.filter((game) => arrGame.includes(String(game.id)));
@@ -169,6 +169,7 @@ io.on('connection', (socket) => {
     });
 
     socket.join(roomID);
+    gameService.changeStatusGame(Number(roomID), GAME_STATUS.IN_LOBBY);
     shareRoomsInfo();
     // setTimeout(() => {
     //   // io.to(roomID).emit('OloloAnswer', {
@@ -245,6 +246,7 @@ io.on('connection', (socket) => {
 
   function leaveRoom() {
     const { rooms } = socket;
+    console.log('roomsInleave', rooms);
     Array.from(rooms).forEach((roomID) => {
       const clients = Array.from(io.sockets.adapter.rooms.get(roomID) || []);
       clients.forEach((clientID) => {

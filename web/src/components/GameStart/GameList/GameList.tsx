@@ -11,6 +11,7 @@ import {
   getGame,
 } from '../../../store/reducers/actionCreators';
 import style from './GameList.module.css';
+import GAME_STATUS from '../../../actions/gameStatus';
 
 export default function GameList() {
   const { games } = useAppSelector((store) => store.allGame);
@@ -19,9 +20,9 @@ export default function GameList() {
   const navigate = useNavigate();
   // TODO:
   // запрос с базы данных активных игр!
-  // useEffect(() => {
-  //   dispatch(getGame());
-  // }, []);
+  useEffect(() => {
+    dispatch(getGame());
+  }, []);
 
   const [activeLobby, setActiveLobby] = useState([]);
 
@@ -33,7 +34,6 @@ export default function GameList() {
 
   useEffect(() => {
     socket.emit(ACTIONS.SHARE_ROOMS);
-    
   }, []);
 
   const handleClick = (gameInner: IGame) => {
@@ -46,6 +46,15 @@ export default function GameList() {
       {activeLobby.map((gameInner: IGame) => (
         <div className={style.listItem} key={gameInner.id}>
           <span className={style.listTitle}>{gameInner.title}</span>
+          <span className={style.listTitle}>{gameInner.countPlayers} / {gameInner.maxPlayers}</span>
+          <input className={style.listInput} type="text" name="password" placeholder="Введите пароль" />
+          <button className={style.listSubmit} type="submit" onClick={() => handleClick(gameInner)}>Выбрать игру</button>
+        </div>
+      ))}
+      {games.filter((game)=>game.status === GAME_STATUS.CREATED).map((gameInner: IGame) => (
+        <div className={style.listItem} key={gameInner.id}>
+          <span className={style.listTitle}>{gameInner.title}</span>
+          <span className={style.listTitle}>{gameInner.countPlayers} / {gameInner.maxPlayers}</span>
           <input className={style.listInput} type="text" name="password" placeholder="Введите пароль" />
           <button className={style.listSubmit} type="submit" onClick={() => handleClick(gameInner)}>Выбрать игру</button>
         </div>

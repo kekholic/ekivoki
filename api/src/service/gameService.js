@@ -181,6 +181,21 @@ class GameService {
       throw ApiError.BadRequest('Ошибка старта игры');
     }
   }
+
+  async changeStatusGame(id, newStatus) {
+    console.log('id', id, 'newStatus', newStatus);
+    try {
+      const game = await prisma.game.update({
+        where: { id },
+        data: {
+          status: newStatus,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      throw ApiError.BadRequest('Ошибка смены статуса игры');
+    }
+  }
 }
 
 module.exports = new GameService();
