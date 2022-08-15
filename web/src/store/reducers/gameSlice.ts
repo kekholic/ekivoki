@@ -64,7 +64,7 @@ export const gameSlice = createSlice({
   initialState,
   reducers: {
     updateGameState(state, action: PayloadAction<GameState>) {
-      console.log(action.payload, 'ACTION PAYLOAD');
+      // console.log(action.payload, 'ACTION PAYLOAD');
 
       state.game = { ...action.payload.game };
       state.questions.list = [...action.payload.questions.list];
@@ -78,7 +78,7 @@ export const gameSlice = createSlice({
     },
     playerJoinedUpdateState(state, action: PayloadAction<any>) {
       state.game.countPlayers += 1;
-      console.log('action: ', action.payload);
+      // console.log('action: ', action.payload);
       const temp = {
         username: action.payload.username,
         userId: action.payload.id,

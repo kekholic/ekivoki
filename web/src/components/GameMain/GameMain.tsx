@@ -25,6 +25,7 @@ import {
   playerJoinedUpdateState,
   updateGameState,
 } from '../../store/reducers/gameSlice';
+import Canvas from '../Canvas/Canvas';
 // import { updateGameState } from '../../store/reducers/gameSlice';
 // import { newQuestionState } from '../../store/reducers/questionSlice';
 // import ModalAnswerCard from '../ModalAnswerCard/ModalAnswerCard';
@@ -141,8 +142,9 @@ export default function GameMain() {
 
     for (let i = 0; i < game.playersPriority.length; i++) {
       if (game.playersPriority[i].userId === game.isHost) {
-        isHost = game.playersPriority[i + 1]?.userId
-          || game.playersPriority[0]?.userId;
+        isHost =
+          game.playersPriority[i + 1]?.userId ||
+          game.playersPriority[0]?.userId;
       }
     }
     const progress = {
@@ -161,8 +163,6 @@ export default function GameMain() {
     modalCloseNo(String(game.game.id));
   };
 
-
-
   return (
     <>
       {id && <VideoComponent roomID={id} />}
@@ -170,12 +170,7 @@ export default function GameMain() {
         <div>
           {user.canSendMessage ? (
             <>
-              <p>
-                {' '}
-                {modal.username}
-                {' '}
-                верно ответил на вопрос?
-              </p>
+              <p> {modal.username} верно ответил на вопрос?</p>
               <button onClick={yesHandler}>Да</button>
               <button onClick={noHandler}>Нет</button>
             </>
@@ -184,8 +179,8 @@ export default function GameMain() {
           )}
         </div>
       )}
-      {!game.game.isPanding
-        && (user.canSendMessage ? (
+      {!game.game.isPanding &&
+        (user.canSendMessage ? (
           <p>{game.questions.list[findIndex()].questionForHost}</p>
         ) : (
           <>
@@ -193,6 +188,8 @@ export default function GameMain() {
             <button onClick={giveAnswer}>Дать ответ</button>
           </>
         ))}
+
+      {id && <Canvas roomID={id} />}
     </>
   );
 }

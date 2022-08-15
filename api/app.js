@@ -176,7 +176,9 @@ io.on('connection', (socket) => {
     socket.to(msg.roomID).emit('playerJoined', msg.user);
   });
   socket.on('sendNewGameState', (msg) => {
-    setTimeout(() => { socket.to(msg.roomID).emit('sendNewGameStateBack', msg); }, 2000);
+    setTimeout(() => {
+      socket.to(msg.roomID).emit('sendNewGameStateBack', msg);
+    }, 2000);
   });
 
   socket.on('modalAnswer', (msg) => {
@@ -185,6 +187,12 @@ io.on('connection', (socket) => {
 
   socket.on('modalClose', (msg) => {
     socket.to(msg.roomID).emit('modalCloseFromBack', '');
+  });
+
+  socket.on('draw_server', (msg) => {
+    console.log('2', msg.figure);
+    console.log('msg.roomID: ', msg.roomID);
+    socket.to(msg.roomID).emit('draw', msg);
   });
 
   function leaveRoom() {
