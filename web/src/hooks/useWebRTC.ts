@@ -4,7 +4,7 @@ import { useEffect, useRef, useCallback } from 'react';
 import freeice from 'freeice';
 import useStateWithCallback from './useStateWithCallback';
 import socket from '../socket';
-import ACTIONS from '../socket/actions';
+import ACTIONS from '../actions/wsActions';
 import {
   IlocalMediaStream, IpeerConnections, IpeerMediaElements, IRTCSessionDescriptionInit,
 } from '../types/webRTC';

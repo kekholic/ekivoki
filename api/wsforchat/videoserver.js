@@ -14,7 +14,7 @@ const io = require('socket.io')(server, {
 const morgan = require('morgan');
 const path = require('path');
 const { version, validate } = require('uuid');
-const ACTIONS = require('./actions');
+const ACTIONS = require('../src/actions/wsActions');
 
 app.use(morgan('dev'));
 

@@ -35,8 +35,12 @@ app.use(cookieParser());
 
 const authRouter = require('./src/routes/authRouter');
 const gameRouter = require('./src/routes/gameRouter');
-const ACTIONS = require('./wsforchat/actions');
+const ACTIONS = require('./src/actions/wsActions');
+const gameControllers = require('./src/controllers/gameControllers');
+const gameService = require('./src/service/gameService');
 const questionRouter = require('./src/routes/questionRouter');
+const GAME_STATUS = require('./src/actions/gameStatus');
+
 // const authMiddleware = require('./src/middlewares/authMiddleware');
 
 app.use(express.static(path.join(__dirname, 'public'))); // подключение  public директории
@@ -52,12 +56,7 @@ app.use('/question', questionRouter);
 
 // app.ws('/game/:id', GameController.start);
 
-// app.ws('/canvas', (ws, req) => {
-//   ws.on('message', (msg) => {
-//     const mesg = JSON.parse(msg);
-//     switch (mesg.method) {
-//       case 'connection':
-//         connectionHandler(ws, mesg);
+// app.ws('/canvas', (ws, reNumber(rooms)(ws, mesg);
 //         break;
 //       case 'draw':
 //         broadcastConnection(ws, mesg);
@@ -105,28 +104,51 @@ app.use('/question', questionRouter);
 //   // socket.broadcast.emit('resive_message', msg);
 // });
 
-// // const connectionHandler = (ws, msg) => {
-// //   ws.id = msg.id;
-// //   broadcastConnection(ws, msg);
-// // };
+// const connectionHandler = (ws, msg) => {
+//   ws.id = msg.id;
+//   broadcastConnection(ws, msg);
+// };
 
-// // const broadcastConnection = (ws, msg) => {
-// //   aWss.clients.forEach((client) => {
-// //     client.send(JSON.stringify(msg));
-// //     if (client.id === msg.id) {
-// //     }
-// //   })
-// // };
+// const broadcastConnection = (ws, msg) => {
+//   aWss.clients.forEach((client) => {
+//     client.send(JSON.stringify(msg));
+//     if (client.id === msg.id) {
+//     }
+//   });
+// };
+
+async function getClientRooms() {
+  const { rooms } = io.sockets.adapter;
+
+  const allgamePading = await gameService.searchGame();
+  const arrGame = Array.from(rooms.keys());
+
+  const newarrGame = allgamePading.filter((game) => arrGame.includes(String(game.id)));
+
+  return newarrGame;
+}
+
+async function shareRoomsInfo() {
+  io.emit(ACTIONS.SHARE_ROOMS, {
+    rooms: await getClientRooms(),
+  });
+}
 
 io.on('connection', (socket) => {
-  // shareRoomsInfo();
+  shareRoomsInfo();
   console.log('socket connection');
+  socket.on(ACTIONS.SHARE_ROOMS, () => {
+    shareRoomsInfo();
+  });
 
   socket.on(ACTIONS.JOIN, (config) => {
     const { room: roomID } = config;
-
+    console.log('roomID', roomID);
     const { rooms: joinedRooms } = socket;
 
+    if (!Number.isNaN(Number(roomID))) {
+      gameService.changePlayersCount(Number(roomID), 'increment');
+    }
     if (Array.from(joinedRooms).includes(roomID)) {
       return console.warn(`Already joined to ${roomID}`);
     }
@@ -146,6 +168,20 @@ io.on('connection', (socket) => {
     });
 
     socket.join(roomID);
+    gameService.changeStatusGame(Number(roomID), GAME_STATUS.IN_LOBBY);
+    shareRoomsInfo();
+    // setTimeout(() => {
+    //   // io.to(roomID).emit('OloloAnswer', {
+    //   //   answer: '123',
+    //   // });
+    //   console.log(io.sockets.adapter.rooms.has(roomID), 'boolean');
+    //   io.to('9').emit('OloloAnswer', 'test');
+    // }, 3000);
+    // // console.log(Array.from(io.sockets.adapter.rooms.get(roomID)), 'lOOOOOOOOOOOl');
+    // // socket.emit('OloloAnswer', { roomID, answer: 'Ti dibil' });
+    // // io.sockets.in(roomID).emit('OloloAnswer', 'You are in room');
+    // // socket.emit('OloloAnswer', roomID);
+    // Array.from(io.sockets.adapter.rooms.get(roomID));
   });
 
   // socket.on('game', (msg) => {
@@ -209,8 +245,10 @@ io.on('connection', (socket) => {
 
   function leaveRoom() {
     const { rooms } = socket;
+    console.log('zashwl v liv', rooms);
     Array.from(rooms).forEach((roomID) => {
       const clients = Array.from(io.sockets.adapter.rooms.get(roomID) || []);
+      console.log('clients', clients);
       clients.forEach((clientID) => {
         io.to(clientID).emit(ACTIONS.REMOVE_PEER, {
           peerID: socket.id,
@@ -220,13 +258,23 @@ io.on('connection', (socket) => {
           peerID: clientID,
         });
       });
+      console.log(Number(roomID));
+      if (!Number.isNaN(Number(roomID))) {
+        gameService.changePlayersCount(Number(roomID), 'decrement');
+      }
+      console.log('zashwl posle lib liv', rooms);
       socket.leave(roomID);
     });
-    // shareRoomsInfo();
+    shareRoomsInfo();
   }
 
-  socket.on(ACTIONS.LEAVE, leaveRoom);
-  socket.on('disconnecting', leaveRoom);
+  socket.on(ACTIONS.LEAVE, () => {
+    leaveRoom();
+  });
+  socket.on('disconnecting', () => {
+    console.log('zashel v disconect');
+    leaveRoom();
+  });
 
   socket.on(ACTIONS.RELAY_SDP, ({ peerID, sessionDescription }) => {
     io.to(peerID).emit(ACTIONS.SESSION_DESCRIPTION, {

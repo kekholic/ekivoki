@@ -41,8 +41,7 @@ model Game {
   password        String?
   countPlayers    Int               @default(0)
   maxPlayers      Int
-  isPanding       Boolean
-  isdone          Boolean
+  status          String            @default("created")
   UserNGame       UserNGame[]
   GameNCollection GameNCollection[]
   createdAt       DateTime          @default(now())
