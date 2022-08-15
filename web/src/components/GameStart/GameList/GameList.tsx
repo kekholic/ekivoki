@@ -9,13 +9,11 @@ import socket from '../../../socket';
 import ACTIONS from '../../../actions/wsActions';
 import {
   getGame,
-  // playersConnection,
 } from '../../../store/reducers/actionCreators';
+import style from './GameList.module.css';
 
 export default function GameList() {
-  const [value, setValue] = useState('');
   const { games } = useAppSelector((store) => store.allGame);
-  // const { game } = useAppSelector((store) => store);
   const user = useAppSelector((store) => store.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -39,34 +37,19 @@ export default function GameList() {
   }, []);
 
   const handleClick = (gameInner: IGame) => {
-    // dispatch(playersConnection({ id: gameInner.id, user: user.user }));
     connectedToTheGame(String(gameInner.id), user.user);
     navigate(`/game/${gameInner.id}`);
   };
 
-  // useEffect(() => {
-  //   if (game.playersPriority.length > 1);
-  // }, [game]);
-
   return (
-    <>
+    <div className={style.listContent}>
       {activeLobby.map((gameInner: IGame) => (
-        <div key={gameInner.id}>
-          <p>{gameInner.title}</p>
-          <input
-            value={value}
-            type="text"
-            name="password"
-            placeholder="Введите пароль"
-            onChange={(e) => {
-              setValue(e.target.value);
-            }}
-          />
-          <button type="submit" onClick={() => handleClick(gameInner)}>
-            Выбрать игру
-          </button>
+        <div className={style.listItem} key={gameInner.id}>
+          <span className={style.listTitle}>{gameInner.title}</span>
+          <input className={style.listInput} type="text" name="password" placeholder="Введите пароль" />
+          <button className={style.listSubmit} type="submit" onClick={() => handleClick(gameInner)}>Выбрать игру</button>
         </div>
       ))}
-    </>
+    </div>
   );
 }
