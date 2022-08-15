@@ -1,0 +1,13 @@
+.settingsForm{
+  display: flex;
+  flex-direction: column;
+  font-family: 'Montserrat';
+  color: #fff;
+  row-gap: 20px;
+}
+
+.createTitle{
+  font-size: 25px;
+  align-self: center;
+  letter-spacing: 2px;
+}
