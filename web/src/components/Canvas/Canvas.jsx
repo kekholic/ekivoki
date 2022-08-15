@@ -5,9 +5,8 @@ import CanvasContainer from '../CanvasContainer/CanvasContainer.jsx';
 import socket from '../../socket';
 import { useAppSelector } from '../../hooks/redux';
 
-export default function Canvas({ roomID }) {
-  const game = useAppSelector((store) => store.game);
-  console.log(roomID, typeof roomID);
+export default function Canvas({ roomID, canSendMessage }) {
+  const user = useAppSelector((store) => store.user);
   const CANVAS_REF = useRef(null);
 
   const isDrawing = useRef(false);
@@ -46,98 +45,72 @@ export default function Canvas({ roomID }) {
   }
 
   function startDrawing(event) {
-    isDrawing.current = true;
-    const canvas = CANVAS_REF.current;
-    const context = canvas.getContext('2d');
-    console.log('STARt');
-    context.beginPath();
-    const { eventOffsetX, eventOffsetY } = getCanvasOffset(event);
-    socket.emit('draw_server', {
-      roomID,
-      figure: {
-        START: 'START',
-        x: eventOffsetX,
-        y: eventOffsetY,
-      },
-    });
-
-    /* socket.send(
-      JSON.stringify({
-        method: 'draw',
-        id,
+    if (canSendMessage) {
+      isDrawing.current = true;
+      const canvas = CANVAS_REF.current;
+      const context = canvas.getContext('2d');
+      console.log('STARt');
+      context.beginPath();
+      const { eventOffsetX, eventOffsetY } = getCanvasOffset(event);
+      socket.emit('draw_server', {
+        roomID,
         figure: {
           START: 'START',
           x: eventOffsetX,
           y: eventOffsetY,
         },
-      })
-    ); */
-    context.lineTo(eventOffsetX, eventOffsetY);
-    event.preventDefault();
+      });
+      context.lineTo(eventOffsetX, eventOffsetY);
+      event.preventDefault();
+    }
   }
 
   function draw(event) {
-    if (isDrawing.current) {
-      const canvas = CANVAS_REF.current;
-      const context = canvas.getContext('2d');
-      const { eventOffsetX, eventOffsetY } = getCanvasOffset(event);
-      console.log(eventOffsetX, eventOffsetY);
-      // console.log(event);
-      socket.emit('draw_server', {
-        roomID,
-        figure: {
-          x: eventOffsetX,
-          y: eventOffsetY,
-        },
-      });
-      /* socket.send(
-        JSON.stringify({
-          method: 'draw',
-          id,
+    if (canSendMessage) {
+      if (isDrawing.current) {
+        const canvas = CANVAS_REF.current;
+        const context = canvas.getContext('2d');
+        const { eventOffsetX, eventOffsetY } = getCanvasOffset(event);
+        console.log(eventOffsetX, eventOffsetY);
+        // console.log(event);
+        socket.emit('draw_server', {
+          roomID,
           figure: {
             x: eventOffsetX,
             y: eventOffsetY,
           },
-        })
-      ); */
-      context.lineTo(eventOffsetX, eventOffsetY);
+        });
+        context.lineTo(eventOffsetX, eventOffsetY);
 
-      context.strokeStyle = 'black';
-      context.lineWidth = '3px';
-      context.lineCap = 'round';
-      context.lineJoin = 'round';
-      context.stroke();
+        context.strokeStyle = 'black';
+        context.lineWidth = '3px';
+        context.lineCap = 'round';
+        context.lineJoin = 'round';
+        context.stroke();
+      }
+      event.preventDefault();
     }
-    event.preventDefault();
   }
 
   function stopDrawing(event) {
-    if (isDrawing.current) {
-      const canvas = CANVAS_REF.current;
-      const context = canvas.getContext('2d');
-      console.log('STOP');
+    if (canSendMessage) {
+      if (isDrawing.current) {
+        const canvas = CANVAS_REF.current;
+        const context = canvas.getContext('2d');
+        console.log('STOP');
 
-      socket.emit('draw_server', {
-        roomID,
-        figure: {
-          STOP: 'STOP',
-        },
-      });
-      /* socket.send(
-        JSON.stringify({
-          method: 'draw',
-          id,
+        socket.emit('draw_server', {
+          roomID,
           figure: {
             STOP: 'STOP',
           },
-        })
-      ); */
-
-      context.stroke();
-      context.closePath();
-      isDrawing.current = false;
+        });
+        context.stroke();
+        context.closePath();
+        isDrawing.current = false;
+      }
+      event.preventDefault();
     }
-    event.preventDefault();
   }
 
   useEffect(() => {
@@ -145,31 +118,6 @@ export default function Canvas({ roomID }) {
       console.log('msg: ', msg.figure);
       drawHandler(msg);
     });
-    /* const socket = new WebSocket('ws://localhost:4000/canvas');
-    socket.onopen = () => {
-      console.log('Подключение установлено');
-      socket.send(
-        JSON.stringify({
-          // id:params.id,
-          // username: canvasState.username,
-          method: 'connection',
-        }),
-      );
-    };
-    socket.onmessage = (event) => {
-      const msg = JSON.parse(event.data);
-      switch (msg.method) {
-        case 'connection':
-          console.log('пользователь {msg.username} присоединился'); // поправить
-          break;
-
-        case 'draw':
-          drawHandler(msg);
-          break;
-        default:
-          break;
-      }
-    }; */
 
     const canvas = CANVAS_REF.current;
     console.log('canvas: ', canvas);
@@ -189,7 +137,7 @@ export default function Canvas({ roomID }) {
         canvas.removeEventListener('mouseout', stopDrawing);
       };
     }
-  }, []);
+  }, [canSendMessage]);
 
   return (
     <div>
