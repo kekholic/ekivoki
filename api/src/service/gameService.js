@@ -38,7 +38,6 @@ class GameService {
       const oneGame = await prisma.game.findUnique({
         where: { id },
       });
-      console.log('oneGame', oneGame);
       return oneGame.status;
     } catch (error) {
       console.log(error);
@@ -53,7 +52,6 @@ class GameService {
           title,
           password,
           maxPlayers: +maxPlayers,
-          countPlayers,
         },
       });
       if (!newGame) {
@@ -183,7 +181,6 @@ class GameService {
   }
 
   async changeStatusGame(id, newStatus) {
-    console.log('id', id, 'newStatus', newStatus);
     try {
       const game = await prisma.game.update({
         where: { id },
@@ -194,6 +191,25 @@ class GameService {
     } catch (error) {
       console.log(error);
       throw ApiError.BadRequest('Ошибка смены статуса игры');
+    }
+  }
+
+  async changePlayersCount(id, direction) {
+    try {
+      const game = await prisma.game.update({
+        where: { id },
+        data: {
+          countPlayers: {
+            [direction]: 1,
+          },
+        },
+      });
+      if (game.countPlayers === 0) {
+        this.changeStatusGame(id, GAME_STATUS.CREATED);
+      }
+    } catch (error) {
+      console.log(error);
+      throw ApiError.BadRequest('Ошибка смены кол-ва игроков');
     }
   }
 }
