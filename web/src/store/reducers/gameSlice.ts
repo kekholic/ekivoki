@@ -22,8 +22,12 @@ export interface GameState {
   progress: Iprogress;
   isLoading: boolean;
   error: string;
+  videoComponents: IVideoComponents;
 }
 
+interface IVideoComponents {
+  [key: string]: number;
+}
 interface IplayersPriority {
   userId: number;
   username: string;
@@ -51,6 +55,7 @@ const initialState: GameState = {
     ],
     current: 1,
   },
+  videoComponents: {},
   isCanvas: false,
   playersPriority: [],
   isHost: 0,
@@ -75,6 +80,7 @@ export const gameSlice = createSlice({
       state.isHost = action.payload.isHost;
       state.isLoading = false;
       state.error = '';
+      state.videoComponents = { ...action.payload.videoComponents };
     },
     hostLeaveUpdate(state, action: PayloadAction<any>) {
       // console.log(action.payload, 'ACTION PAYLOAD');
@@ -110,11 +116,15 @@ export const gameSlice = createSlice({
       state.isHost = state.isHost > action.payload.id ? action.payload.id : state.isHost;
       // eslint-disable-next-line max-len
       if (state.game.countPlayers === state.game.maxPlayers) state.game.status = GAME_STATUS.IN_PROGRESS;
+      console.log(action.payload, 'SUKA SUK SUKA BLYAT');
+      state.videoComponents = {
+        ...state.videoComponents,
+        [action.payload.socket]: action.payload.id,
+      };
       // state.game.isPanding = state.game.countPlayers !== state.game.maxPlayers;
       // state.game.status = action.payload.status;
     },
     correctAnswer(state, action: PayloadAction<any>) {
-      console.log('action correctanswer: ', action.payload);
       state.progress = {
         ...state.progress,
         [action.payload.progress.userId]: action.payload.progress.score,
@@ -122,6 +132,9 @@ export const gameSlice = createSlice({
       };
       state.isHost = action.payload.isHost;
       state.questions.current = action.payload.current;
+    },
+    setVideoComponents(state, action: PayloadAction<any>) {
+      state.videoComponents = { ...state.videoComponents, ...action.payload };
     },
   },
   extraReducers: {
@@ -235,6 +248,7 @@ export const {
   correctAnswer,
   hostLeaveUpdate,
   playersLeaveUpdate,
+  setVideoComponents,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;
