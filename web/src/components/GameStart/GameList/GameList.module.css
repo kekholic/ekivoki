@@ -6,14 +6,17 @@
 
 .listItem{
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 }
 
 .listTitle{
+  position:relative;
   font-size: 25px;
   letter-spacing: 1px;
   color: #fff;
+  width: 25%;
+  overflow: hidden;
 }
 
 .listInput{
