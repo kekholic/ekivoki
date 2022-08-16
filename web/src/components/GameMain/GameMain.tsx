@@ -55,7 +55,7 @@ import VideoComponent from '../WebChat/VideoComponent';
   game,
 }); */
 
-let i = 0;
+const i = 0;
 
 export default function GameMain() {
   const [modal, setModal] = useState({
@@ -82,6 +82,8 @@ export default function GameMain() {
     return ind;
   };
 
+  // useE
+
   useEffect(() => {
     console.log(statusGame);
   }, [statusGame]);
@@ -100,6 +102,7 @@ export default function GameMain() {
       });
 
       socket.on('sendNewGameStateBack', (msg) => {
+        // console.log('what a fuck?');
         dispatch(updateGameState(msg.game));
       });
 
@@ -122,23 +125,23 @@ export default function GameMain() {
         setBoardVisible(true);
       });
 
-      socket.on('exit_game_host', (msg) => {
-        if (user.user.id === msg.isHost) {
-          dispatch(hostLeaveUpdate(msg));
-        }
-      });
-      socket.on('exit_game', (msg) => {
-        if (user.canSendMessage) {
-          dispatch(playersLeaveUpdate(msg));
-        }
-      });
+      // socket.on('exit_game_host', (msg) => {
+      //   if (user.user.id === msg.isHost) {
+      //     dispatch(hostLeaveUpdate(msg));
+      //   }
+      // });
+      // socket.on('exit_game', (msg) => {
+      //   if (user.canSendMessage) {
+      //     dispatch(playersLeaveUpdate(msg));
+      //   }
+      // });
     }, [socket]);
 
     useEffect(() => {
       if (user.canSendMessage) {
         sendNewGameState(game, String(game.game.id));
         if (user.user.id !== game.isHost) {
-          if (!game.game.isPanding && Object.keys(game.progress).length) {
+          if (game.game.status === GAME_STATUS.IN_PROGRESS && Object.keys(game.progress).length) {
             BoardVisibleMessage(id);
             setBoardVisible(true);
           }
@@ -148,36 +151,36 @@ export default function GameMain() {
       if (user.user.id === game.isHost) {
         dispatch(updateCanSendStatus(true));
       }
-      i += 1;
-      console.log(i);
+      // i += 1;
+      // console.log(i);
     }, [game]);
 
-    useEffect(() => {
-      console.log(i);
+    // useEffect(() => {
+    //   console.log(i);
 
-      return () => {
-        if (user.canSendMessage) {
-          let isHost = 0;
+    //   return () => {
+    //     if (user.canSendMessage) {
+    //       let isHost = 0;
 
-          for (let i = 0; i < game.playersPriority.length; i++) {
-            if (game.playersPriority[i].userId === game.isHost) {
-              isHost =
-                game.playersPriority[i + 1]?.userId ||
-                game.playersPriority[0]?.userId;
-            }
-          }
+    //       for (let i = 0; i < game.playersPriority.length; i++) {
+    //         if (game.playersPriority[i].userId === game.isHost) {
+    //           isHost =
+    //             game.playersPriority[i + 1]?.userId ||
+    //             game.playersPriority[0]?.userId;
+    //         }
+    //       }
 
-          socket.emit('exit_game_host', {
-            isHost,
-            game,
-            roomId: id,
-            userId: user.user.id,
-          });
-        } else {
-          socket.emit('exit_game', { roomId: id, userId: user.user.id });
-        }
-      };
-    }, [game]);
+    //       socket.emit('exit_game_host', {
+    //         isHost,
+    //         game,
+    //         roomId: id,
+    //         userId: user.user.id,
+    //       });
+    //     } else {
+    //       socket.emit('exit_game', { roomId: id, userId: user.user.id });
+    //     }
+    //   };
+    // }, [game]);
 
     const giveAnswer = () => {
       modalAnswer(String(game.game.id), user.user.username, user.user.id);
@@ -208,13 +211,13 @@ export default function GameMain() {
           />
         )}
 
-        {!game.game.isPanding &&
+        {(game.game.status === GAME_STATUS.IN_PROGRESS) &&
           (user.canSendMessage ? (
             <p>{game.questions.list[findIndex()].questionForHost}</p>
           ) : (
             <>
               <p>{game.questions.list[findIndex()].questionForPlayers}</p>
-              <button type='submit' onClick={giveAnswer}>
+              <button type="submit" onClick={giveAnswer}>
                 Дать ответ
               </button>
             </>

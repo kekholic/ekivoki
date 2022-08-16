@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import GAME_STATUS from '../../actions/gameStatus';
 import { IGame } from '../../models/IGame';
 import { IQuestions } from '../../models/IQuestions';
 import {
@@ -107,7 +108,10 @@ export const gameSlice = createSlice({
       };
       state.playersPriority.push(temp);
       state.isHost = state.isHost > action.payload.id ? action.payload.id : state.isHost;
-      state.game.isPanding = state.game.countPlayers !== state.game.maxPlayers;
+      // eslint-disable-next-line max-len
+      if (state.game.countPlayers === state.game.maxPlayers) state.game.status = GAME_STATUS.IN_PROGRESS;
+      // state.game.isPanding = state.game.countPlayers !== state.game.maxPlayers;
+      // state.game.status = action.payload.status;
     },
     correctAnswer(state, action: PayloadAction<any>) {
       console.log('action correctanswer: ', action.payload);
@@ -126,10 +130,11 @@ export const gameSlice = createSlice({
       state.isLoading = false;
       state.error = '';
       state.game = action.payload.game;
-
+      state.game.status = action.payload.status;
       state.isHost = action.payload.user.userId;
       state.questions.list = [...action.payload.questions];
       state.playersPriority.push(action.payload.user);
+      state.game.countPlayers = 1;
     },
     [createGame.pending.type]: (state) => {
       state.isLoading = true;
@@ -176,7 +181,7 @@ export const gameSlice = createSlice({
     [startGame.fulfilled.type]: (state) => {
       state.isLoading = false;
       state.error = '';
-      state.game.isPanding = false;
+      // state.game.isPanding = false;
     },
     [startGame.pending.type]: (state) => {
       state.isLoading = true;
@@ -188,7 +193,7 @@ export const gameSlice = createSlice({
     [endGame.fulfilled.type]: (state) => {
       state.isLoading = false;
       state.error = '';
-      state.game.isdone = true;
+      // state.game.isdone = true;
     },
     [endGame.pending.type]: (state) => {
       state.isLoading = true;

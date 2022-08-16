@@ -1,5 +1,6 @@
 /* eslint-disable class-methods-use-this */
 const { PrismaClient } = require('@prisma/client');
+const GAME_STATUS = require('../actions/gameStatus');
 const gameService = require('../service/gameService');
 
 const prisma = new PrismaClient();
@@ -10,7 +11,6 @@ class GameController {
       title, password, maxPlayers, countPlayers, id, username,
     } = req.body;
 
-    console.log(req.body);
     try {
       const response = await gameService.createGame(
         title,
@@ -20,6 +20,7 @@ class GameController {
         id,
         username,
       );
+      response.status = GAME_STATUS.IN_LOBBY;
 
       res.json(response);
     } catch (error) {
@@ -30,7 +31,7 @@ class GameController {
   async searchGame(req, res, next) {
     try {
       const allGame = await gameService.searchGame();
-      
+
       res.json(allGame);
     } catch (error) {
       next(error);
