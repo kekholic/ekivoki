@@ -115,6 +115,7 @@ export const gameSlice = createSlice({
       state.progress = {
         ...state.progress,
         [action.payload.progress.userId]: action.payload.progress.score,
+        [action.payload.progressHost.userId]: action.payload.progressHost.score,
       };
       state.isHost = action.payload.isHost;
       state.questions.current = action.payload.current;

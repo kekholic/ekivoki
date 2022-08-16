@@ -19,14 +19,14 @@ import { correctAnswer } from '../../store/reducers/gameSlice';
 // }
 
 interface IProps {
-  modal: IModal,
-  setModal: Dispatch<IModal>,
-  findIndex: Function,
+  modal: IModal;
+  setModal: Dispatch<IModal>;
+  findIndex: Function;
 }
 interface IModal {
-  visible: boolean,
-  username: string,
-  userId: number,
+  visible: boolean;
+  username: string;
+  userId: number;
 }
 
 export default function ModalAnswerCard(props: IProps): ReactElement {
@@ -71,8 +71,9 @@ export default function ModalAnswerCard(props: IProps): ReactElement {
 
     for (let i = 0; i < game.playersPriority.length; i++) {
       if (game.playersPriority[i].userId === game.isHost) {
-        isHost = game.playersPriority[i + 1]?.userId
-          || game.playersPriority[0]?.userId;
+        isHost =
+          game.playersPriority[i + 1]?.userId ||
+          game.playersPriority[0]?.userId;
       }
     }
     const progress = {
@@ -81,7 +82,13 @@ export default function ModalAnswerCard(props: IProps): ReactElement {
     };
     progress.score += game.questions.list[findIndex()].type;
 
-    dispatch(correctAnswer({ progress, isHost, current }));
+    const progressHost = {
+      userId: user.user.id,
+      score: game.progress[user.user.id] ? game.progress[user.user.id] : 0,
+    };
+    progressHost.score += game.questions.list[findIndex()].type;
+
+    dispatch(correctAnswer({ progress, progressHost, isHost, current }));
 
     setModal({
       visible: false,
@@ -136,10 +143,19 @@ export default function ModalAnswerCard(props: IProps): ReactElement {
       )}
       <p>.</p> */}
 
-      <div className={modal.visible ? `${style.modal} ${style.modalActive}` : `${style.modal}`}>
-
+      <div
+        className={
+          modal.visible
+            ? `${style.modal} ${style.modalActive}`
+            : `${style.modal}`
+        }
+      >
         <div
-          className={modal.visible ? `${style.modalContent} ${style.modalContentActive}` : `${style.modalContent}`}
+          className={
+            modal.visible
+              ? `${style.modalContent} ${style.modalContentActive}`
+              : `${style.modalContent}`
+          }
           onClick={(e) => e.stopPropagation()}
         >
           {' '}
@@ -148,14 +164,13 @@ export default function ModalAnswerCard(props: IProps): ReactElement {
           <div>
             {user.canSendMessage ? (
               <>
-                <p>
-                  {' '}
-                  {modal.username}
-                  {' '}
-                  верно ответил на вопрос?
-                </p>
-                <button type="submit" onClick={yesHandler}>Да</button>
-                <button type="submit" onClick={noHandler}>Нет</button>
+                <p> {modal.username} верно ответил на вопрос?</p>
+                <button type='submit' onClick={yesHandler}>
+                  Да
+                </button>
+                <button type='submit' onClick={noHandler}>
+                  Нет
+                </button>
               </>
             ) : (
               <div>

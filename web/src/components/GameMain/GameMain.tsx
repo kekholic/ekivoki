@@ -53,6 +53,8 @@ import VideoComponent from '../WebChat/VideoComponent';
   game,
 }); */
 
+let i = 0;
+
 export default function GameMain() {
   const [modal, setModal] = useState({
     visible: false,
@@ -131,7 +133,7 @@ export default function GameMain() {
       if (user.canSendMessage) {
         sendNewGameState(game, String(game.game.id));
         if (user.user.id !== game.isHost) {
-          if (!game.game.isPanding) {
+          if (!game.game.isPanding && Object.keys(game.progress).length) {
             BoardVisibleMessage(id);
             setBoardVisible(true);
           }
@@ -141,6 +143,12 @@ export default function GameMain() {
       if (user.user.id === game.isHost) {
         dispatch(updateCanSendStatus(true));
       }
+    i += 1;
+    console.log(i);
+  }, [game]);
+
+ /*  useEffect(() => {
+    console.log(i);
 
       return () => {
         if (user.canSendMessage) {
@@ -174,13 +182,13 @@ export default function GameMain() {
       });
     };
 
-    useEffect(() => {
-      if (boardVisible) {
-        setTimeout(() => {
-          setBoardVisible(false);
-        }, 15000);
-      }
-    }, [boardVisible]);
+  useEffect(() => {
+    if (boardVisible) {
+      setTimeout(() => {
+        setBoardVisible(false);
+      }, 5000);
+    }
+  }, [boardVisible]);
 
     return (
       <>
@@ -200,7 +208,7 @@ export default function GameMain() {
         ) : (
           <>
             <p>{game.questions.list[findIndex()].questionForPlayers}</p>
-            <button type="submit" onClick={giveAnswer}>
+            <button type='submit' onClick={giveAnswer}>
               Дать ответ
             </button>
           </>
@@ -210,8 +218,9 @@ export default function GameMain() {
         <Canvas roomID={id} canSendMessage={user.canSendMessage} />
         )}
 
-        {boardVisible && <ModalBoard />}
-      </>
+        {boardVisible && <ModalBoard boardVisible={boardVisible} />}
+        {/* <ModalBoard boardVisible={boardVisible} /> */}
+    </>
     );
   }
 
