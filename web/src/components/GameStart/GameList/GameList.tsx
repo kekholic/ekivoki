@@ -46,15 +46,24 @@ export default function GameList() {
       {activeLobby.map((gameInner: IGame) => (
         <div className={style.listItem} key={gameInner.id}>
           <span className={style.listTitle}>{gameInner.title}</span>
-          <span className={style.listTitle}>{gameInner.countPlayers} / {gameInner.maxPlayers}</span>
+          <span className={style.listCount}>
+            {gameInner.countPlayers}
+            /
+            {gameInner.maxPlayers}
+          </span>
           <input className={style.listInput} type="text" name="password" placeholder="Введите пароль" />
           <button className={style.listSubmit} type="submit" onClick={() => handleClick(gameInner)}>Выбрать игру</button>
         </div>
       ))}
-      {games.filter((game)=>game.status === GAME_STATUS.CREATED).map((gameInner: IGame) => (
+      {games.filter((game) => game.status === GAME_STATUS.CREATED).map((gameInner: IGame) => (
         <div className={style.listItem} key={gameInner.id}>
           <span className={style.listTitle}>{gameInner.title}</span>
-          <span className={style.listTitle}>{gameInner.countPlayers} / {gameInner.maxPlayers}</span>
+          <span className={style.listCount}>
+            {gameInner.countPlayers}
+            /
+            {gameInner.maxPlayers}
+
+          </span>
           <input className={style.listInput} type="text" name="password" placeholder="Введите пароль" />
           <button className={style.listSubmit} type="submit" onClick={() => handleClick(gameInner)}>Выбрать игру</button>
         </div>
