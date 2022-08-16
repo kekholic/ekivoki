@@ -68,7 +68,6 @@ export default function GameInit() {
         <div className={style.settingsSelect}>
           <select name="maxPlayers">
             <option selected disabled>Коль-во игроков</option>
-            <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>

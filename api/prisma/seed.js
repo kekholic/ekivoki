@@ -17,6 +17,12 @@ async function main() {
       },
       {
         collectionId: 1,
+        questionForPlayers: 'Отгадайте слово по рисунку',
+        questionForHost: 'Нарисуйте следующее: "Стрелка на колготках"',
+        type: 3,
+      },
+      {
+        collectionId: 1,
         questionForPlayers: 'Отгадайте слово, ведущий объяснит его словами',
         questionForHost: 'Объясните словами: "Нэпман", не используя однокоренные слова',
         type: 1,
