@@ -219,6 +219,7 @@ io.on('connection', (socket) => {
   // вход игрока в существующую игру:
   socket.on('playerJoined', (msg) => {
     console.log('playerJoined', msg);
+    msg.user.socket = msg.socket;
     socket.to(msg.roomID).emit('playerJoined', msg.user);
   });
   socket.on('sendNewGameState', (msg) => {
@@ -288,6 +289,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on(ACTIONS.RELAY_SDP, ({ peerID, sessionDescription }) => {
+    console.log('PPPPPPPPPPPPPPPPPPPPPP', peerID);
     io.to(peerID).emit(ACTIONS.SESSION_DESCRIPTION, {
       peerID: socket.id,
       sessionDescription,
@@ -295,6 +297,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on(ACTIONS.RELAY_ICE, ({ peerID, iceCandidate }) => {
+    console.log('PPPPPPPPPPPPPPPPPPPPPP22222', peerID);
     io.to(peerID).emit(ACTIONS.ICE_CANDIDATE, {
       peerID: socket.id,
       iceCandidate,

@@ -66,6 +66,7 @@ export function connectedToTheGame(id: string | undefined, user: IUser): void {
   socket.emit('playerJoined', {
     roomID: id,
     user,
+    socket: socket.id,
   });
 }
 

@@ -30,6 +30,7 @@ import {
   hostLeaveUpdate,
   playerJoinedUpdateState,
   playersLeaveUpdate,
+  setVideoComponents,
   updateGameState,
 } from '../../store/reducers/gameSlice';
 import Canvas from '../Canvas/Canvas';
@@ -55,7 +56,7 @@ import VideoComponent from '../WebChat/VideoComponent';
   game,
 }); */
 
-const i = 0;
+let users = {};
 
 export default function GameMain() {
   const [modal, setModal] = useState({
@@ -63,12 +64,18 @@ export default function GameMain() {
     username: '',
     userId: 0,
   });
-  const [boardVisible, setBoardVisible] = useState(false);
   const user = useAppSelector((store) => store.user);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (user.canSendMessage) {
+      dispatch(setVideoComponents({ [socket.id]: user.user.id }))
+    }
+  }, []);
+  const [boardVisible, setBoardVisible] = useState(false);
   const { game } = useAppSelector((store) => store);
   // const question = useAppSelector((store) => store.question);
   const { id } = useParams();
-  const dispatch = useAppDispatch();
   const statusGame = checkStatusGame(Number(id));
 
   const findIndex = (): number => {
@@ -82,7 +89,7 @@ export default function GameMain() {
     return ind;
   };
 
-  // useE
+  console.log(socket.id);
 
   useEffect(() => {
     console.log(statusGame);
@@ -96,6 +103,8 @@ export default function GameMain() {
       // sendMessageGameState(game, id, user);
 
       socket.on('playerJoined', (player) => {
+        // users = { ...users, player };
+        console.log('socket.id', player);
         if (user.canSendMessage) {
           dispatch(playerJoinedUpdateState(player));
         }
