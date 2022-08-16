@@ -73,3 +73,18 @@
     transform: translateY(-2px);
     box-shadow: 0 1px 0 #9f511a;
   }
+
+  .listError{
+    text-align: center;
+    color: #fff;
+    font-weight: 500;
+    font-size: 30px;
+    letter-spacing: 2px;
+    font-family: 'Montserrat';
+
+  }
+
+  .listErrorLink{
+    color: #fff;
+    text-decoration: underline;
+  }

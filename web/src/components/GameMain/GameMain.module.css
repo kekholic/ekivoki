@@ -1,0 +1,11 @@
+.gameVideos{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 63%;
+  gap: 15px;
+}
+
+.gameSpace{
+
+}
