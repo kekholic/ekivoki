@@ -172,6 +172,7 @@ io.on('connection', (socket) => {
 
   // вход игрока в существующую игру:
   socket.on('playerJoined', (msg) => {
+    console.log('playerJoined', msg);
     socket.to(msg.roomID).emit('playerJoined', msg.user);
   });
   socket.on('sendNewGameState', (msg) => {

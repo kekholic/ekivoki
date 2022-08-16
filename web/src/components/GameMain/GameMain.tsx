@@ -139,7 +139,7 @@ export default function GameMain() {
     console.log(i);
   }, [game]);
 
-  useEffect(() => {
+ /*  useEffect(() => {
     console.log(i);
 
     return () => {
@@ -175,7 +175,7 @@ export default function GameMain() {
       socket.emit('exit_game', { roomID: id, userId: user.user.id });
       // }
     };
-  }, []);
+  }, []); */
 
   const giveAnswer = () => {
     modalAnswer(String(game.game.id), user.user.username, user.user.id);
@@ -190,7 +190,7 @@ export default function GameMain() {
     if (boardVisible) {
       setTimeout(() => {
         setBoardVisible(false);
-      }, 15000);
+      }, 5000);
     }
   }, [boardVisible]);
 
@@ -222,8 +222,8 @@ export default function GameMain() {
         <Canvas roomID={id} canSendMessage={user.canSendMessage} />
       )}
 
-      {/* {boardVisible && <ModalBoard />} */}
-      <ModalBoard boardVisible={boardVisible} />
+      {boardVisible && <ModalBoard boardVisible={boardVisible} />}
+      {/* <ModalBoard boardVisible={boardVisible} /> */}
     </>
   );
 }
