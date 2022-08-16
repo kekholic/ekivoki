@@ -35,7 +35,7 @@ interface IplayersPriority {
 interface Iprogress {
   [key: string]: number;
 }
-const initialState: GameState = {
+export const initialState: GameState = {
   game: {
     id: 0,
     title: '',
