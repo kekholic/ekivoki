@@ -23,6 +23,7 @@ export default function GameList() {
   useEffect(() => {
     dispatch(getGame());
   }, []);
+  
 
   const [activeLobby, setActiveLobby] = useState([]);
 

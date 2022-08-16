@@ -30,6 +30,7 @@ class GameController {
   async searchGame(req, res, next) {
     try {
       const allGame = await gameService.searchGame();
+      
       res.json(allGame);
     } catch (error) {
       next(error);

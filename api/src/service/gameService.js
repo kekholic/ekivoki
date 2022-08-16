@@ -33,6 +33,33 @@ class GameService {
     }
   }
 
+  async searchGameOnStatus(status) {
+    try {
+      const games = await prisma.game.findMany({
+        where: {
+          status,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async deletGamesOnDate(dateNow) {
+    try {
+      const games = await prisma.game.deleteMany({
+        where: {
+          status: GAME_STATUS.CREATED,
+          updatedAt: {
+            lt: dateNow,
+          },
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async checkStatusGame(id) {
     try {
       const oneGame = await prisma.game.findUnique({
@@ -204,12 +231,12 @@ class GameService {
           },
         },
       });
+
       if (game.countPlayers === 0) {
         this.changeStatusGame(id, GAME_STATUS.CREATED);
       }
     } catch (error) {
       console.log(error);
-      throw ApiError.BadRequest('Ошибка смены кол-ва игроков');
     }
   }
 }
