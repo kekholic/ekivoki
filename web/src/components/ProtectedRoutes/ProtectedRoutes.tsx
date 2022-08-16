@@ -5,7 +5,7 @@ import { useAppSelector } from '../../hooks/redux';
 function ProtectedRoutes() {
   const { isAuth } = useAppSelector((store) => store.user);
 
-  return isAuth ? <Outlet /> : <Navigate to="/login" />;
+  return localStorage.getItem('token') ? <Outlet /> : <Navigate to="/login" />;
 }
 
 export default ProtectedRoutes;

@@ -5,10 +5,13 @@ import { useNavigate } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux';
 import { connectedToTheGame } from '../../../lib/game/gameUpdate';
 import { IGame } from '../../../models/IGame';
+import socket from '../../../socket';
+import ACTIONS from '../../../actions/wsActions';
 import {
   getGame,
 } from '../../../store/reducers/actionCreators';
 import style from './GameList.module.css';
+import GAME_STATUS from '../../../actions/gameStatus';
 
 export default function GameList() {
   const { games } = useAppSelector((store) => store.allGame);
@@ -20,6 +23,19 @@ export default function GameList() {
   useEffect(() => {
     dispatch(getGame());
   }, []);
+  
+
+  const [activeLobby, setActiveLobby] = useState([]);
+
+  useEffect(() => {
+    socket.on(ACTIONS.SHARE_ROOMS, ({ rooms = [] }) => {
+      setActiveLobby(rooms);
+    });
+  }, []);
+
+  useEffect(() => {
+    socket.emit(ACTIONS.SHARE_ROOMS);
+  }, []);
 
   const handleClick = (gameInner: IGame) => {
     connectedToTheGame(String(gameInner.id), user.user);
@@ -28,9 +44,27 @@ export default function GameList() {
 
   return (
     <div className={style.listContent}>
-      {games.map((gameInner: IGame) => (
+      {activeLobby.map((gameInner: IGame) => (
         <div className={style.listItem} key={gameInner.id}>
           <span className={style.listTitle}>{gameInner.title}</span>
+          <span className={style.listCount}>
+            {gameInner.countPlayers}
+            /
+            {gameInner.maxPlayers}
+          </span>
+          <input className={style.listInput} type="text" name="password" placeholder="Введите пароль" />
+          <button className={style.listSubmit} type="submit" onClick={() => handleClick(gameInner)}>Выбрать игру</button>
+        </div>
+      ))}
+      {games.filter((game) => game.status === GAME_STATUS.CREATED).map((gameInner: IGame) => (
+        <div className={style.listItem} key={gameInner.id}>
+          <span className={style.listTitle}>{gameInner.title}</span>
+          <span className={style.listCount}>
+            {gameInner.countPlayers}
+            /
+            {gameInner.maxPlayers}
+
+          </span>
           <input className={style.listInput} type="text" name="password" placeholder="Введите пароль" />
           <button className={style.listSubmit} type="submit" onClick={() => handleClick(gameInner)}>Выбрать игру</button>
         </div>

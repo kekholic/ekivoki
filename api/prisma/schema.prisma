@@ -29,7 +29,7 @@ model User {
 model Token {
   id           Int      @id @default(autoincrement())
   refreshToken String   @unique
-  User         User     @relation(fields: [userId], references: [id])
+  User         User     @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId       Int      @unique
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -41,8 +41,7 @@ model Game {
   password        String?
   countPlayers    Int               @default(0)
   maxPlayers      Int
-  isPanding       Boolean
-  isdone          Boolean
+  status          String            @default("created")
   UserNGame       UserNGame[]
   GameNCollection GameNCollection[]
   createdAt       DateTime          @default(now())
@@ -51,9 +50,9 @@ model Game {
 
 model UserNGame {
   id        Int      @id @default(autoincrement())
-  User      User     @relation(fields: [userId], references: [id])
+  User      User     @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId    Int
-  Game      Game     @relation(fields: [gameId], references: [id])
+  Game      Game     @relation(fields: [gameId], onDelete: Cascade, references: [id])
   gameId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -81,9 +80,9 @@ model Card {
 
 model GameNCollection {
   id           Int        @id @default(autoincrement())
-  Game         Game       @relation(fields: [gameId], references: [id])
+  Game         Game       @relation(fields: [gameId], onDelete: Cascade, references: [id])
   gameId       Int
-  Collection   Collection @relation(fields: [collectionId], references: [id])
+  Collection   Collection @relation(fields: [collectionId], onDelete: Cascade, references: [id])
   collectionId Int
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt

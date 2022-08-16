@@ -9,7 +9,9 @@ import React, {
   //  useState
 } from 'react';
 import { useParams } from 'react-router-dom';
+import GAME_STATUS from '../../actions/gameStatus';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import checkStatusGame from '../../hooks/useCheckStatusGame';
 import {
   BoardVisibleMessage,
   modalAnswer,
@@ -65,6 +67,7 @@ export default function GameMain() {
   // const question = useAppSelector((store) => store.question);
   const { id } = useParams();
   const dispatch = useAppDispatch();
+  const statusGame = checkStatusGame(Number(id));
 
   const findIndex = (): number => {
     let ind = 0;
@@ -78,63 +81,68 @@ export default function GameMain() {
   };
 
   useEffect(() => {
-    // sendMessageGameState(game, id, user);
+    console.log(statusGame);
+  }, [statusGame]);
 
-    socket.on('playerJoined', (player) => {
-      if (user.canSendMessage) {
-        dispatch(playerJoinedUpdateState(player));
-      }
-    });
+  if (statusGame !== GAME_STATUS.END && statusGame !== GAME_STATUS.IN_PROGRESS) {
+    useEffect(() => {
+      // sendMessageGameState(game, id, user);
 
-    socket.on('sendNewGameStateBack', (msg) => {
-      dispatch(updateGameState(msg.game));
-    });
-
-    socket.on('modalAnswerOpen', (msg) => {
-      setModal({
-        visible: true,
-        username: msg.username,
-        userId: msg.userId,
-      });
-    });
-
-    socket.on('modalCloseFromBack', (msg) => {
-      setModal({
-        visible: false,
-        username: '',
-        userId: 0,
-      });
-    });
-    socket.on('OpenBoard', (msg) => {
-      setBoardVisible(true);
-    });
-
-    socket.on('exit_game_host', (msg) => {
-      if (user.user.id === msg.isHost) {
-        dispatch(hostLeaveUpdate(msg));
-      }
-    });
-    socket.on('exit_game', (msg) => {
-      if (user.canSendMessage) {
-        dispatch(playersLeaveUpdate(msg));
-      }
-    });
-  }, [socket]);
-
-  useEffect(() => {
-    if (user.canSendMessage) {
-      sendNewGameState(game, String(game.game.id));
-      if (user.user.id !== game.isHost) {
-        if (!game.game.isPanding && Object.keys(game.progress).length) {
-          BoardVisibleMessage(id);
-          setBoardVisible(true);
+      socket.on('playerJoined', (player) => {
+        if (user.canSendMessage) {
+          dispatch(playerJoinedUpdateState(player));
         }
-        dispatch(updateCanSendStatus(false));
+      });
+
+      socket.on('sendNewGameStateBack', (msg) => {
+        dispatch(updateGameState(msg.game));
+      });
+
+      socket.on('modalAnswerOpen', (msg) => {
+        setModal({
+          visible: true,
+          username: msg.username,
+          userId: msg.userId,
+        });
+      });
+
+      socket.on('modalCloseFromBack', (msg) => {
+        setModal({
+          visible: false,
+          username: '',
+          userId: 0,
+        });
+      });
+      socket.on('OpenBoard', (msg) => {
+        setBoardVisible(true);
+      });
+
+      socket.on('exit_game_host', (msg) => {
+        if (user.user.id === msg.isHost) {
+          dispatch(hostLeaveUpdate(msg));
+        }
+      });
+      socket.on('exit_game', (msg) => {
+        if (user.canSendMessage) {
+          dispatch(playersLeaveUpdate(msg));
+        }
+      });
+    }, [socket]);
+
+    useEffect(() => {
+      if (user.canSendMessage) {
+        sendNewGameState(game, String(game.game.id));
+        if (user.user.id !== game.isHost) {
+          if (!game.game.isPanding && Object.keys(game.progress).length) {
+            BoardVisibleMessage(id);
+            setBoardVisible(true);
+          }
+          dispatch(updateCanSendStatus(false));
+        }
       }
-    }
-    if (user.user.id === game.isHost) {
-      dispatch(updateCanSendStatus(true));
-    }
+      if (user.user.id === game.isHost) {
+        dispatch(updateCanSendStatus(true));
+      }
     i += 1;
     console.log(i);
   }, [game]);
@@ -142,49 +150,37 @@ export default function GameMain() {
  /*  useEffect(() => {
     console.log(i);
 
-    return () => {
-      // console.log('пизда');
-      // if (user.canSendMessage && i > 1) {
-      console.log(
-        'пизда я в рот ебал эту ебаную хуету сука бляяяяяяяяяяяяяяяяяяяяяяяяяяяяять',
-        id,
-        typeof id
-      );
-      let isHost = 0;
+      return () => {
+        if (user.canSendMessage) {
+          let isHost = 0;
 
-      for (let i = 0; i < game.playersPriority.length; i++) {
-        if (game.playersPriority[i].userId === game.isHost) {
-          isHost =
-            game.playersPriority[i + 1]?.userId ||
-            game.playersPriority[0]?.userId;
+          for (let i = 0; i < game.playersPriority.length; i++) {
+            if (game.playersPriority[i].userId === game.isHost) {
+              isHost = game.playersPriority[i + 1]?.userId
+              || game.playersPriority[0]?.userId;
+            }
+          }
+
+          socket.emit('exit_game_host', {
+            isHost,
+            game,
+            roomId: id,
+            userId: user.user.id,
+          });
+        } else {
+          socket.emit('exit_game', { roomId: id, userId: user.user.id });
         }
-      }
+      };
+    }, [game]);
 
-      socket.emit('exit_game_host', {
-        isHost,
-        game,
-        roomID: id,
+    const giveAnswer = () => {
+      modalAnswer(String(game.game.id), user.user.username, user.user.id);
+      setModal({
+        visible: true,
+        username: user.user.username || 'username',
         userId: user.user.id,
       });
-      // } else if (i > 1) {
-      console.log(
-        'ты что сука ебанутый что ле сукаааааааааааааааааааа',
-        id,
-        typeof id
-      );
-      socket.emit('exit_game', { roomID: id, userId: user.user.id });
-      // }
     };
-  }, []); */
-
-  const giveAnswer = () => {
-    modalAnswer(String(game.game.id), user.user.username, user.user.id);
-    setModal({
-      visible: true,
-      username: user.user.username || 'username',
-      userId: user.user.id,
-    });
-  };
 
   useEffect(() => {
     if (boardVisible) {
@@ -194,20 +190,20 @@ export default function GameMain() {
     }
   }, [boardVisible]);
 
-  return (
-    <>
-      {id && <VideoComponent roomID={id} />}
+    return (
+      <>
+        {id && <VideoComponent roomID={id} />}
 
-      {modal.visible && (
+        {modal.visible && (
         <ModalAnswerCard
           setModal={setModal}
           modal={modal}
           findIndex={findIndex}
         />
-      )}
+        )}
 
-      {!game.game.isPanding &&
-        (user.canSendMessage ? (
+        {!game.game.isPanding
+        && (user.canSendMessage ? (
           <p>{game.questions.list[findIndex()].questionForHost}</p>
         ) : (
           <>
@@ -218,12 +214,35 @@ export default function GameMain() {
           </>
         ))}
 
-      {game.questions.list[findIndex()].type === 3 && (
+        {game.questions.list[findIndex()].type === 3 && (
         <Canvas roomID={id} canSendMessage={user.canSendMessage} />
-      )}
+        )}
 
-      {boardVisible && <ModalBoard boardVisible={boardVisible} />}
-      {/* <ModalBoard boardVisible={boardVisible} /> */}
+        {boardVisible && <ModalBoard boardVisible={boardVisible} />}
+        {/* <ModalBoard boardVisible={boardVisible} /> */}
     </>
-  );
+    );
+  }
+
+  if (statusGame === GAME_STATUS.END) {
+    return (
+      <>
+
+        <h1>Эта игра закончена</h1>
+        <div>перейдите в список игр</div>
+
+      </>
+    );
+  }
+
+  if (statusGame === GAME_STATUS.IN_PROGRESS) {
+    return (
+      <>
+
+        <h1>Эта игра уже стартовала</h1>
+        <div>перейдите в список игр</div>
+
+      </>
+    );
+  }
 }
