@@ -8,6 +8,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  column-gap: 8px;
 }
 
 .listTitle{
@@ -19,8 +20,16 @@
   overflow: hidden;
 }
 
+.listCount{
+  width: 6%;
+  align-self: center;
+  font-size: 25px;
+  letter-spacing: 1px;
+  color: #fff;
+}
+
 .listInput{
-  width: 40%;
+  width: 30%;
   height: 35px;
   padding-left: 15px;
   font-size: 20px;
@@ -39,6 +48,7 @@
   opacity: 0.8;
 }
   .listSubmit{
+    width: 30%;
     padding: 8px 16px;
     text-decoration: none;
     font-family: 'Montserrat';
