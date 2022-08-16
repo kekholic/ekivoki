@@ -1,5 +1,11 @@
-.video{
+.videoHost{
+  width: 700px;
+  border: solid 4px #E1782B;
+  border-radius: 12px ;
+}
+
+.videoPlayer{
   width: 400px;
-  border: solid 2px #E1782B;
+  border: solid 4px #060606;
   border-radius: 12px ;
 }

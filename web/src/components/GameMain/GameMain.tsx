@@ -57,7 +57,7 @@ import style from './GameMain.module.css';
   game,
 }); */
 
-let users = {};
+const users = {};
 
 export default function GameMain() {
   const [modal, setModal] = useState({
@@ -70,7 +70,7 @@ export default function GameMain() {
 
   useEffect(() => {
     if (user.canSendMessage) {
-      dispatch(setVideoComponents({ [socket.id]: user.user.id }))
+      dispatch(setVideoComponents({ [socket.id]: user.user.id }));
     }
   }, []);
   const [boardVisible, setBoardVisible] = useState(false);

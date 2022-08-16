@@ -9,9 +9,8 @@ import {
   IlocalMediaStream, IpeerConnections, IpeerMediaElements, IRTCSessionDescriptionInit,
 } from '../types/webRTC';
 
-export const LOCAL_VIDEO : string = 'LOCAL_VIDEO';
-
 export default function useWebRTC(roomID : string) {
+  const LOCAL_VIDEO : string = socket.id;
   const [clients, updateClients] = useStateWithCallback([]);
 
   const addNewClient = useCallback((newClient: string, cb: ()=>void) => {
