@@ -3,10 +3,10 @@ import useWebRTC, { LOCAL_VIDEO } from '../../hooks/useWebRTC';
 import { IvcProps } from '../../types/webRTC';
 import style from './VideoComponent.module.css';
 
-export default function VideoComponent(props: IvcProps) : ReactElement {
+export default function VideoComponent(props: IvcProps): ReactElement {
   const { roomID } = props;
   const { clients, provideMediaRef } = useWebRTC(roomID);
-
+  // (game.videoComponents[clientID] == game.isHost) ? bigWindow : smallWindow
   return (
     clients?.map((clientID: string) => (
       <video
