@@ -44,30 +44,26 @@ export default function GameList() {
 
   return (
     <div className={style.listContent}>
-      {activeLobby.filter((game) => game.status !== GAME_STATUS.IN_PROGRESS)
-        .map((gameInner: IGame) => (
-          <div className={style.listItem} key={gameInner.id}>
-            <span className={style.listTitle}>{gameInner.title}</span>
-            <span className={style.listTitle}>
-              {gameInner.countPlayers}
-              {' '}
-              /
-              {' '}
-              {gameInner.maxPlayers}
-            </span>
-            <input className={style.listInput} type="text" name="password" placeholder="Введите пароль" />
-            <button className={style.listSubmit} type="submit" onClick={() => handleClick(gameInner)}>Выбрать игру</button>
-          </div>
-        ))}
+      {activeLobby.map((gameInner: IGame) => (
+        <div className={style.listItem} key={gameInner.id}>
+          <span className={style.listTitle}>{gameInner.title}</span>
+          <span className={style.listCount}>
+            {gameInner.countPlayers}
+            /
+            {gameInner.maxPlayers}
+          </span>
+          <input className={style.listInput} type="text" name="password" placeholder="Введите пароль" />
+          <button className={style.listSubmit} type="submit" onClick={() => handleClick(gameInner)}>Выбрать игру</button>
+        </div>
+      ))}
       {games.filter((game) => game.status === GAME_STATUS.CREATED).map((gameInner: IGame) => (
         <div className={style.listItem} key={gameInner.id}>
           <span className={style.listTitle}>{gameInner.title}</span>
-          <span className={style.listTitle}>
+          <span className={style.listCount}>
             {gameInner.countPlayers}
-            {' '}
             /
-            {' '}
             {gameInner.maxPlayers}
+
           </span>
           <input className={style.listInput} type="text" name="password" placeholder="Введите пароль" />
           <button className={style.listSubmit} type="submit" onClick={() => handleClick(gameInner)}>Выбрать игру</button>

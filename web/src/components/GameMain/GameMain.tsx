@@ -80,7 +80,6 @@ export default function GameMain() {
 
   useEffect(() => {
     console.log(statusGame);
-    
   }, [statusGame]);
 
   if (statusGame !== GAME_STATUS.END && statusGame !== GAME_STATUS.IN_PROGRESS) {
