@@ -4,6 +4,5 @@ export interface IGame {
   password?: string,
   countPlayers: number,
   maxPlayers: number,
-  isPanding?: boolean,
-  isdone?: boolean,
+  status: string,
 }

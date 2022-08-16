@@ -1,3 +1,5 @@
+/* eslint-disable operator-linebreak */
+/* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
 /* eslint-disable import/extensions */
 /* eslint-disable no-plusplus */
@@ -84,7 +86,10 @@ export default function GameMain() {
     console.log(statusGame);
   }, [statusGame]);
 
-  if (statusGame !== GAME_STATUS.END && statusGame !== GAME_STATUS.IN_PROGRESS) {
+  if (
+    statusGame !== GAME_STATUS.END &&
+    statusGame !== GAME_STATUS.IN_PROGRESS
+  ) {
     useEffect(() => {
       // sendMessageGameState(game, id, user);
 
@@ -143,12 +148,12 @@ export default function GameMain() {
       if (user.user.id === game.isHost) {
         dispatch(updateCanSendStatus(true));
       }
-    i += 1;
-    console.log(i);
-  }, [game]);
+      i += 1;
+      console.log(i);
+    }, [game]);
 
- /*  useEffect(() => {
-    console.log(i);
+    useEffect(() => {
+      console.log(i);
 
       return () => {
         if (user.canSendMessage) {
@@ -156,8 +161,9 @@ export default function GameMain() {
 
           for (let i = 0; i < game.playersPriority.length; i++) {
             if (game.playersPriority[i].userId === game.isHost) {
-              isHost = game.playersPriority[i + 1]?.userId
-              || game.playersPriority[0]?.userId;
+              isHost =
+                game.playersPriority[i + 1]?.userId ||
+                game.playersPriority[0]?.userId;
             }
           }
 
@@ -182,55 +188,53 @@ export default function GameMain() {
       });
     };
 
-  useEffect(() => {
-    if (boardVisible) {
-      setTimeout(() => {
-        setBoardVisible(false);
-      }, 5000);
-    }
-  }, [boardVisible]);
+    useEffect(() => {
+      if (boardVisible) {
+        setTimeout(() => {
+          setBoardVisible(false);
+        }, 5000);
+      }
+    }, [boardVisible]);
 
     return (
       <>
         {id && <VideoComponent roomID={id} />}
 
         {modal.visible && (
-        <ModalAnswerCard
-          setModal={setModal}
-          modal={modal}
-          findIndex={findIndex}
-        />
+          <ModalAnswerCard
+            setModal={setModal}
+            modal={modal}
+            findIndex={findIndex}
+          />
         )}
 
-        {!game.game.isPanding
-        && (user.canSendMessage ? (
-          <p>{game.questions.list[findIndex()].questionForHost}</p>
-        ) : (
-          <>
-            <p>{game.questions.list[findIndex()].questionForPlayers}</p>
-            <button type='submit' onClick={giveAnswer}>
-              Дать ответ
-            </button>
-          </>
-        ))}
+        {!game.game.isPanding &&
+          (user.canSendMessage ? (
+            <p>{game.questions.list[findIndex()].questionForHost}</p>
+          ) : (
+            <>
+              <p>{game.questions.list[findIndex()].questionForPlayers}</p>
+              <button type='submit' onClick={giveAnswer}>
+                Дать ответ
+              </button>
+            </>
+          ))}
 
         {game.questions.list[findIndex()].type === 3 && (
-        <Canvas roomID={id} canSendMessage={user.canSendMessage} />
+          <Canvas roomID={id} canSendMessage={user.canSendMessage} />
         )}
 
         {boardVisible && <ModalBoard boardVisible={boardVisible} />}
         {/* <ModalBoard boardVisible={boardVisible} /> */}
-    </>
+      </>
     );
   }
 
   if (statusGame === GAME_STATUS.END) {
     return (
       <>
-
         <h1>Эта игра закончена</h1>
         <div>перейдите в список игр</div>
-
       </>
     );
   }
@@ -238,10 +242,8 @@ export default function GameMain() {
   if (statusGame === GAME_STATUS.IN_PROGRESS) {
     return (
       <>
-
         <h1>Эта игра уже стартовала</h1>
         <div>перейдите в список игр</div>
-
       </>
     );
   }

@@ -37,8 +37,7 @@ const initialState: GameState = {
     password: '',
     countPlayers: 0,
     maxPlayers: 6,
-    isPanding: true,
-    isdone: false,
+    status: '',
   },
   questions: {
     list: [
