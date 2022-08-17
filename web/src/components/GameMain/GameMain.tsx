@@ -104,7 +104,6 @@ export default function GameMain() {
   };
 
   useEffect(() => {
-
     // sendMessageGameState(game, id, user);
 
     socket.on('playerJoined', (player) => {
@@ -140,7 +139,6 @@ export default function GameMain() {
       setBoardVisible(true);
     });
     socket.on('EndGame', (msg) => {
-
       try {
         setWinner(msg.winner);
         socket.emit(ACTIONS.LEAVE);
@@ -158,7 +156,6 @@ export default function GameMain() {
       //     game,
       //   });
       // }
-
     });
 
     // socket.on('exit_game_host', (msg) => {
@@ -179,8 +176,7 @@ export default function GameMain() {
       if (user.user.id !== game.isHost) {
         if (
           game.game.status === GAME_STATUS.IN_PROGRESS &&
-
-            Object.keys(game.progress).length
+          Object.keys(game.progress).length
         ) {
           BoardVisibleMessage(id);
           setBoardVisible(true);
@@ -242,7 +238,7 @@ export default function GameMain() {
     statusGame !== GAME_STATUS.IN_PROGRESS
   ) {
     return (
-      <>
+      <div className={style.gameContainer}>
         <div className={style.gameVideos}>
           {id && <VideoComponent roomID={id} />}
         </div>
@@ -256,7 +252,6 @@ export default function GameMain() {
             />
           )}
           {game.game.status === GAME_STATUS.IN_PROGRESS &&
-
             (user.canSendMessage ? (
               <p>{game.questions.list[findIndex()].questionForHost}</p>
             ) : (
@@ -278,10 +273,4 @@ export default function GameMain() {
       </div>
     );
   }
-
-      {boardVisible && <ModalBoard boardVisible={boardVisible} />}
-      {/* <ModalBoard boardVisible={boardVisible} /> */}
-      {winner.win && <ModalEnd winner={winner} />}
-    </>
-  );
 }
