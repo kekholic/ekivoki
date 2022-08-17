@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { useAppSelector } from '../../hooks/redux';
 import useWebRTC, { LOCAL_VIDEO } from '../../hooks/useWebRTC';
 import { IvcProps } from '../../types/webRTC';
@@ -10,16 +10,20 @@ export default function VideoComponent(props: IvcProps): ReactElement {
   const { clients, provideMediaRef } = useWebRTC(roomID);
   const { game } = useAppSelector((store) => store);
   // (game.videoComponents[clientID] == game.isHost) ? bigWindow : smallWindow
-  const findUserName = (id:number):string => {
+  const findUserName = (id: number): string => {
     const userName = game.playersPriority.find((el) => el.userId === id)?.username || '';
     return userName;
   };
+  const [nick, setNick] = useState('');
 
+  useEffect(() => { /// //??????
+    setNick('1');
+  }, [game.videoComponents]);
   return (
     clients?.map((clientID: string) => (
       (game.videoComponents[clientID] === game.isHost)
         ? (
-          <div className={`${style.videoContainer} ${style.videoContainerHost}`}>
+          <div className={`${style.videoContainer} ${nick} ${style.videoContainerHost}`}>
             <video
               className={(game.videoComponents[clientID] === game.isHost) ? style.videoHost : style.videoPlayer}
               key={clientID}
@@ -32,11 +36,11 @@ export default function VideoComponent(props: IvcProps): ReactElement {
             </video>
             <span className={style.videoHostTitle}>Ведущий</span>
             {game.videoComponents[clientID]
-            && <span className={style.videoUserName}>{findUserName(game.videoComponents[clientID])}</span>}
+              && <span className={style.videoUserName}>{findUserName(game.videoComponents[clientID])}</span>}
           </div>
         )
         : (
-          <div className={`${style.videoContainer} ${style.videoContainerPlayer}`}>
+          <div className={`${style.videoContainer} ${nick} ${style.videoContainerPlayer}`}>
             <video
               className={(game.videoComponents[clientID] === game.isHost) ? style.videoHost : style.videoPlayer}
               key={clientID}
@@ -48,7 +52,7 @@ export default function VideoComponent(props: IvcProps): ReactElement {
               <track kind="captions" />
             </video>
             {game.videoComponents[clientID]
-            && <span className={style.videoUserName}>{findUserName(game.videoComponents[clientID])}</span>}
+              && <span className={style.videoUserName}>{findUserName(game.videoComponents[clientID])}</span>}
           </div>
         )
     ))

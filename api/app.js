@@ -186,7 +186,7 @@ io.on('connection', (socket) => {
   // вход игрока в существующую игру:
   socket.on('playerJoined', (msg) => {
     console.log('playerJoined', msg.roomID);
-    msg.user.socket = msg.socket;
+    msg.user.socket = socket.id;
     io.to(msg.roomID).emit('playerJoined', msg.user);
   });
   socket.on('sendNewGameState', (msg) => {
@@ -228,8 +228,9 @@ io.on('connection', (socket) => {
   });
 
   socket.on('f5', (msg) => {
-    // console.log('Принял сообщение что кто то слетел', msg);
-    socket.to(msg.roomID).emit('f5', msg);
+    msg.user.socket = socket.id;
+    console.log('Принял сообщение что кто то слетел', msg);
+    socket.to(msg.roomID).timeout(2000).emit('f5', msg);
   });
 
   socket.on('disconnect', () => {

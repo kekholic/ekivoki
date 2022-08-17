@@ -149,8 +149,8 @@ export default function GameMain() {
       }
     });
     socket.on('f5', (msg) => {
-      // console.log('принял сообщение об слете игры с сервера');
-      if (user.canSendMessage) dispatch(reconnect(msg));
+      console.log('принял сообщение об слете игры с сервера');
+      dispatch(reconnect(msg));
       // if (game.game.id !== 0) {
       //   console.log('Отправил сообщениес новым стейтом');
       //   socket.emit('updatef5', {
@@ -191,17 +191,16 @@ export default function GameMain() {
     }
 
     // console.log('socket.id', socket.id);
-    if (game.game.id === 0 && allGames.games.length === 0) {
-      // console.log('Стэйт слетел !', game.game.id, 'soketID', socket.id);
-      socket.emit('f5', {
+    if (game.game.id === 0 && allGames.games.length === 0 && user.user.id) {
+      console.log('Стэйт слетел !', game.game.id, 'soketID', socket.id);
+      socket.timeout(3000).emit('f5', {
         roomID: id,
-        socket: socket.id,
         user: user.user,
       });
     }
     // i += 1;
     // console.log(i);
-  }, [game]);
+  }, [game, user]);
 
   const giveAnswer = () => {
     modalAnswer(String(game.game.id), user.user.username, user.user.id);
@@ -235,34 +234,57 @@ export default function GameMain() {
     }
   }, [winner]);
 
-  if (
-    statusGame !== GAME_STATUS.END &&
-    statusGame !== GAME_STATUS.IN_PROGRESS
-  ) {
+  if (statusGame === GAME_STATUS.END) {
     return (
-      <div className={style.gameContainer}>
-        <div className={style.gameVideos}>
-          {id && <VideoComponent roomID={id} />}
-        </div>
-        <div className={style.gameSpace}>
-          {modal.visible && (
-            <ModalAnswerCard
-              setModal={setModal}
-              modal={modal}
-              findIndex={findIndex}
-              setWinner={setWinner}
-            />
-          )}
-          {game.game.status === GAME_STATUS.IN_PROGRESS &&
-            (user.canSendMessage ? (
-              <CardForHost findIndex={findIndex} />
-            ) : (
-              <CardForPlayer id={id} findIndex={findIndex} giveAnswer={giveAnswer} />
-            ))}
-          {boardVisible && <ModalBoard boardVisible={boardVisible} />}
-          {winner.win && <ModalEnd winner={winner} />}
-        </div>
-      </div>
+      <>
+        <h1>Эта игра закончена</h1>
+        <div>перейдите в список игр</div>
+      </>
     );
   }
+
+  if (statusGame === GAME_STATUS.IN_PROGRESS) {
+    return (
+      <>
+        <h1>Эта игра уже стартовала</h1>
+        <div>перейдите в список игр</div>
+      </>
+    );
+  }
+
+  return (
+    <div className={style.gameContainer}>
+      <div className={style.gameVideos}>
+        {id && <VideoComponent roomID={id} />}
+      </div>
+      <div className={style.gameSpace}>
+        {modal.visible && (
+          <ModalAnswerCard
+            setModal={setModal}
+            modal={modal}
+            findIndex={findIndex}
+            setWinner={setWinner}
+          />
+        )}
+        {game.game.status === GAME_STATUS.IN_PROGRESS &&
+          (user.canSendMessage ? (
+            <p>{game.questions.list[findIndex()].questionForHost}</p>
+          ) : (
+            <>
+              <p>{game.questions.list[findIndex()].questionForPlayers}</p>
+              <button type="submit" onClick={giveAnswer}>
+                Дать ответ
+              </button>
+            </>
+          ))}
+
+        {game.questions.list[findIndex()].type === 3 && (
+          <Canvas roomID={id} canSendMessage={user.canSendMessage} />
+        )}
+        {boardVisible && <ModalBoard boardVisible={boardVisible} />}
+        {/* <ModalBoard boardVisible={boardVisible} /> */}
+        {winner.win && <ModalEnd winner={winner} />}
+      </div>
+    </div>
+  );
 }

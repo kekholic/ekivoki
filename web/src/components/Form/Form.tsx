@@ -2,6 +2,7 @@
 // NOTE: CHECK SUBMIT HANDLER DOUBLE TYPES
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useAppDispatch } from '../../hooks/redux';
+import { IInput } from '../../models/IInout';
 import { getAuth } from '../../store/reducers/actionCreators';
 import style from './Form.module.css';
 
@@ -12,11 +13,6 @@ interface IProps {
 export default function Form({ auth }: IProps): ReactElement {
   const dispatch = useAppDispatch();
   // const navigate = useNavigate();
-  interface IInput {
-    email: string;
-    password: string;
-    username: string | undefined
-  }
 
   const [input, setInput] = useState<IInput>({ email: '', password: '', username: '' });
 
@@ -46,12 +42,12 @@ export default function Form({ auth }: IProps): ReactElement {
         : <h1 className={style.formTitle}>Войти</h1>}
       <form className={style.submitForm} onSubmit={submitHandler}>
         {auth
-        && (
-          <>
-            <label className={style.label} htmlFor="username">Имя</label>
-            <input className={style.authInput} type="text" name="username" id="username" />
-          </>
-        )}
+          && (
+            <>
+              <label className={style.label} htmlFor="username">Имя</label>
+              <input className={style.authInput} type="text" name="username" id="username" />
+            </>
+          )}
         <label className={style.label} htmlFor="email">Email</label>
         <input className={style.authInput} type="text" name="email" id="email" />
         <label className={style.label} htmlFor="password">Пароль</label>

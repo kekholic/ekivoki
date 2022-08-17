@@ -1,12 +1,12 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React from 'react';
+import React, { Dispatch } from 'react';
 import style from './ModalSettings.module.css';
 
 interface IProps {
   children: any,
   active: boolean,
-  setActive: any,
+  setActive: Dispatch<boolean>,
 }
 
 export default function ModalSettings({ active, setActive, children }: IProps) {

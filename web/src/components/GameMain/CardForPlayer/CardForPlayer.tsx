@@ -7,7 +7,7 @@ import style from './CardForPlayer.module.css';
 interface Props {
   findIndex: Function,
   giveAnswer: Function,
-  id:string | undefined,
+  id: string | undefined,
 }
 
 export default function CardForPlayer({ findIndex, giveAnswer, id }: Props) {

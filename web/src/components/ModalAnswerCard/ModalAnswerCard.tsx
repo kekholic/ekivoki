@@ -71,8 +71,8 @@ export default function ModalAnswerCard(props: IProps): ReactElement {
       userId: user.user.id,
       score: game.progress[user.user.id] ? game.progress[user.user.id] : 0,
     };
-    progressHost.score += 10;
-    progress.score += 10;
+    progressHost.score += 1;
+    progress.score += 1;
 
     if (progressHost.score >= 44) {
       console.log('progressHost.score : ', progressHost.score);
