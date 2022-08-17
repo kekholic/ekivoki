@@ -25,12 +25,12 @@ class AuthService {
           email,
           username,
           password: hashPassword,
-          codeActivation: `${process.env.API_URL}/activate/${activateLink}`,
+          codeActivation: activateLink,
         },
       });
       await mailService.sendActivationMail(
         email,
-        `${process.env.API_URL}/activate/${activateLink}`,
+        `${process.env.CLIENT_URL}/activate/${activateLink}`,
       );
       const userDto = new UserDto(user);
       const tokens = tokenService.generateTokens({ ...userDto });
@@ -48,9 +48,9 @@ class AuthService {
 
   async activate(link) {
     try {
-      const user = prisma.user.findUnique({
+      const user = await prisma.user.findUnique({
         where: {
-          codeActivation: `${process.env.API_URL}/activate/${link}`,
+          codeActivation: `${link}`,
         },
       });
       if (!user) {
@@ -58,9 +58,15 @@ class AuthService {
       }
       await prisma.user.update({
         where: { id: user.id },
-        data: { isActivated: true },
+        data: {
+          appruvedMail: true,
+          codeActivation: null,
+        },
+
       });
+      return true;
     } catch (error) {
+      console.log(error);
       throw ApiError.BadRequest('Ошибка активации');
     }
   }

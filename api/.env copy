@@ -1,5 +1,4 @@
 PORT=4000
-PORT_VS=5000
 DATABASE_URL="postgresql://admindb:admindb@localhost:5432/ekivoki?schema=public"
 JWT_ACCESS_SECRET=jwt-access-secret-key
 JWT_REFRESH_SECRET=jwt-refresh-secret-key

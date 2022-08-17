@@ -8,6 +8,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable max-len */
 import React, {
+  ReactElement,
   useEffect,
   useState,
   //  useState
@@ -104,145 +105,7 @@ export default function GameMain() {
     console.log(statusGame);
   }, [statusGame]);
 
-  if (
-    statusGame !== GAME_STATUS.END &&
-    statusGame !== GAME_STATUS.IN_PROGRESS
-  ) {
-    useEffect(() => {
-      // sendMessageGameState(game, id, user);
-
-      socket.on('playerJoined', (player) => {
-        // users = { ...users, player };
-        console.log('socket.id', player);
-        if (user.canSendMessage) {
-          dispatch(playerJoinedUpdateState(player));
-        }
-      });
-
-      socket.on('sendNewGameStateBack', (msg) => {
-        // console.log('what a fuck?');
-        dispatch(updateGameState(msg.game));
-      });
-
-      socket.on('modalAnswerOpen', (msg) => {
-        setModal({
-          visible: true,
-          username: msg.username,
-          userId: msg.userId,
-        });
-      });
-
-      socket.on('modalCloseFromBack', (msg) => {
-        setModal({
-          visible: false,
-          username: '',
-          userId: 0,
-        });
-      });
-      socket.on('OpenBoard', (msg) => {
-        setBoardVisible(true);
-      });
-      socket.on('EndGame', (msg) => {
-        console.log('msg: ', msg);
-        setWinner(msg.winner);
-      });
-
-      // socket.on('exit_game_host', (msg) => {
-      //   if (user.user.id === msg.isHost) {
-      //     dispatch(hostLeaveUpdate(msg));
-      //   }
-      // });
-      // socket.on('exit_game', (msg) => {
-      //   if (user.canSendMessage) {
-      //     dispatch(playersLeaveUpdate(msg));
-      //   }
-      // });
-    }, [socket]);
-
-    useEffect(() => {
-      if (user.canSendMessage) {
-        sendNewGameState(game, String(game.game.id));
-        if (user.user.id !== game.isHost) {
-          if (
-            game.game.status === GAME_STATUS.IN_PROGRESS &&
-            Object.keys(game.progress).length
-          ) {
-            BoardVisibleMessage(id);
-            setBoardVisible(true);
-          }
-          dispatch(updateCanSendStatus(false));
-        }
-      }
-      if (user.user.id === game.isHost) {
-        dispatch(updateCanSendStatus(true));
-      }
-      // i += 1;
-      // console.log(i);
-    }, [game]);
-
-    const giveAnswer = () => {
-      modalAnswer(String(game.game.id), user.user.username, user.user.id);
-      setModal({
-        visible: true,
-        username: user.user.username || 'username',
-        userId: user.user.id,
-      });
-    };
-
-    useEffect(() => {
-      if (boardVisible) {
-        setTimeout(() => {
-          setBoardVisible(false);
-        }, 5000);
-      }
-    }, [boardVisible]);
-
-    useEffect(() => {
-      if (winner.win) {
-        socket.emit('endGame', {
-          winner,
-          roomID: id,
-          users: game.playersPriority,
-        });
-      }
-    }, [winner]);
-    return (
-      <>
-        <div className={style.gameVideos}>
-          {id && <VideoComponent roomID={id} />}
-        </div>
-        <div className={style.gameSpace}>
-          {modal.visible && (
-            <ModalAnswerCard
-              setModal={setModal}
-              modal={modal}
-              findIndex={findIndex}
-              setWinner={setWinner}
-            />
-          )}
-          {game.game.status === GAME_STATUS.IN_PROGRESS &&
-            (user.canSendMessage ? (
-              <p>{game.questions.list[findIndex()].questionForHost}</p>
-            ) : (
-              <>
-                <p>{game.questions.list[findIndex()].questionForPlayers}</p>
-                <button type='submit' onClick={giveAnswer}>
-                  Дать ответ
-                </button>
-              </>
-            ))}
-          {game.questions.list[findIndex()].type === 3 && (
-            <Canvas roomID={id} canSendMessage={user.canSendMessage} />
-          )}
-        </div>
-
-        {boardVisible && <ModalBoard boardVisible={boardVisible} />}
-        {/* <ModalBoard boardVisible={boardVisible} /> */}
-        {winner.win && <ModalEnd winner={winner} />}
-      </>
-    );
-  }
-
+  // перенесены наверх, что бы не было лишних условий и в компоненте был неусловный return
   if (statusGame === GAME_STATUS.END) {
     return (
       <>
@@ -260,4 +123,139 @@ export default function GameMain() {
       </>
     );
   }
+
+ 
+  useEffect(() => {
+    // sendMessageGameState(game, id, user);
+
+    socket.on('playerJoined', (player) => {
+      // users = { ...users, player };
+      console.log('socket.id', player);
+      if (user.canSendMessage) {
+        dispatch(playerJoinedUpdateState(player));
+      }
+    });
+
+    socket.on('sendNewGameStateBack', (msg) => {
+      // console.log('what a fuck?');
+      dispatch(updateGameState(msg.game));
+    });
+
+    socket.on('modalAnswerOpen', (msg) => {
+      setModal({
+        visible: true,
+        username: msg.username,
+        userId: msg.userId,
+      });
+    });
+
+    socket.on('modalCloseFromBack', (msg) => {
+      setModal({
+        visible: false,
+        username: '',
+        userId: 0,
+      });
+    });
+    socket.on('OpenBoard', (msg) => {
+      setBoardVisible(true);
+    });
+    socket.on('EndGame', (msg) => {
+      console.log('msg: ', msg);
+      setWinner(msg.winner);
+    });
+
+    // socket.on('exit_game_host', (msg) => {
+    //   if (user.user.id === msg.isHost) {
+    //     dispatch(hostLeaveUpdate(msg));
+    //   }
+    // });
+    // socket.on('exit_game', (msg) => {
+    //   if (user.canSendMessage) {
+    //     dispatch(playersLeaveUpdate(msg));
+    //   }
+    // });
+  }, [socket]);
+
+  useEffect(() => {
+    if (user.canSendMessage) {
+      sendNewGameState(game, String(game.game.id));
+      if (user.user.id !== game.isHost) {
+        if (
+          game.game.status === GAME_STATUS.IN_PROGRESS &&
+            Object.keys(game.progress).length
+        ) {
+          BoardVisibleMessage(id);
+          setBoardVisible(true);
+        }
+        dispatch(updateCanSendStatus(false));
+      }
+    }
+    if (user.user.id === game.isHost) {
+      dispatch(updateCanSendStatus(true));
+    }
+    // i += 1;
+    // console.log(i);
+  }, [game]);
+
+  const giveAnswer = () => {
+    modalAnswer(String(game.game.id), user.user.username, user.user.id);
+    setModal({
+      visible: true,
+      username: user.user.username || 'username',
+      userId: user.user.id,
+    });
+  };
+
+  useEffect(() => {
+    if (boardVisible) {
+      setTimeout(() => {
+        setBoardVisible(false);
+      }, 5000);
+    }
+  }, [boardVisible]);
+
+  useEffect(() => {
+    if (winner.win) {
+      socket.emit('endGame', {
+        winner,
+        roomID: id,
+        users: game.playersPriority,
+      });
+    }
+  }, [winner]);
+  return (
+    <>
+      <div className={style.gameVideos}>
+        {id && <VideoComponent roomID={id} />}
+      </div>
+      <div className={style.gameSpace}>
+        {modal.visible && (
+        <ModalAnswerCard
+          setModal={setModal}
+          modal={modal}
+          findIndex={findIndex}
+          setWinner={setWinner}
+        />
+        )}
+        {game.game.status === GAME_STATUS.IN_PROGRESS &&
+            (user.canSendMessage ? (
+              <p>{game.questions.list[findIndex()].questionForHost}</p>
+            ) : (
+              <>
+                <p>{game.questions.list[findIndex()].questionForPlayers}</p>
+                <button type="submit" onClick={giveAnswer}>
+                  Дать ответ
+                </button>
+              </>
+            ))}
+        {game.questions.list[findIndex()].type === 3 && (
+        <Canvas roomID={id} canSendMessage={user.canSendMessage} />
+        )}
+      </div>
+
+      {boardVisible && <ModalBoard boardVisible={boardVisible} />}
+      {/* <ModalBoard boardVisible={boardVisible} /> */}
+      {winner.win && <ModalEnd winner={winner} />}
+    </>
+  );
 }
