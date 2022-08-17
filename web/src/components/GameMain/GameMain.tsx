@@ -253,12 +253,11 @@ export default function GameMain() {
           {game.questions.list[findIndex()].type === 3 && (
             <Canvas roomID={id} canSendMessage={user.canSendMessage} />
           )}
+          {boardVisible && <ModalBoard boardVisible={boardVisible} />}
+          {/* <ModalBoard boardVisible={boardVisible} /> */}
+          {winner.win && <ModalEnd winner={winner} />}
         </div>
       </div>
-        {boardVisible && <ModalBoard boardVisible={boardVisible} />}
-        {/* <ModalBoard boardVisible={boardVisible} /> */}
-        {winner.win && <ModalEnd winner={winner} />}
-      </>
     );
   }
 

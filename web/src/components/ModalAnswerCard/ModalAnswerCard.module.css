@@ -30,3 +30,53 @@
 .modalContentActive {
   transform: scale(1);
 }
+
+.answerContainer{
+  text-align: center;
+  font-size: 25px;
+  font-family: 'Montserrat';
+  color: #fff;
+}
+
+.answerText{
+  padding: 20px;
+}
+
+.answerButton{
+  width: 20%;
+  padding: 8px 16px;
+  text-decoration: none;
+  font-family: 'Montserrat';
+  box-shadow: 0 6px 6px rgb(0 0 0 / 35%);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 25px;
+  color: #F8F8F8;
+  background: #E1782B;
+  border-radius: 12px;
+  letter-spacing: 2px;
+  transition: 0.2s;
+}
+
+.answerButton:hover{
+  background: #fa842f;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 0 #9f511a;
+}
+
+.answerButton:active{
+  transform: translateY(-1px);
+  box-shadow: 0 1px 0 #9f511a;
+}
+
+.answerButton + .answerButton {
+  margin-left: 10%;
+}
+
+p + .answerButton{
+  margin-top: 2%;
+}
+
+.answerUserName{
+  font-weight: 600;
+}
