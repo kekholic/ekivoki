@@ -238,6 +238,7 @@ export default function GameMain() {
         />
         )}
         {game.game.status === GAME_STATUS.IN_PROGRESS &&
+
             (user.canSendMessage ? (
               <p>{game.questions.list[findIndex()].questionForHost}</p>
             ) : (
@@ -248,10 +249,18 @@ export default function GameMain() {
                 </button>
               </>
             ))}
-        {game.questions.list[findIndex()].type === 3 && (
-        <Canvas roomID={id} canSendMessage={user.canSendMessage} />
-        )}
+
+          {game.questions.list[findIndex()].type === 3 && (
+            <Canvas roomID={id} canSendMessage={user.canSendMessage} />
+          )}
+        </div>
       </div>
+        {boardVisible && <ModalBoard boardVisible={boardVisible} />}
+        {/* <ModalBoard boardVisible={boardVisible} /> */}
+        {winner.win && <ModalEnd winner={winner} />}
+      </>
+    );
+  }
 
       {boardVisible && <ModalBoard boardVisible={boardVisible} />}
       {/* <ModalBoard boardVisible={boardVisible} /> */}
