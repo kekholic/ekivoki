@@ -47,6 +47,8 @@ import ModalEnd from '../ModalEnd/ModalEnd';
 // import ModalAnswerCard from '../ModalAnswerCard/ModalAnswerCard';
 // import QuestionCard from '../QuestionCard/QuestionCard';
 import VideoComponent from '../WebChat/VideoComponent';
+import CardForHost from './CardForHost/CardForHost';
+import CardForPlayer from './CardForPlayer/CardForPlayer';
 import style from './GameMain.module.css';
 
 // TODO:
@@ -253,21 +255,11 @@ export default function GameMain() {
           )}
           {game.game.status === GAME_STATUS.IN_PROGRESS &&
             (user.canSendMessage ? (
-              <p>{game.questions.list[findIndex()].questionForHost}</p>
+              <CardForHost findIndex={findIndex} />
             ) : (
-              <>
-                <p>{game.questions.list[findIndex()].questionForPlayers}</p>
-                <button type="submit" onClick={giveAnswer}>
-                  Дать ответ
-                </button>
-              </>
+              <CardForPlayer id={id} findIndex={findIndex} giveAnswer={giveAnswer} />
             ))}
-
-          {game.questions.list[findIndex()].type === 3 && (
-            <Canvas roomID={id} canSendMessage={user.canSendMessage} />
-          )}
           {boardVisible && <ModalBoard boardVisible={boardVisible} />}
-          {/* <ModalBoard boardVisible={boardVisible} /> */}
           {winner.win && <ModalEnd winner={winner} />}
         </div>
       </div>
