@@ -226,7 +226,7 @@ export default function GameMain() {
             ) : (
               <>
                 <p>{game.questions.list[findIndex()].questionForPlayers}</p>
-                <button type='submit' onClick={giveAnswer}>
+                <button type="submit" onClick={giveAnswer}>
                   Дать ответ
                 </button>
               </>
@@ -234,12 +234,11 @@ export default function GameMain() {
           {game.questions.list[findIndex()].type === 3 && (
             <Canvas roomID={id} canSendMessage={user.canSendMessage} />
           )}
+          {boardVisible && <ModalBoard boardVisible={boardVisible} />}
+          {/* <ModalBoard boardVisible={boardVisible} /> */}
+          {winner.win && <ModalEnd winner={winner} />}
         </div>
       </div>
-        {boardVisible && <ModalBoard boardVisible={boardVisible} />}
-        {/* <ModalBoard boardVisible={boardVisible} /> */}
-        {winner.win && <ModalEnd winner={winner} />}
-      </>
     );
   }
 
