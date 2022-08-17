@@ -76,6 +76,7 @@ model Card {
   type               Int
   theme              String?
   task               String
+  word               String
   exceptions         String?
   createdAt          DateTime   @default(now())
   updatedAt          DateTime   @updatedAt
