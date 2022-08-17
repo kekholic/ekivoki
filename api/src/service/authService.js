@@ -47,28 +47,26 @@ class AuthService {
   }
 
   async activate(link) {
-    try {
-      const user = await prisma.user.findUnique({
-        where: {
-          codeActivation: `${link}`,
-        },
-      });
-      if (!user) {
-        throw ApiError.BadRequest('Неккоректная ссылка активации');
-      }
-      await prisma.user.update({
-        where: { id: user.id },
-        data: {
-          appruvedMail: true,
-          codeActivation: null,
-        },
-
-      });
-      return true;
-    } catch (error) {
-      console.log(error);
-      throw ApiError.BadRequest('Ошибка активации');
+    const user = await prisma.user.findUnique({
+      where: {
+        codeActivation: `${link}`,
+      },
+    });
+    if (!user) {
+      throw ApiError.BadRequest('Неккоректная ссылка активации');
     }
+    const updatedUser = await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        appruvedMail: true,
+        codeActivation: null,
+      },
+
+    });
+    if (!updatedUser) {
+      throw ApiError.BadRequest('Ошибка активации ');
+    }
+    return true;
   }
 
   async login(email, password) {

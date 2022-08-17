@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export default function useActivateAccount(activateLink: string) {
   const [isActivated, setIsActivated] = useState(false);
@@ -14,6 +14,10 @@ export default function useActivateAccount(activateLink: string) {
       console.log(error);
     }
   }, [activateLink]);
-  
-  return { isActivated, errorMsg, chekActivateLink};
+
+  useEffect(() => {
+    chekActivateLink();
+  }, []);
+
+  return { isActivated, errorMsg };
 }
