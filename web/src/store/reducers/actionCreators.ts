@@ -1,13 +1,16 @@
 /* eslint-disable import/prefer-default-export */
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+
 import $api from '../../http';
 import { IData } from '../../models/IData';
+import { IDataCreateGame } from '../../models/IDataCreateGame';
 import { IDataGame } from '../../models/IDataGame';
+import { IInput } from '../../models/IInout';
 
 export const getAuth = createAsyncThunk(
   'auth/getAuth',
-  async (data: any, thunkAPI) => {
+  async (data: IInput, thunkAPI) => {
     try {
       const res = await $api.post<IData>(
         `/auth/${data.username ? 'registration' : 'login'}`,
@@ -54,7 +57,7 @@ export const getLogout = createAsyncThunk(
 
 export const createGame = createAsyncThunk(
   'game/createGame',
-  async (data: any, thunkAPI) => {
+  async (data: IDataCreateGame, thunkAPI) => {
     try {
       const res = await $api.post<IDataGame>('/game', data);
       return res.data;
@@ -78,7 +81,7 @@ export const getGame = createAsyncThunk(
 
 export const incrementCountPlayers = createAsyncThunk(
   'game/incrementCountPlayers',
-  async (data: Object, thunkAPI) => {
+  async (data, thunkAPI) => {
     try {
       const res = await $api.patch('/game/add', data); // подготовить к отправке обьект с данными { gameId, userData add:true}
       return res.data; // с бэка обьект типа{username:xxx, userId:x}
@@ -90,7 +93,7 @@ export const incrementCountPlayers = createAsyncThunk(
 
 export const decrementCountPlayers = createAsyncThunk(
   'game/decrementCountPlayers',
-  async (data: Object, thunkAPI) => {
+  async (data, thunkAPI) => {
     try {
       const res = await $api.patch('/game/del', data); // подготовить к отправке обьект с данными { gameId, userData add:true}
       return res.data; // с бэка статус
@@ -102,7 +105,7 @@ export const decrementCountPlayers = createAsyncThunk(
 
 export const startGame = createAsyncThunk(
   'game/startGame',
-  async (data: Object, thunkAPI) => {
+  async (data, thunkAPI) => {
     try {
       const res = await $api.patch('/game/start', data); // подготовить к отправке обьект с данными { gameId,ipanding: false}
       return res.data; // с бэка статус
@@ -114,7 +117,7 @@ export const startGame = createAsyncThunk(
 
 export const endGame = createAsyncThunk(
   'game/endGame',
-  async (data: Object, thunkAPI) => {
+  async (data, thunkAPI) => {
     try {
       const res = await $api.patch('/game/end', data); // подготовить к отправке обьект с данными { gameId, ipanding: false}
       return res.data; // с бэка статус
@@ -126,7 +129,7 @@ export const endGame = createAsyncThunk(
 
 export const playersConnection = createAsyncThunk(
   'game/playersConnection',
-  async (data: any, thunkAPI) => {
+  async (data, thunkAPI) => {
     try {
       const res = await $api.post('/game/connections', data); // подготовить к отправке обьект с данными { gameId, user}
       return res.data; // с бэка {new game}
@@ -138,7 +141,7 @@ export const playersConnection = createAsyncThunk(
 
 export const getCard = createAsyncThunk(
   'question/getCard',
-  async (data: any, thunkAPI) => {
+  async (data, thunkAPI) => {
     try {
       const res = await $api.post('/question', data); // подготовить к отправке обьект с данными { question.id }
       console.log(res.data, 'getCard****************************');

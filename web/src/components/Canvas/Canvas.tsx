@@ -6,7 +6,7 @@ import socket from '../../socket';
 // import { useAppSelector } from '../../hooks/redux';
 
 interface IProps {
-  roomID: string;
+  roomID: string | undefined;
   canSendMessage: Boolean;
 }
 interface Ifigure {

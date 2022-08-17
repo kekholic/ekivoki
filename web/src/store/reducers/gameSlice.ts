@@ -29,7 +29,7 @@ export interface GameState {
 interface IVideoComponents {
   [key: string]: number;
 }
-interface IplayersPriority {
+export interface IplayersPriority {
   userId: number;
   username: string;
 }
@@ -94,7 +94,7 @@ export const gameSlice = createSlice({
       state.questions.current = action.payload.game.questions.current;
       state.isCanvas = false;
       state.playersPriority = action.payload.game.playersPriority.filter(
-        (el: IplayersPriority) => el.userId !== action.payload.userId
+        (el: IplayersPriority) => el.userId !== action.payload.userId,
       );
       state.progress = action.payload.game.progress;
       state.isHost = action.payload.isHost;
@@ -104,7 +104,7 @@ export const gameSlice = createSlice({
     playersLeaveUpdate(state, action: PayloadAction<any>) {
       // console.log(action.payload, 'ACTION PAYLOAD');
       state.playersPriority = state.playersPriority.filter(
-        (el) => el.userId !== action.payload.userId
+        (el) => el.userId !== action.payload.userId,
       );
       state.isLoading = false;
       state.error = '';
@@ -117,11 +117,9 @@ export const gameSlice = createSlice({
         userId: action.payload.id,
       };
       state.playersPriority.push(temp);
-      state.isHost =
-        state.isHost > action.payload.id ? action.payload.id : state.isHost;
+      state.isHost = state.isHost > action.payload.id ? action.payload.id : state.isHost;
       // eslint-disable-next-line max-len
-      if (state.game.countPlayers === state.game.maxPlayers)
-        state.game.status = GAME_STATUS.IN_PROGRESS;
+      if (state.game.countPlayers === state.game.maxPlayers) { state.game.status = GAME_STATUS.IN_PROGRESS; }
       state.videoComponents = {
         ...state.videoComponents,
         [action.payload.socket]: action.payload.id,
@@ -149,10 +147,11 @@ export const gameSlice = createSlice({
           break;
         }
       }
+      console.log('ALLO VBLYAT', action.payload);
       delete state.videoComponents[objKey];
       state.videoComponents = {
         ...state.videoComponents,
-        [action.payload.soket]: action.payload.user.id,
+        [action.payload.user.socket]: action.payload.user.id,
       };
     },
   },
@@ -177,7 +176,7 @@ export const gameSlice = createSlice({
     },
     [incrementCountPlayers.fulfilled.type]: (
       state,
-      action: PayloadAction<IplayersPriority>
+      action: PayloadAction<IplayersPriority>,
     ) => {
       state.isLoading = false;
       state.error = '';
@@ -189,7 +188,7 @@ export const gameSlice = createSlice({
     },
     [incrementCountPlayers.rejected.type]: (
       state,
-      action: PayloadAction<string>
+      action: PayloadAction<string>,
     ) => {
       state.isLoading = false;
       state.error = action.payload;
@@ -205,7 +204,7 @@ export const gameSlice = createSlice({
     },
     [decrementCountPlayers.rejected.type]: (
       state,
-      action: PayloadAction<string>
+      action: PayloadAction<string>,
     ) => {
       state.isLoading = false;
       state.error = action.payload;
@@ -236,7 +235,7 @@ export const gameSlice = createSlice({
     },
     [playersConnection.fulfilled.type]: (
       state,
-      action: PayloadAction<GameState>
+      action: PayloadAction<GameState>,
     ) => {
       state.game = action.payload.game;
       state.playersPriority = action.payload.playersPriority;
@@ -249,7 +248,7 @@ export const gameSlice = createSlice({
     },
     [playersConnection.rejected.type]: (
       state,
-      action: PayloadAction<string>
+      action: PayloadAction<string>,
     ) => {
       state.isLoading = false;
 

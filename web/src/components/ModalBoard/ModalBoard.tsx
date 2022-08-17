@@ -8,12 +8,21 @@ import ava2 from '../../img/chip7-e82ee8f9e57c466e.png';
 import ava3 from '../../img/chip8-9d9e969a7a91713e.png';
 import ava4 from '../../img/png-transparent-emoticon-wearing-sunglasses-sticker-smiley-emoticon-emoji-sunglasses-emoji-s-orange-sticker-glasses.png';
 import { useAppSelector } from '../../hooks/redux';
+import { IplayersPriority } from '../../store/reducers/gameSlice';
 
 type Props = {
   boardVisible: boolean;
 };
 
-const obj = {
+interface IObj {
+  [key: string]: {
+    y: string;
+    x: string;
+  };
+
+}
+
+const obj: IObj = {
   1: { y: '175px', x: '100px' },
   2: { y: '242px', x: '100px' },
   3: { y: '307px', x: '131px' },
@@ -59,16 +68,26 @@ const obj = {
   43: { y: '790px', x: '357px' },
   44: { y: '790px', x: '429px' },
 };
-const avaarr: any = [ava1, ava2, ava3, ava4];
+const avaarr = [ava1, ava2, ava3, ava4];
+
+interface IPlayersNava {
+  pic: string;
+  id: number;
+}
 
 function ModalBoard({ boardVisible }: Props) {
   const game = useAppSelector((store) => store.game);
-  const [plaNava, setPlaNav] = useState([]);
-  let playersNava: any = [];
+  const [plaNava, setPlaNav] = useState(
+    [{
+      pic: '',
+      id: -1,
+    }],
+  );
+  let playersNava: IPlayersNava[] = [];
 
   useEffect(() => {
     playersNava = game.playersPriority.reduce(
-      (acc: Object[], el: any, ind: number) => {
+      (acc: IPlayersNava[], el: IplayersPriority, ind: number) => {
         acc.push({
           pic: avaarr[ind],
           id: el.userId,
@@ -110,16 +129,16 @@ function ModalBoard({ boardVisible }: Props) {
             <div>
               {plaNava.map(
                 (
-                  elem: any, // {userId: cell}
+                  elem, // {userId: cell}
                 ) => (
                   <div>
                     {game.progress[elem.id] == el && (
-                    <img
-                      id={String(elem.id)}
-                      className={style.ava}
-                      src={elem.pic}
-                      alt="ava"
-                    />
+                      <img
+                        id={String(elem.id)}
+                        className={style.ava}
+                        src={elem.pic}
+                        alt="ava"
+                      />
                     )}
                   </div>
                 ),
