@@ -213,27 +213,28 @@ export default function GameMain() {
         </div>
         <div className={style.gameSpace}>
           {modal.visible && (
-          <ModalAnswerCard
-            setModal={setModal}
-            modal={modal}
-            findIndex={findIndex}
-            setWinner={setWinner}
-          />
+            <ModalAnswerCard
+              setModal={setModal}
+              modal={modal}
+              findIndex={findIndex}
+              setWinner={setWinner}
+            />
           )}
-          {(game.game.status === GAME_STATUS.IN_PROGRESS) &&
-          (user.canSendMessage ? (
-            <p>{game.questions.list[findIndex()].questionForHost}</p>
-          ) : (
-            <>
-              <p>{game.questions.list[findIndex()].questionForPlayers}</p>
-              <button type='submit' onClick={giveAnswer}>
-                Дать ответ
-              </button>
-            </>
-          ))}
+          {game.game.status === GAME_STATUS.IN_PROGRESS &&
+            (user.canSendMessage ? (
+              <p>{game.questions.list[findIndex()].questionForHost}</p>
+            ) : (
+              <>
+                <p>{game.questions.list[findIndex()].questionForPlayers}</p>
+                <button type='submit' onClick={giveAnswer}>
+                  Дать ответ
+                </button>
+              </>
+            ))}
           {game.questions.list[findIndex()].type === 3 && (
-          <Canvas roomID={id} canSendMessage={user.canSendMessage} />
-        )}
+            <Canvas roomID={id} canSendMessage={user.canSendMessage} />
+          )}
+        </div>
 
         {boardVisible && <ModalBoard boardVisible={boardVisible} />}
         {/* <ModalBoard boardVisible={boardVisible} /> */}
