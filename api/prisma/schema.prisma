@@ -74,7 +74,7 @@ model Card {
   questionForPlayers String
   questionForHost    String
   type               Int
-  theme              String
+  theme              String?
   task               String
   exceptions         String?
   createdAt          DateTime   @default(now())

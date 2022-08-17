@@ -49,6 +49,9 @@ const initialState: GameState = {
       {
         questionForHost: '',
         questionForPlayers: '',
+        theme: '',
+        task: '',
+        exceptions: '',
         id: 0,
         type: 0,
       },
@@ -116,7 +119,6 @@ export const gameSlice = createSlice({
       state.isHost = state.isHost > action.payload.id ? action.payload.id : state.isHost;
       // eslint-disable-next-line max-len
       if (state.game.countPlayers === state.game.maxPlayers) state.game.status = GAME_STATUS.IN_PROGRESS;
-      console.log(action.payload, 'SUKA SUK SUKA BLYAT');
       state.videoComponents = {
         ...state.videoComponents,
         [action.payload.socket]: action.payload.id,

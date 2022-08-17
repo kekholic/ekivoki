@@ -10,13 +10,13 @@ const ApiError = require('../exceptions/apiError');
 // const aWss = WSServer.getWss();
 
 class GameService {
-/*   gameConnections(ws, msg) {
-    console.log('eebat');
-    aWss.clients.forEach((client) => {
-      client.send(JSON.stringify(msg));
-    });
-  }
-  */
+  /*   gameConnections(ws, msg) {
+      console.log('eebat');
+      aWss.clients.forEach((client) => {
+        client.send(JSON.stringify(msg));
+      });
+    }
+    */
   async searchGame() {
     try {
       const allGame = await prisma.game.findMany({
@@ -102,6 +102,9 @@ class GameService {
           id: true,
           questionForPlayers: true,
           questionForHost: true,
+          exceptions: true,
+          theme: true,
+          task: true,
           type: true,
         },
       });
