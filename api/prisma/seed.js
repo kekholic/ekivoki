@@ -11,11 +11,11 @@ async function main() {
       // карточки за 1
       {
         collectionId: 1,
-        questionForPlayers: 'Отгадайте слово по объяснению ведущего.',
-        questionForHost: 'Объясните словами: "Лукбук", не используя однокоренные слова.',
-        type: 1,
-        theme: 'Красота и здоровье',
-        task: 'Слова',
+        questionForPlayers: 'Отгадайте слово, ведущий будет объяснять жестами.',
+        questionForHost: 'Объясните жестами: "Энергетический вампир".',
+        type: 4,
+        theme: 'Верю-не-верю',
+        task: 'Жесты',
       },
       {
         collectionId: 1,
@@ -24,6 +24,14 @@ async function main() {
         type: 3,
         theme: 'Красота и здоровье',
         task: 'Рисунок',
+      },
+      {
+        collectionId: 1,
+        questionForPlayers: 'Отгадайте слово по объяснению ведущего.',
+        questionForHost: 'Объясните словами: "Лукбук", не используя однокоренные слова.',
+        type: 1,
+        theme: 'Красота и здоровье',
+        task: 'Слова',
       },
       {
         collectionId: 1,
