@@ -1,11 +1,18 @@
 .gameVideos{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  width: 63%;
+  display: inline-flex;
   gap: 15px;
 }
 
 .gameSpace{
 
+}
+
+.gameContainer{
+  display: grid;
+  column-gap: 20px;
+  grid-template-columns: 2fr 1fr;
+}
+
+.videoContainer{
+  
 }

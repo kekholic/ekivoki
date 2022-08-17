@@ -8,6 +8,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable max-len */
 import React, {
+  ReactElement,
   useEffect,
   useState,
   //  useState
@@ -103,6 +104,7 @@ export default function GameMain() {
   };
 
   useEffect(() => {
+
     // sendMessageGameState(game, id, user);
 
     socket.on('playerJoined', (player) => {
@@ -133,10 +135,12 @@ export default function GameMain() {
         userId: 0,
       });
     });
+
     socket.on('OpenBoard', (msg) => {
       setBoardVisible(true);
     });
     socket.on('EndGame', (msg) => {
+
       try {
         setWinner(msg.winner);
         socket.emit(ACTIONS.LEAVE);
@@ -154,6 +158,7 @@ export default function GameMain() {
       //     game,
       //   });
       // }
+
     });
 
     // socket.on('exit_game_host', (msg) => {
@@ -174,7 +179,8 @@ export default function GameMain() {
       if (user.user.id !== game.isHost) {
         if (
           game.game.status === GAME_STATUS.IN_PROGRESS &&
-          Object.keys(game.progress).length
+
+            Object.keys(game.progress).length
         ) {
           BoardVisibleMessage(id);
           setBoardVisible(true);
@@ -185,6 +191,7 @@ export default function GameMain() {
     if (user.user.id === game.isHost) {
       dispatch(updateCanSendStatus(true));
     }
+
     console.log('socket.id', socket.id);
     if (game.game.id === 0 && allGames.games.length === 0) {
       console.log('Стэйт слетел !', game.game.id, 'soketID', socket.id);
@@ -249,43 +256,32 @@ export default function GameMain() {
             />
           )}
           {game.game.status === GAME_STATUS.IN_PROGRESS &&
+
             (user.canSendMessage ? (
               <p>{game.questions.list[findIndex()].questionForHost}</p>
             ) : (
               <>
                 <p>{game.questions.list[findIndex()].questionForPlayers}</p>
-                <button type='submit' onClick={giveAnswer}>
+                <button type="submit" onClick={giveAnswer}>
                   Дать ответ
                 </button>
               </>
             ))}
+
           {game.questions.list[findIndex()].type === 3 && (
             <Canvas roomID={id} canSendMessage={user.canSendMessage} />
           )}
+          {boardVisible && <ModalBoard boardVisible={boardVisible} />}
+          {/* <ModalBoard boardVisible={boardVisible} /> */}
+          {winner.win && <ModalEnd winner={winner} />}
         </div>
-
-        {boardVisible && <ModalBoard boardVisible={boardVisible} />}
-        {/* <ModalBoard boardVisible={boardVisible} /> */}
-        {winner.win && <ModalEnd winner={winner} />}
-      </>
+      </div>
     );
   }
 
-  if (statusGame === GAME_STATUS.END) {
-    return (
-      <>
-        <h1>Эта игра закончена</h1>
-        <div>перейдите в список игр</div>
-      </>
-    );
-  }
-
-  if (statusGame === GAME_STATUS.IN_PROGRESS) {
-    return (
-      <>
-        <h1>Эта игра уже стартовала</h1>
-        <div>перейдите в список игр</div>
-      </>
-    );
-  }
+      {boardVisible && <ModalBoard boardVisible={boardVisible} />}
+      {/* <ModalBoard boardVisible={boardVisible} /> */}
+      {winner.win && <ModalEnd winner={winner} />}
+    </>
+  );
 }

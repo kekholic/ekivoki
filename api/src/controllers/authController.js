@@ -27,8 +27,8 @@ class AuthController {
   async activate(req, res, next) {
     try {
       const codeActivation = req.params.link;
-      await authService.activate(codeActivation);
-      res.redirect('http://localhost:3000');
+      const response = await authService.activate(codeActivation);
+      res.json(response);
     } catch (error) {
       next(error);
     }

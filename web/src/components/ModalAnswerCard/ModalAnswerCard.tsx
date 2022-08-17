@@ -10,7 +10,6 @@ import {
   correctAnswer,
 } from '../../store/reducers/gameSlice';
 
-
 interface IProps {
   modal: IModal;
   setModal: Dispatch<IModal>;
@@ -30,10 +29,11 @@ interface Iwinner {
 }
 
 export default function ModalAnswerCard(props: IProps): ReactElement {
-  const { setModal, modal, findIndex, setWinner } = props;
+  const {
+    setModal, modal, findIndex, setWinner,
+  } = props;
 
   const dispatch = useAppDispatch();
-
 
   const { game } = useAppSelector((store) => store);
   const user = useAppSelector((store) => store.user);
@@ -58,9 +58,8 @@ export default function ModalAnswerCard(props: IProps): ReactElement {
 
     for (let i = 0; i < game.playersPriority.length; i++) {
       if (game.playersPriority[i].userId === game.isHost) {
-        isHost =
-          game.playersPriority[i + 1]?.userId ||
-          game.playersPriority[0]?.userId;
+        isHost = game.playersPriority[i + 1]?.userId
+          || game.playersPriority[0]?.userId;
       }
     }
     const progress = {
@@ -99,7 +98,7 @@ export default function ModalAnswerCard(props: IProps): ReactElement {
         progressHost,
         isHost,
         current,
-      })
+      }),
     );
 
     setModal({
@@ -121,31 +120,32 @@ export default function ModalAnswerCard(props: IProps): ReactElement {
       }
     >
       <div
-        className={
-          modal.visible
-            ? `${style.modalContent} ${style.modalContentActive}`
-            : `${style.modalContent}`
-        }
+        className={modal.visible ? `${style.modalContent} ${style.modalContentActive}` : `${style.modalContent}`}
         onClick={(e) => e.stopPropagation()}
       >
-        (
         {user.canSendMessage ? (
-          <>
-            <p> {modal.username} верно ответил на вопрос?</p>
-            <button type='submit' onClick={yesHandler}>
-              Да
-            </button>
-            <button type='submit' onClick={noHandler}>
-              Нет
-            </button>
-          </>
+          <div className={style.answerContainer}>
+            <p className={style.answerText}>
+              <span className={style.answerUserName}>
+                {modal.username}
+              </span>
+              {' '}
+              верно ответил на вопрос?
+            </p>
+            <button className={style.answerButton} type="submit" onClick={yesHandler}>Да</button>
+            <button className={style.answerButton} type="submit" onClick={noHandler}>Нет</button>
+          </div>
         ) : (
-          <div>
-            На вопрос отвечает
-            {modal.username}
+          <div className={style.answerContainer}>
+            <p className={style.answerText}>
+              На вопрос отвечает
+              {' '}
+              <span className={style.answerUserName}>
+                {modal.username}
+              </span>
+            </p>
           </div>
         )}
-        )
       </div>
     </div>
   );
