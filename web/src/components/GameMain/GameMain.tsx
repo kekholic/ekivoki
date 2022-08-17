@@ -210,7 +210,7 @@ export default function GameMain() {
     }, [boardVisible]);
 
     return (
-      <>
+      <div className={style.gameContainer}>
         <div className={style.gameVideos}>
           {id && <VideoComponent roomID={id} />}
         </div>
@@ -239,7 +239,7 @@ export default function GameMain() {
           {boardVisible && <ModalBoard boardVisible={boardVisible} />}
           {/* <ModalBoard boardVisible={boardVisible} /> */}
         </div>
-      </>
+      </div>
     );
   }
 

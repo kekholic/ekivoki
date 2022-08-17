@@ -9,8 +9,10 @@ import {
   IlocalMediaStream, IpeerConnections, IpeerMediaElements, IRTCSessionDescriptionInit,
 } from '../types/webRTC';
 
+export const LOCAL_VIDEO : string = socket.id;
+
 export default function useWebRTC(roomID : string) {
-  const LOCAL_VIDEO : string = socket.id;
+  const MY_VIDEO : string = socket.id;
   const [clients, updateClients] = useStateWithCallback([]);
 
   const addNewClient = useCallback((newClient: string, cb: ()=>void) => {
@@ -166,8 +168,8 @@ export default function useWebRTC(roomID : string) {
         },
       });
 
-      addNewClient(LOCAL_VIDEO, () => {
-        const localVideoElement = peerMediaElements.current[LOCAL_VIDEO];
+      addNewClient(MY_VIDEO, () => {
+        const localVideoElement = peerMediaElements.current[MY_VIDEO];
 
         if (localVideoElement) {
           localVideoElement.volume = 0;
