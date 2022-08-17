@@ -1,9 +1,15 @@
 import React from 'react';
+import { useAppSelector } from '../../../hooks/redux';
 
-type Props = {}
+interface Props {
+  findIndex: Function,
+}
 
-export default function CardForHost({ }: Props) {
+export default function CardForHost({ findIndex }: Props) {
+  const { game } = useAppSelector((store) => store);
   return (
-    <div>CardForHost</div>
+
+    <p>{game.questions.list[findIndex()].questionForHost}</p>
+
   );
 }

@@ -47,6 +47,8 @@ import ModalEnd from '../ModalEnd/ModalEnd';
 // import ModalAnswerCard from '../ModalAnswerCard/ModalAnswerCard';
 // import QuestionCard from '../QuestionCard/QuestionCard';
 import VideoComponent from '../WebChat/VideoComponent';
+import CardForHost from './CardForHost/CardForHost';
+import CardForPlayer from './CardForPlayer/CardForPlayer';
 import style from './GameMain.module.css';
 
 // TODO:
