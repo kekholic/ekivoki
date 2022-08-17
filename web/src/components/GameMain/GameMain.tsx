@@ -207,7 +207,7 @@ export default function GameMain() {
       }
     }, [winner]);
     return (
-      <>
+      <div className={style.gameContainer}>
         <div className={style.gameVideos}>
           {id && <VideoComponent roomID={id} />}
         </div>
@@ -235,7 +235,7 @@ export default function GameMain() {
             <Canvas roomID={id} canSendMessage={user.canSendMessage} />
           )}
         </div>
-
+      </div>
         {boardVisible && <ModalBoard boardVisible={boardVisible} />}
         {/* <ModalBoard boardVisible={boardVisible} /> */}
         {winner.win && <ModalEnd winner={winner} />}
