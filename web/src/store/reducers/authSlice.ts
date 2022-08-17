@@ -2,7 +2,7 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IUser } from '../../models/IUser';
-import { getAuth, getLogout } from './actionCreators';
+import { checkAuth, getAuth, getLogout } from './actionCreators';
 
 interface UserState {
   user: IUser;
@@ -69,6 +69,20 @@ export const authSlice = createSlice({
       state.error = action.payload;
     },
 
+    // refresh logic
+    [checkAuth.fulfilled.type]: (state, action: PayloadAction<IUser>) => {
+      state.isLoading = false;
+      state.error = '';
+      state.user = action.payload;
+      state.isAuth = true;
+    },
+    [checkAuth.pending.type]: (state) => {
+      state.isLoading = true;
+    },
+    [checkAuth.rejected.type]: (state, action: PayloadAction<string>) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
   },
 });
 
