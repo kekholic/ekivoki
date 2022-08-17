@@ -40,6 +40,7 @@ const gameControllers = require('./src/controllers/gameControllers');
 const gameService = require('./src/service/gameService');
 const questionRouter = require('./src/routes/questionRouter');
 const GAME_STATUS = require('./src/actions/gameStatus');
+const { prisma } = require('@prisma/client');
 
 // const authMiddleware = require('./src/middlewares/authMiddleware');
 
@@ -133,7 +134,9 @@ async function getClientRooms() {
   const allgamePading = await gameService.searchGame();
   const arrGame = Array.from(rooms.keys());
 
-  const newarrGame = allgamePading.filter((game) => arrGame.includes(String(game.id)));
+  const newarrGame = allgamePading.filter((game) =>
+    arrGame.includes(String(game.id))
+  );
 
   return newarrGame;
 }
@@ -254,6 +257,11 @@ io.on('connection', (socket) => {
     console.log('exit_game.roomID: ', msg.roomID);
     io.to(msg.roomID).emit('exit_game', msg);
   });
+  socket.on('endGame', (msg) => {
+    console.log('msg: ', msg);
+    socket.to(msg.roomID).emit('EndGame', msg);
+    // ljltkfnm prisma.user.update({where: })
+  });
 
   function leaveRoom() {
     const { rooms } = socket;
@@ -289,7 +297,6 @@ io.on('connection', (socket) => {
   });
 
   socket.on(ACTIONS.RELAY_SDP, ({ peerID, sessionDescription }) => {
-    console.log('PPPPPPPPPPPPPPPPPPPPPP', peerID);
     io.to(peerID).emit(ACTIONS.SESSION_DESCRIPTION, {
       peerID: socket.id,
       sessionDescription,
@@ -297,7 +304,6 @@ io.on('connection', (socket) => {
   });
 
   socket.on(ACTIONS.RELAY_ICE, ({ peerID, iceCandidate }) => {
-    console.log('PPPPPPPPPPPPPPPPPPPPPP22222', peerID);
     io.to(peerID).emit(ACTIONS.ICE_CANDIDATE, {
       peerID: socket.id,
       iceCandidate,
