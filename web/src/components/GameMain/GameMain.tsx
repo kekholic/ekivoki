@@ -222,7 +222,11 @@ export default function GameMain() {
         roomID: id,
         users: game.playersPriority,
       });
-      socket.emit(ACTIONS.LEAVE);
+    }
+    if (winner.win) {
+      console.log('winner.win: зашел ********************** ', winner.win);
+      // socket.emit(ACTIONS.LEAVE);
+      // socket.disconnect();
     }
   }, [winner]);
 
