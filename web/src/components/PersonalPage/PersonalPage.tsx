@@ -1,9 +1,9 @@
-import React from 'react'
+import React, {
+  ReactElement,
+} from 'react';
 
-type Props = {}
-
-export default function PersonalPage({ }: Props) {
+export default function PersonalPage(): ReactElement {
   return (
     <div>PersonalPage</div>
-  )
+  );
 }

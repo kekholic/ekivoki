@@ -1,25 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect } from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import './App.css';
 
+import NavBar from './components/NavBar/NavBar';
+import { useAppDispatch } from './hooks/redux';
+
+import MainRoutes from './Routes';
+import { checkAuth } from './store/reducers/actionCreators';
+
 function App() {
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      dispatch(checkAuth());
+    }
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <BrowserRouter>
+      <header className="header">
+        <NavBar />
       </header>
-    </div>
+      <main className="main">
+        <div className="container">
+          <MainRoutes />
+        </div>
+      </main>
+    </BrowserRouter>
   );
 }
 
