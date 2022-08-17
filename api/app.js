@@ -223,7 +223,7 @@ io.on('connection', (socket) => {
   socket.on('playerJoined', (msg) => {
     console.log('playerJoined', msg);
     msg.user.socket = msg.socket;
-    socket.to(msg.roomID).emit('playerJoined', msg.user);
+    io.to(msg.roomID).emit('playerJoined', msg.user);
   });
   socket.on('sendNewGameState', (msg) => {
     setTimeout(() => {
@@ -258,9 +258,13 @@ io.on('connection', (socket) => {
     io.to(msg.roomID).emit('exit_game', msg);
   });
   socket.on('endGame', (msg) => {
-    console.log('msg: ', msg);
     socket.to(msg.roomID).emit('EndGame', msg);
-    // ljltkfnm prisma.user.update({where: })
+    gameService.finishGame(msg);
+  });
+
+  socket.on('f5', (msg) => {
+    console.log('Принял сообщение что кто то слетел', msg);
+    socket.to(msg.roomID).emit('f5', msg);
   });
 
   function leaveRoom() {

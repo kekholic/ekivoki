@@ -12,8 +12,9 @@ import React, {
   useState,
   //  useState
 } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import GAME_STATUS from '../../actions/gameStatus';
+import ACTIONS from '../../actions/wsActions';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import checkStatusGame from '../../hooks/useCheckStatusGame';
 import {
@@ -32,6 +33,7 @@ import {
   hostLeaveUpdate,
   playerJoinedUpdateState,
   playersLeaveUpdate,
+  reconnect,
   setVideoComponents,
   updateGameState,
 } from '../../store/reducers/gameSlice';
@@ -63,6 +65,7 @@ import style from './GameMain.module.css';
 const users = {};
 
 export default function GameMain() {
+  const navigate = useNavigate();
   const [modal, setModal] = useState({
     visible: false,
     username: '',
@@ -74,6 +77,7 @@ export default function GameMain() {
     win: false,
   });
   const user = useAppSelector((store) => store.user);
+  const allGames = useAppSelector((store) => store.allGame);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -98,114 +102,134 @@ export default function GameMain() {
     return ind;
   };
 
-  console.log(socket.id);
+  useEffect(() => {
+    // sendMessageGameState(game, id, user);
+
+    socket.on('playerJoined', (player) => {
+      // users = { ...users, player };
+      console.log('socket.id', player);
+      if (user.canSendMessage) {
+        dispatch(playerJoinedUpdateState(player));
+      }
+    });
+
+    socket.on('sendNewGameStateBack', (msg) => {
+      console.log('what a fuck?');
+      dispatch(updateGameState(msg.game));
+    });
+
+    socket.on('modalAnswerOpen', (msg) => {
+      setModal({
+        visible: true,
+        username: msg.username,
+        userId: msg.userId,
+      });
+    });
+
+    socket.on('modalCloseFromBack', (msg) => {
+      setModal({
+        visible: false,
+        username: '',
+        userId: 0,
+      });
+    });
+    socket.on('OpenBoard', (msg) => {
+      setBoardVisible(true);
+    });
+    socket.on('EndGame', (msg) => {
+      try {
+        setWinner(msg.winner);
+        socket.emit(ACTIONS.LEAVE);
+      } catch (error) {
+        navigate('../');
+      }
+    });
+    socket.on('f5', (msg) => {
+      console.log('принял сообщение об слете игры с сервера');
+      dispatch(reconnect(msg));
+      // if (game.game.id !== 0) {
+      //   console.log('Отправил сообщениес новым стейтом');
+      //   socket.emit('updatef5', {
+      //     roomID: id,
+      //     game,
+      //   });
+      // }
+    });
+
+    // socket.on('exit_game_host', (msg) => {
+    //   if (user.user.id === msg.isHost) {
+    //     dispatch(hostLeaveUpdate(msg));
+    //   }
+    // });
+    // socket.on('exit_game', (msg) => {
+    //   if (user.canSendMessage) {
+    //     dispatch(playersLeaveUpdate(msg));
+    //   }
+    // });
+  }, [socket]);
 
   useEffect(() => {
-    console.log(statusGame);
-  }, [statusGame]);
+    if (user.canSendMessage) {
+      sendNewGameState(game, String(game.game.id));
+      if (user.user.id !== game.isHost) {
+        if (
+          game.game.status === GAME_STATUS.IN_PROGRESS &&
+          Object.keys(game.progress).length
+        ) {
+          BoardVisibleMessage(id);
+          setBoardVisible(true);
+        }
+        dispatch(updateCanSendStatus(false));
+      }
+    }
+    if (user.user.id === game.isHost) {
+      dispatch(updateCanSendStatus(true));
+    }
+    console.log('socket.id', socket.id);
+    if (game.game.id === 0 && allGames.games.length === 0) {
+      console.log('Стэйт слетел !', game.game.id, 'soketID', socket.id);
+      socket.emit('f5', {
+        roomID: id,
+        socket: socket.id,
+        user: user.user,
+      });
+    }
+    // i += 1;
+    // console.log(i);
+  }, [game]);
+
+  const giveAnswer = () => {
+    modalAnswer(String(game.game.id), user.user.username, user.user.id);
+    setModal({
+      visible: true,
+      username: user.user.username || 'username',
+      userId: user.user.id,
+    });
+  };
+
+  useEffect(() => {
+    if (boardVisible) {
+      setTimeout(() => {
+        setBoardVisible(false);
+      }, 5000);
+    }
+  }, [boardVisible]);
+
+  useEffect(() => {
+    if (winner.win && user.canSendMessage) {
+      socket.emit('endGame', {
+        winner,
+        roomID: id,
+        users: game.playersPriority,
+      });
+      socket.emit(ACTIONS.LEAVE);
+    }
+  }, [winner]);
 
   if (
     statusGame !== GAME_STATUS.END &&
     statusGame !== GAME_STATUS.IN_PROGRESS
   ) {
-    useEffect(() => {
-      // sendMessageGameState(game, id, user);
-
-      socket.on('playerJoined', (player) => {
-        // users = { ...users, player };
-        console.log('socket.id', player);
-        if (user.canSendMessage) {
-          dispatch(playerJoinedUpdateState(player));
-        }
-      });
-
-      socket.on('sendNewGameStateBack', (msg) => {
-        // console.log('what a fuck?');
-        dispatch(updateGameState(msg.game));
-      });
-
-      socket.on('modalAnswerOpen', (msg) => {
-        setModal({
-          visible: true,
-          username: msg.username,
-          userId: msg.userId,
-        });
-      });
-
-      socket.on('modalCloseFromBack', (msg) => {
-        setModal({
-          visible: false,
-          username: '',
-          userId: 0,
-        });
-      });
-      socket.on('OpenBoard', (msg) => {
-        setBoardVisible(true);
-      });
-      socket.on('EndGame', (msg) => {
-        console.log('msg: ', msg);
-        setWinner(msg.winner);
-      });
-
-      // socket.on('exit_game_host', (msg) => {
-      //   if (user.user.id === msg.isHost) {
-      //     dispatch(hostLeaveUpdate(msg));
-      //   }
-      // });
-      // socket.on('exit_game', (msg) => {
-      //   if (user.canSendMessage) {
-      //     dispatch(playersLeaveUpdate(msg));
-      //   }
-      // });
-    }, [socket]);
-
-    useEffect(() => {
-      if (user.canSendMessage) {
-        sendNewGameState(game, String(game.game.id));
-        if (user.user.id !== game.isHost) {
-          if (
-            game.game.status === GAME_STATUS.IN_PROGRESS &&
-            Object.keys(game.progress).length
-          ) {
-            BoardVisibleMessage(id);
-            setBoardVisible(true);
-          }
-          dispatch(updateCanSendStatus(false));
-        }
-      }
-      if (user.user.id === game.isHost) {
-        dispatch(updateCanSendStatus(true));
-      }
-      // i += 1;
-      // console.log(i);
-    }, [game]);
-
-    const giveAnswer = () => {
-      modalAnswer(String(game.game.id), user.user.username, user.user.id);
-      setModal({
-        visible: true,
-        username: user.user.username || 'username',
-        userId: user.user.id,
-      });
-    };
-
-    useEffect(() => {
-      if (boardVisible) {
-        setTimeout(() => {
-          setBoardVisible(false);
-        }, 5000);
-      }
-    }, [boardVisible]);
-
-    useEffect(() => {
-      if (winner.win) {
-        socket.emit('endGame', {
-          winner,
-          roomID: id,
-          users: game.playersPriority,
-        });
-      }
-    }, [winner]);
     return (
       <>
         <div className={style.gameVideos}>
