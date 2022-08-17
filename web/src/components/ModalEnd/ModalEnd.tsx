@@ -20,8 +20,9 @@ function ModalEnd({ winner }: Props) {
   const navigate = useNavigate();
 
   const exitHandler = () => {
-    dispatch(updateGameState(initialState))
+    dispatch(updateGameState(initialState));
     navigate('../');
+    navigate(0);
   };
   return (
     <div
