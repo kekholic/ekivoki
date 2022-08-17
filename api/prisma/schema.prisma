@@ -19,7 +19,7 @@ model User {
   won            Int         @default(0)
   lost           Int         @default(0)
   appruvedMail   Boolean     @default(false)
-  codeActivation String?
+  codeActivation String?     @unique
   UserNGame      UserNGame[]
   Token          Token?
   createdAt      DateTime    @default(now())

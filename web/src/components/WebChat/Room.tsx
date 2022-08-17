@@ -3,7 +3,7 @@ import { useParams } from 'react-router';
 import VideoComponent from './VideoComponent';
 
 export default function Room() {
-  const { id: roomID } = useParams<Record<string, string | undefined>>();
+  const { id: roomID } = useParams();
 
   if (roomID) {
     return (

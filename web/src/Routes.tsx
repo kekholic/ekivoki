@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import {
   Navigate, Route, Routes,
 } from 'react-router-dom';
+import Activate from './components/Auth/Activate/Activate';
 import Login from './components/Auth/Login/Login';
 import Registration from './components/Auth/Registration/Registration';
 import Canvas from './components/Canvas/Canvas.jsx';
@@ -51,6 +52,7 @@ function MainRoutes() {
         <Route path="/login" element={<Login />} />
       </Route>
       <Route path="/logout" />
+      <Route path="/activate/:link" element={<Activate />} />
     </Routes>
   );
 }
