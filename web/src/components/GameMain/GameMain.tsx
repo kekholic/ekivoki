@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-empty */
 /* eslint-disable operator-linebreak */
 /* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
@@ -36,6 +38,7 @@ import {
 import Canvas from '../Canvas/Canvas';
 import ModalAnswerCard from '../ModalAnswerCard/ModalAnswerCard';
 import ModalBoard from '../ModalBoard/ModalBoard';
+import ModalEnd from '../ModalEnd/ModalEnd';
 // import { updateGameState } from '../../store/reducers/gameSlice';
 // import { newQuestionState } from '../../store/reducers/questionSlice';
 // import ModalAnswerCard from '../ModalAnswerCard/ModalAnswerCard';
@@ -57,7 +60,7 @@ import style from './GameMain.module.css';
   game,
 }); */
 
-let users = {};
+const users = {};
 
 export default function GameMain() {
   const [modal, setModal] = useState({
@@ -65,12 +68,17 @@ export default function GameMain() {
     username: '',
     userId: 0,
   });
+  const [winner, setWinner] = useState({
+    name: '',
+    score: 0,
+    win: false,
+  });
   const user = useAppSelector((store) => store.user);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (user.canSendMessage) {
-      dispatch(setVideoComponents({ [socket.id]: user.user.id }))
+      dispatch(setVideoComponents({ [socket.id]: user.user.id }));
     }
   }, []);
   const [boardVisible, setBoardVisible] = useState(false);
@@ -134,6 +142,10 @@ export default function GameMain() {
       socket.on('OpenBoard', (msg) => {
         setBoardVisible(true);
       });
+      socket.on('EndGame', (msg) => {
+        console.log('msg: ', msg);
+        setWinner(msg.winner);
+      });
 
       // socket.on('exit_game_host', (msg) => {
       //   if (user.user.id === msg.isHost) {
@@ -151,7 +163,10 @@ export default function GameMain() {
       if (user.canSendMessage) {
         sendNewGameState(game, String(game.game.id));
         if (user.user.id !== game.isHost) {
-          if (game.game.status === GAME_STATUS.IN_PROGRESS && Object.keys(game.progress).length) {
+          if (
+            game.game.status === GAME_STATUS.IN_PROGRESS &&
+            Object.keys(game.progress).length
+          ) {
             BoardVisibleMessage(id);
             setBoardVisible(true);
           }
@@ -164,33 +179,6 @@ export default function GameMain() {
       // i += 1;
       // console.log(i);
     }, [game]);
-
-    // useEffect(() => {
-    //   console.log(i);
-
-    //   return () => {
-    //     if (user.canSendMessage) {
-    //       let isHost = 0;
-
-    //       for (let i = 0; i < game.playersPriority.length; i++) {
-    //         if (game.playersPriority[i].userId === game.isHost) {
-    //           isHost =
-    //             game.playersPriority[i + 1]?.userId ||
-    //             game.playersPriority[0]?.userId;
-    //         }
-    //       }
-
-    //       socket.emit('exit_game_host', {
-    //         isHost,
-    //         game,
-    //         roomId: id,
-    //         userId: user.user.id,
-    //       });
-    //     } else {
-    //       socket.emit('exit_game', { roomId: id, userId: user.user.id });
-    //     }
-    //   };
-    // }, [game]);
 
     const giveAnswer = () => {
       modalAnswer(String(game.game.id), user.user.username, user.user.id);
@@ -209,6 +197,15 @@ export default function GameMain() {
       }
     }, [boardVisible]);
 
+    useEffect(() => {
+      if (winner.win) {
+        socket.emit('endGame', {
+          winner,
+          roomID: id,
+          users: game.playersPriority,
+        });
+      }
+    }, [winner]);
     return (
       <>
         <div className={style.gameVideos}>
@@ -216,29 +213,32 @@ export default function GameMain() {
         </div>
         <div className={style.gameSpace}>
           {modal.visible && (
-          <ModalAnswerCard
-            setModal={setModal}
-            modal={modal}
-            findIndex={findIndex}
-          />
+            <ModalAnswerCard
+              setModal={setModal}
+              modal={modal}
+              findIndex={findIndex}
+              setWinner={setWinner}
+            />
           )}
-          {(game.game.status === GAME_STATUS.IN_PROGRESS) &&
-          (user.canSendMessage ? (
-            <p>{game.questions.list[findIndex()].questionForHost}</p>
-          ) : (
-            <>
-              <p>{game.questions.list[findIndex()].questionForPlayers}</p>
-              <button type="submit" onClick={giveAnswer}>
-                Дать ответ
-              </button>
-            </>
-          ))}
+          {game.game.status === GAME_STATUS.IN_PROGRESS &&
+            (user.canSendMessage ? (
+              <p>{game.questions.list[findIndex()].questionForHost}</p>
+            ) : (
+              <>
+                <p>{game.questions.list[findIndex()].questionForPlayers}</p>
+                <button type='submit' onClick={giveAnswer}>
+                  Дать ответ
+                </button>
+              </>
+            ))}
           {game.questions.list[findIndex()].type === 3 && (
-          <Canvas roomID={id} canSendMessage={user.canSendMessage} />
+            <Canvas roomID={id} canSendMessage={user.canSendMessage} />
           )}
-          {boardVisible && <ModalBoard boardVisible={boardVisible} />}
-          {/* <ModalBoard boardVisible={boardVisible} /> */}
         </div>
+
+        {boardVisible && <ModalBoard boardVisible={boardVisible} />}
+        {/* <ModalBoard boardVisible={boardVisible} /> */}
+        {winner.win && <ModalEnd winner={winner} />}
       </>
     );
   }
