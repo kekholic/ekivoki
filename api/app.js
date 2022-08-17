@@ -181,45 +181,11 @@ io.on('connection', (socket) => {
     socket.join(roomID);
     gameService.changeStatusGame(Number(roomID), GAME_STATUS.IN_LOBBY);
     shareRoomsInfo();
-    // setTimeout(() => {
-    //   // io.to(roomID).emit('OloloAnswer', {
-    //   //   answer: '123',
-    //   // });
-    //   console.log(io.sockets.adapter.rooms.has(roomID), 'boolean');
-    //   io.to('9').emit('OloloAnswer', 'test');
-    // }, 3000);
-    // // console.log(Array.from(io.sockets.adapter.rooms.get(roomID)), 'lOOOOOOOOOOOl');
-    // // socket.emit('OloloAnswer', { roomID, answer: 'Ti dibil' });
-    // // io.sockets.in(roomID).emit('OloloAnswer', 'You are in room');
-    // // socket.emit('OloloAnswer', roomID);
-    // Array.from(io.sockets.adapter.rooms.get(roomID));
   });
-
-  // socket.on('game', (msg) => {
-  //   switch (msg.method) {
-  //     case 'initState':
-  //       socket.to(msg.roomID).emit('gameAnswers', msg);
-  //       break;
-  //     case 'visibleState':
-  //       socket.to(msg.roomID).emit('gameAnswers', msg);
-  //       break;
-  //     case 'questionState':
-  //       socket.to(msg.roomID).emit('gameAnswers', msg);
-  //       break;
-  //     case 'tryAnswer':
-  //       socket.to(msg.roomID).emit('gameAnswers', msg);
-  //       break;
-  //     case 'wrongAnswer':
-  //       socket.to(msg.roomID).emit('gameAnswers', msg);
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // });
 
   // вход игрока в существующую игру:
   socket.on('playerJoined', (msg) => {
-    // console.log('playerJoined', msg);
+    console.log('playerJoined', msg.roomID);
     msg.user.socket = msg.socket;
     io.to(msg.roomID).emit('playerJoined', msg.user);
   });
@@ -256,7 +222,7 @@ io.on('connection', (socket) => {
     io.to(msg.roomID).emit('exit_game', msg);
   });
   socket.on('endGame', (msg) => {
-    console.log('msgendGame: ', msg);
+    // console.log('msgendGame: ', msg);
     socket.to(msg.roomID).emit('EndGame', msg);
     gameService.finishGame(msg);
   });
@@ -267,13 +233,13 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    console.log('zashel v disconect ***************');
+    // console.log('zashel v disconect ***************');
     leaveRoom();
   });
 
   function leaveRoom() {
     const { rooms } = socket;
-    // console.log('zashwl v liv', rooms);
+    console.log('zashwl v liv', rooms);
     Array.from(rooms).forEach((roomID) => {
       const clients = Array.from(io.sockets.adapter.rooms.get(roomID) || []);
       console.log('clients', clients);
@@ -290,7 +256,7 @@ io.on('connection', (socket) => {
       if (!Number.isNaN(Number(roomID))) {
         gameService.changePlayersCount(Number(roomID), 'decrement');
       }
-      console.log('zashwl posle lib liv', rooms);
+      // console.log('zashwl posle lib liv', rooms);
       socket.leave(roomID);
     });
     shareRoomsInfo();
@@ -300,7 +266,7 @@ io.on('connection', (socket) => {
     leaveRoom();
   });
   socket.on('disconnecting', () => {
-    console.log('zashel v disconect');
+    // console.log('zashel v disconect');
     leaveRoom();
   });
 

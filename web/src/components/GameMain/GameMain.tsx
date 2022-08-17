@@ -108,7 +108,7 @@ export default function GameMain() {
 
     socket.on('playerJoined', (player) => {
       // users = { ...users, player };
-      console.log('socket.id', player);
+      console.log('PLAYER JOINED BEFORE DISPATCH', player);
       if (user.canSendMessage) {
         dispatch(playerJoinedUpdateState(player));
       }
@@ -147,8 +147,8 @@ export default function GameMain() {
       }
     });
     socket.on('f5', (msg) => {
-      console.log('принял сообщение об слете игры с сервера');
-      dispatch(reconnect(msg));
+      // console.log('принял сообщение об слете игры с сервера');
+      if (user.canSendMessage) dispatch(reconnect(msg));
       // if (game.game.id !== 0) {
       //   console.log('Отправил сообщениес новым стейтом');
       //   socket.emit('updatef5', {
@@ -171,7 +171,7 @@ export default function GameMain() {
   }, [socket]);
 
   useEffect(() => {
-    if (user.canSendMessage) {
+    if (user.canSendMessage && game.playersPriority.length > 1) {
       sendNewGameState(game, String(game.game.id));
       if (user.user.id !== game.isHost) {
         if (
@@ -188,9 +188,9 @@ export default function GameMain() {
       dispatch(updateCanSendStatus(true));
     }
 
-    console.log('socket.id', socket.id);
+    // console.log('socket.id', socket.id);
     if (game.game.id === 0 && allGames.games.length === 0) {
-      console.log('Стэйт слетел !', game.game.id, 'soketID', socket.id);
+      // console.log('Стэйт слетел !', game.game.id, 'soketID', socket.id);
       socket.emit('f5', {
         roomID: id,
         socket: socket.id,
@@ -225,11 +225,11 @@ export default function GameMain() {
         roomID: id,
         users: game.playersPriority,
       });
+      dispatch(updateCanSendStatus(false));
     }
     if (winner.win) {
-      console.log('winner.win: зашел ********************** ', winner.win);
-      // socket.emit(ACTIONS.LEAVE);
-      // socket.disconnect();
+      // navigate(0);
+      // setTimeout(() => window.location.reload(), 1000);
     }
   }, [winner]);
 
