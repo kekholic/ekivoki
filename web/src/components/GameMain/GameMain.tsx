@@ -51,20 +51,6 @@ import CardForHost from './CardForHost/CardForHost';
 import CardForPlayer from './CardForPlayer/CardForPlayer';
 import style from './GameMain.module.css';
 
-// TODO:
-// отрисовка шаблона: камеры, место для карточки с вопросом, место для боарда.
-// на сокетах реализовать обновление геймстейта: как только новый игрок присоединяется к игре,
-// с бэка прилетает инфа о том, что новый пользователь присоединился и записывается в редакс
-// как только набирается нужное количество человек, делаем уведомление о начале игры
-// и делаем кнопку броска кубика активной. Как только игра началась - игра меняет статус на бэке
-// ее больше не найти в списке игр.
-/* socket.emit('send_message', {
-  id,
-  method: 'chat',
-  user,
-  game,
-}); */
-
 const users = {};
 
 export default function GameMain() {
@@ -148,17 +134,6 @@ export default function GameMain() {
         navigate('../');
       }
     });
-    socket.on('f5', (msg) => {
-      console.log('принял сообщение об слете игры с сервера');
-      dispatch(reconnect(msg));
-      // if (game.game.id !== 0) {
-      //   console.log('Отправил сообщениес новым стейтом');
-      //   socket.emit('updatef5', {
-      //     roomID: id,
-      //     game,
-      //   });
-      // }
-    });
 
     // socket.on('exit_game_host', (msg) => {
     //   if (user.user.id === msg.isHost) {
@@ -198,6 +173,36 @@ export default function GameMain() {
         user: user.user,
       });
     }
+
+    socket.on('f5', (msg) => {
+      console.log('принял сообщение об слете игры с сервера');
+      console.log('****************', msg.user.id, game.isHost);
+      if (msg.user.id === game.isHost) {
+        console.log('зашел в условие смены');
+        const users = game.playersPriority.filter(
+          (user) => user.userId !== game.isHost,
+        );
+        console.log('users: ', users);
+        const tempHost = users.sort((a, b) => a.userId - b.userId).pop();
+        console.log('tempHost: ', tempHost);
+
+        if (user.user.id === tempHost?.userId) {
+          console.log('tempHost?.userId: ', tempHost?.userId);
+          console.log('user.user.id: ', user.user.id);
+          console.log('Поменял могу отправлять сообщения');
+          dispatch(updateCanSendStatus(true));
+        }
+      }
+      dispatch(reconnect(msg));
+      // if (game.game.id !== 0) {
+      //   console.log('Отправил сообщениес новым стейтом');
+      //   socket.emit('updatef5', {
+      //     roomID: id,
+      //     game,
+      //   });
+      // }
+    });
+
     // i += 1;
     // console.log(i);
   }, [game, user]);
