@@ -19,6 +19,7 @@ const io = require('socket.io')(server, {
   },
 });
 
+const { prisma } = require('@prisma/client');
 const errorMiddleware = require('./src/middlewares/error-middleware');
 
 const { PORT } = process.env; // получение переменных env
@@ -40,7 +41,6 @@ const gameControllers = require('./src/controllers/gameControllers');
 const gameService = require('./src/service/gameService');
 const questionRouter = require('./src/routes/questionRouter');
 const GAME_STATUS = require('./src/actions/gameStatus');
-const { prisma } = require('@prisma/client');
 
 // const authMiddleware = require('./src/middlewares/authMiddleware');
 
@@ -123,7 +123,7 @@ async function clearVoidRooms() {
   const clearInterval = setInterval(async () => {
     const dateNow = new Date();
     await gameService.deletGamesOnDate(dateNow);
-    console.log('udalil');
+    // console.log('udalil');
   }, 60 * 30 * 1000);
 }
 clearVoidRooms();
@@ -134,9 +134,7 @@ async function getClientRooms() {
   const allgamePading = await gameService.searchGame();
   const arrGame = Array.from(rooms.keys());
 
-  const newarrGame = allgamePading.filter((game) =>
-    arrGame.includes(String(game.id))
-  );
+  const newarrGame = allgamePading.filter((game) => arrGame.includes(String(game.id)));
 
   return newarrGame;
 }
@@ -149,7 +147,7 @@ async function shareRoomsInfo() {
 
 io.on('connection', (socket) => {
   shareRoomsInfo();
-  console.log('socket connection');
+  // console.log('socket connection');
   socket.on(ACTIONS.SHARE_ROOMS, () => {
     shareRoomsInfo();
   });
@@ -221,9 +219,9 @@ io.on('connection', (socket) => {
 
   // вход игрока в существующую игру:
   socket.on('playerJoined', (msg) => {
-    console.log('playerJoined', msg);
+    // console.log('playerJoined', msg);
     msg.user.socket = msg.socket;
-    socket.to(msg.roomID).emit('playerJoined', msg.user);
+    io.to(msg.roomID).emit('playerJoined', msg.user);
   });
   socket.on('sendNewGameState', (msg) => {
     setTimeout(() => {
@@ -244,28 +242,38 @@ io.on('connection', (socket) => {
   });
 
   socket.on('boardVisible', (msg) => {
-    console.log('boardVisible.roomID: ', msg.roomID);
+    // console.log('boardVisible.roomID: ', msg.roomID);
     io.to(msg.roomID).emit('OpenBoard', msg);
   });
 
   socket.on('exit_game_host', (msg) => {
-    console.log('exit_game_host.roomID: ', msg.roomID);
+    // console.log('exit_game_host.roomID: ', msg.roomID);
     io.to(msg.roomID).emit('exit_game_host', msg);
   });
 
   socket.on('exit_game', (msg) => {
-    console.log('exit_game.roomID: ', msg.roomID);
+    // console.log('exit_game.roomID: ', msg.roomID);
     io.to(msg.roomID).emit('exit_game', msg);
   });
   socket.on('endGame', (msg) => {
-    console.log('msg: ', msg);
+    console.log('msgendGame: ', msg);
     socket.to(msg.roomID).emit('EndGame', msg);
-    // ljltkfnm prisma.user.update({where: })
+    gameService.finishGame(msg);
+  });
+
+  socket.on('f5', (msg) => {
+    // console.log('Принял сообщение что кто то слетел', msg);
+    socket.to(msg.roomID).emit('f5', msg);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('zashel v disconect ***************');
+    leaveRoom();
   });
 
   function leaveRoom() {
     const { rooms } = socket;
-    console.log('zashwl v liv', rooms);
+    // console.log('zashwl v liv', rooms);
     Array.from(rooms).forEach((roomID) => {
       const clients = Array.from(io.sockets.adapter.rooms.get(roomID) || []);
       console.log('clients', clients);

@@ -13,8 +13,9 @@ import React, {
   useState,
   //  useState
 } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import GAME_STATUS from '../../actions/gameStatus';
+import ACTIONS from '../../actions/wsActions';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import checkStatusGame from '../../hooks/useCheckStatusGame';
 import {
@@ -33,6 +34,7 @@ import {
   hostLeaveUpdate,
   playerJoinedUpdateState,
   playersLeaveUpdate,
+  reconnect,
   setVideoComponents,
   updateGameState,
 } from '../../store/reducers/gameSlice';
@@ -64,6 +66,7 @@ import style from './GameMain.module.css';
 const users = {};
 
 export default function GameMain() {
+  const navigate = useNavigate();
   const [modal, setModal] = useState({
     visible: false,
     username: '',
@@ -75,6 +78,7 @@ export default function GameMain() {
     win: false,
   });
   const user = useAppSelector((store) => store.user);
+  const allGames = useAppSelector((store) => store.allGame);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -99,33 +103,8 @@ export default function GameMain() {
     return ind;
   };
 
-  console.log(socket.id);
-
   useEffect(() => {
-    console.log(statusGame);
-  }, [statusGame]);
 
-  // перенесены наверх, что бы не было лишних условий и в компоненте был неусловный return
-  if (statusGame === GAME_STATUS.END) {
-    return (
-      <>
-        <h1>Эта игра закончена</h1>
-        <div>перейдите в список игр</div>
-      </>
-    );
-  }
-
-  if (statusGame === GAME_STATUS.IN_PROGRESS) {
-    return (
-      <>
-        <h1>Эта игра уже стартовала</h1>
-        <div>перейдите в список игр</div>
-      </>
-    );
-  }
-
- 
-  useEffect(() => {
     // sendMessageGameState(game, id, user);
 
     socket.on('playerJoined', (player) => {
@@ -137,7 +116,7 @@ export default function GameMain() {
     });
 
     socket.on('sendNewGameStateBack', (msg) => {
-      // console.log('what a fuck?');
+      console.log('what a fuck?');
       dispatch(updateGameState(msg.game));
     });
 
@@ -156,12 +135,30 @@ export default function GameMain() {
         userId: 0,
       });
     });
+
     socket.on('OpenBoard', (msg) => {
       setBoardVisible(true);
     });
     socket.on('EndGame', (msg) => {
-      console.log('msg: ', msg);
-      setWinner(msg.winner);
+
+      try {
+        setWinner(msg.winner);
+        socket.emit(ACTIONS.LEAVE);
+      } catch (error) {
+        navigate('../');
+      }
+    });
+    socket.on('f5', (msg) => {
+      console.log('принял сообщение об слете игры с сервера');
+      dispatch(reconnect(msg));
+      // if (game.game.id !== 0) {
+      //   console.log('Отправил сообщениес новым стейтом');
+      //   socket.emit('updatef5', {
+      //     roomID: id,
+      //     game,
+      //   });
+      // }
+
     });
 
     // socket.on('exit_game_host', (msg) => {
@@ -182,6 +179,7 @@ export default function GameMain() {
       if (user.user.id !== game.isHost) {
         if (
           game.game.status === GAME_STATUS.IN_PROGRESS &&
+
             Object.keys(game.progress).length
         ) {
           BoardVisibleMessage(id);
@@ -192,6 +190,16 @@ export default function GameMain() {
     }
     if (user.user.id === game.isHost) {
       dispatch(updateCanSendStatus(true));
+    }
+
+    console.log('socket.id', socket.id);
+    if (game.game.id === 0 && allGames.games.length === 0) {
+      console.log('Стэйт слетел !', game.game.id, 'soketID', socket.id);
+      socket.emit('f5', {
+        roomID: id,
+        socket: socket.id,
+        user: user.user,
+      });
     }
     // i += 1;
     // console.log(i);
@@ -215,29 +223,39 @@ export default function GameMain() {
   }, [boardVisible]);
 
   useEffect(() => {
-    if (winner.win) {
+    if (winner.win && user.canSendMessage) {
       socket.emit('endGame', {
         winner,
         roomID: id,
         users: game.playersPriority,
       });
     }
+    if (winner.win) {
+      console.log('winner.win: зашел ********************** ', winner.win);
+      // socket.emit(ACTIONS.LEAVE);
+      // socket.disconnect();
+    }
   }, [winner]);
-  return (
-    <>
-      <div className={style.gameVideos}>
-        {id && <VideoComponent roomID={id} />}
-      </div>
-      <div className={style.gameSpace}>
-        {modal.visible && (
-        <ModalAnswerCard
-          setModal={setModal}
-          modal={modal}
-          findIndex={findIndex}
-          setWinner={setWinner}
-        />
-        )}
-        {game.game.status === GAME_STATUS.IN_PROGRESS &&
+
+  if (
+    statusGame !== GAME_STATUS.END &&
+    statusGame !== GAME_STATUS.IN_PROGRESS
+  ) {
+    return (
+      <>
+        <div className={style.gameVideos}>
+          {id && <VideoComponent roomID={id} />}
+        </div>
+        <div className={style.gameSpace}>
+          {modal.visible && (
+            <ModalAnswerCard
+              setModal={setModal}
+              modal={modal}
+              findIndex={findIndex}
+              setWinner={setWinner}
+            />
+          )}
+          {game.game.status === GAME_STATUS.IN_PROGRESS &&
 
             (user.canSendMessage ? (
               <p>{game.questions.list[findIndex()].questionForHost}</p>

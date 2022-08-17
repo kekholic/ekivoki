@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-undef */
 /* eslint-disable class-methods-use-this */
 
 const { PrismaClient } = require('@prisma/client');
@@ -56,7 +58,7 @@ class GameService {
         },
       });
     } catch (error) {
-      console.log(error);
+      throw ApiError.BadRequest('Ошибка удаления игр');
     }
   }
 
@@ -94,7 +96,9 @@ class GameService {
         },
       });
       if (!userNgames) {
-        throw ApiError.BadRequest('Не удалось добавить пользьзователя в игру игру');
+        throw ApiError.BadRequest(
+          'Не удалось добавить пользьзователя в игру игру'
+        );
       }
 
       const questions = await prisma.card.findMany({
@@ -239,7 +243,42 @@ class GameService {
         this.changeStatusGame(id, GAME_STATUS.CREATED);
       }
     } catch (error) {
-      console.log(error);
+      throw ApiError.BadRequest('Ошибка изменения количества игроков');
+    }
+  }
+
+  async finishGame(msg) {
+    try {
+      const { winner, roomID, users } = msg;
+      for await (const oneUser of users) {
+        if (oneUser.username === winner.name) {
+          await prisma.user.update({
+            where: { id: oneUser.userId },
+            data: {
+              won: {
+                increment: 1,
+              },
+            },
+          });
+        } else {
+          await prisma.user.update({
+            where: { id: oneUser.userId },
+            data: {
+              lost: {
+                increment: 1,
+              },
+            },
+          });
+        }
+      }
+      await prisma.game.update({
+        where: { id: Number(roomID) },
+        data: {
+          status: GAME_STATUS.END,
+        },
+      });
+    } catch (error) {
+      throw ApiError.BadRequest('Ошибка записи законченой игры');
     }
   }
 }
