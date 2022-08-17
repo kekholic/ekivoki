@@ -5,7 +5,7 @@ import {
 import Activate from './components/Auth/Activate/Activate';
 import Login from './components/Auth/Login/Login';
 import Registration from './components/Auth/Registration/Registration';
-import Canvas from './components/Canvas/Canvas.jsx';
+import Canvas from './components/Canvas/Canvas';
 import GameInit from './components/GameInit/GameInit';
 import GameMain from './components/GameMain/GameMain';
 import GameList from './components/GameStart/GameList/GameList';
