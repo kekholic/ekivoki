@@ -111,10 +111,10 @@ class AuthService {
       const user = await prisma.user.findUnique({ where: { id: userData.id } });
       const userDto = new UserDto(user);
       const tokens = tokenService.generateTokens({ ...userDto });
-
-      await tokenService.saveToken(userDto.id, tokens.refreshToken);
+      await tokenService.saveToken(userDto.id, tokens);
       return { ...tokens, user: userDto };
     } catch (error) {
+      console.log(error);
       throw ApiError.BadRequest('Ошибка обновления токена');
     }
   }

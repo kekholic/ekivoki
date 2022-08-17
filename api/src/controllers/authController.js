@@ -71,9 +71,7 @@ class AuthController {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
       });
-
-      const { accessToken } = userData;
-      return res.json({ accessToken });
+      return res.json(userData);
     } catch (error) {
       next(error);
     }

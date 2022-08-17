@@ -1,5 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
 import $api from '../../http';
 import { IData } from '../../models/IData';
 import { IDataGame } from '../../models/IDataGame';
@@ -12,6 +13,22 @@ export const getAuth = createAsyncThunk(
         `/auth/${data.username ? 'registration' : 'login'}`,
         data,
       );
+      localStorage.setItem('token', res.data.accessToken);
+      localStorage.setItem('user', JSON.stringify(res.data.user));
+      return res.data.user;
+    } catch (err) {
+      return thunkAPI.rejectWithValue('Ошибка');
+    }
+  },
+);
+
+export const checkAuth = createAsyncThunk(
+  'auth/checkAuth',
+  async (_, thunkAPI) => {
+    try {
+      const res = await axios.get<IData>(`${process.env.REACT_APP_API_URL}/auth/refresh`, {
+        withCredentials: true,
+      });
       localStorage.setItem('token', res.data.accessToken);
       localStorage.setItem('user', JSON.stringify(res.data.user));
       return res.data.user;
