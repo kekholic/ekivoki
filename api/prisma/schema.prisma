@@ -68,14 +68,17 @@ model Collection {
 }
 
 model Card {
-  id           Int        @id @default(autoincrement())
-  Collection   Collection @relation(fields: [collectionId], references: [id])
-  collectionId Int
-  questionForPlayers        String
+  id                 Int        @id @default(autoincrement())
+  Collection         Collection @relation(fields: [collectionId], references: [id])
+  collectionId       Int
+  questionForPlayers String
   questionForHost    String
-  type         Int
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  type               Int
+  theme              String
+  task               String
+  exceptions         String?
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
 }
 
 model GameNCollection {

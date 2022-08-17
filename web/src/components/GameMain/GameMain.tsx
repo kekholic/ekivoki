@@ -44,6 +44,7 @@ import ModalEnd from '../ModalEnd/ModalEnd';
 // import ModalAnswerCard from '../ModalAnswerCard/ModalAnswerCard';
 // import QuestionCard from '../QuestionCard/QuestionCard';
 import VideoComponent from '../WebChat/VideoComponent';
+import style from './GameMain.module.css';
 
 // TODO:
 // отрисовка шаблона: камеры, место для карточки с вопросом, место для боарда.
@@ -207,18 +208,19 @@ export default function GameMain() {
     }, [winner]);
     return (
       <>
-        {id && <VideoComponent roomID={id} />}
-
-        {modal.visible && (
+        <div className={style.gameVideos}>
+          {id && <VideoComponent roomID={id} />}
+        </div>
+        <div className={style.gameSpace}>
+          {modal.visible && (
           <ModalAnswerCard
             setModal={setModal}
             modal={modal}
             findIndex={findIndex}
             setWinner={setWinner}
           />
-        )}
-
-        {game.game.status === GAME_STATUS.IN_PROGRESS &&
+          )}
+          {(game.game.status === GAME_STATUS.IN_PROGRESS) &&
           (user.canSendMessage ? (
             <p>{game.questions.list[findIndex()].questionForHost}</p>
           ) : (
@@ -229,8 +231,7 @@ export default function GameMain() {
               </button>
             </>
           ))}
-
-        {game.questions.list[findIndex()].type === 3 && (
+          {game.questions.list[findIndex()].type === 3 && (
           <Canvas roomID={id} canSendMessage={user.canSendMessage} />
         )}
 
