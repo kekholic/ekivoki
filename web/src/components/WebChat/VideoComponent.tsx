@@ -30,9 +30,6 @@ export default function VideoComponent(props: IvcProps): ReactElement {
     return '';
   };
 
-  const [nick, setNick] = useState('');
-
-
   interface IPlayersNava {
     pic: string;
     id: number;
@@ -60,13 +57,11 @@ export default function VideoComponent(props: IvcProps): ReactElement {
     setPlaNav(playersNava);
   }, [game.playersPriority]);
 
-  useEffect(() => { /// //??????
-
-
+  return (
     clients?.map((clientID: string) => (
       (game.videoComponents[clientID] === game.isHost)
         ? (
-          <div className={`${style.videoContainer} ${nick} ${style.videoContainerHost}`}>
+          <div className={`${style.videoContainer} ${style.videoContainerHost}`}>
             <video
               className={(game.videoComponents[clientID] === game.isHost) ? style.videoHost : style.videoPlayer}
               key={clientID}
@@ -87,7 +82,7 @@ export default function VideoComponent(props: IvcProps): ReactElement {
           </div>
         )
         : (
-          <div className={`${style.videoContainer} ${nick} ${style.videoContainerPlayer}`}>
+          <div className={`${style.videoContainer} ${style.videoContainerPlayer}`}>
             <video
               className={(game.videoComponents[clientID] === game.isHost) ? style.videoHost : style.videoPlayer}
               key={clientID}
