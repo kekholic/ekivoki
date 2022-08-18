@@ -97,7 +97,7 @@ class GameService {
       });
       if (!userNgames) {
         throw ApiError.BadRequest(
-          'Не удалось добавить пользьзователя в игру игру'
+          'Не удалось добавить пользьзователя в игру игру',
         );
       }
 
@@ -107,6 +107,7 @@ class GameService {
           questionForPlayers: true,
           questionForHost: true,
           exceptions: true,
+          word: true,
           theme: true,
           task: true,
           type: true,

@@ -11,24 +11,6 @@ async function main() {
       // карточки за 1
       {
         collectionId: 1,
-        questionForPlayers: 'Отгадайте слово, ведущий будет объяснять жестами.',
-        questionForHost: 'Объясните слово с помощью жестов',
-        type: 4,
-        theme: 'Верю-не-верю',
-        task: 'Жесты',
-        word: 'Энергетический вампир',
-      },
-      {
-        collectionId: 1,
-        questionForPlayers: 'Отгадайте слово. Ведущий нарисует его на экране.',
-        questionForHost: 'Нарисуйте слово при помощи мыши',
-        type: 3,
-        theme: 'Красота и здоровье',
-        task: 'Рисунок',
-        word: 'Стрелка на колготках',
-      },
-      {
-        collectionId: 1,
         questionForPlayers: 'Отгадайте слово по объяснению ведущего.',
         questionForHost: 'Объясните словами, не используя однокоренные слова.',
         type: 1,

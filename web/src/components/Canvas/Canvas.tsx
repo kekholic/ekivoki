@@ -3,6 +3,7 @@ import '../../App.css';
 import React, { useEffect, useRef } from 'react';
 import CanvasContainer from '../CanvasContainer/CanvasContainer';
 import socket from '../../socket';
+import './Canvas.module.css';
 // import { useAppSelector } from '../../hooks/redux';
 
 interface IProps {
@@ -143,10 +144,9 @@ export default function Canvas({ roomID, canSendMessage }: IProps) {
     });
 
     const canvas = CANVAS_REF.current;
-    console.log('canvas: ', canvas);
     if (canvas) {
-      canvas.width = 800;
-      canvas.height = 600;
+      canvas.width = 550;
+      canvas.height = 300;
     }
 
     if (canvas) {
@@ -165,7 +165,7 @@ export default function Canvas({ roomID, canSendMessage }: IProps) {
   }, [canSendMessage]);
 
   return (
-    <div style={{ width: '100%' }}>
+    <div>
       <CanvasContainer CANVAS_REF={CANVAS_REF} />
     </div>
   );
