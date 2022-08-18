@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useParams } from 'react-router';
 import useActivateAccount from '../../../hooks/useActivateAccount';
 
@@ -7,8 +7,6 @@ export default function Activate() {
 
   if (link) {
     const { isActivated, errorMsg } = useActivateAccount(link);
-
-   
 
     if (isActivated) {
       return (
@@ -19,7 +17,7 @@ export default function Activate() {
       <div>
         Ошибка активации:
         {' '}
-        {errorMsg === 'Неккоректная ссылка активации' && 'Неккоректная ссылка активации или ваш аккаунт уже активирован' }
+        {errorMsg === 'Неккоректная ссылка активации' && 'Неккоректная ссылка активации или ваш аккаунт уже активирован'}
         .
         Если ошибка повторится обратитесь в техническую поддержку.
       </div>

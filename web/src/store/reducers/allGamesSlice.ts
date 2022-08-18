@@ -2,7 +2,7 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IGame } from '../../models/IGame';
-import { createGame, getGame } from './actionCreators';
+import { getGame } from './actionCreators';
 
 interface GameState {
   games: Array<IGame>;

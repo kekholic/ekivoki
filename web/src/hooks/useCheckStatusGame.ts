@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { useEffect, useState } from 'react';
 import $api from '../http';
 
@@ -8,7 +9,7 @@ export default function checkStatusGame(id: number) {
     try {
       const { data } = await $api.post(
         `${process.env.REACT_APP_API_URL}/game/checkStatusGame`,
-        { id }
+        { id },
       );
       return data;
     } catch (error) {

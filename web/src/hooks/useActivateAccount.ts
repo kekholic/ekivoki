@@ -7,7 +7,7 @@ export default function useActivateAccount(activateLink: string) {
   const chekActivateLink = useCallback(async () => {
     try {
       const { data } = await axios.get(
-        `${process.env.REACT_APP_API_URL}/auth/activate/${activateLink}`
+        `${process.env.REACT_APP_API_URL}/auth/activate/${activateLink}`,
       );
       setIsActivated(data);
     } catch (error: any) {

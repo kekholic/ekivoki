@@ -180,7 +180,7 @@ export default function GameMain() {
       if (msg.user.id === game.isHost) {
         // // console.log('зашел в условие смены');
         const users = game.playersPriority.filter(
-          (user) => user.userId !== game.isHost
+          (user) => user.userId !== game.isHost,
         );
         // // console.log('users: ', users);
         const tempHost = users.sort((a, b) => a.userId - b.userId).pop();

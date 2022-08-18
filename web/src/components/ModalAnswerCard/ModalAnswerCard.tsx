@@ -27,7 +27,9 @@ interface Iwinner {
 }
 
 export default function ModalAnswerCard(props: IProps): ReactElement {
-  const { setModal, modal, findIndex, setWinner } = props;
+  const {
+    setModal, modal, findIndex, setWinner,
+  } = props;
 
   const dispatch = useAppDispatch();
 
@@ -54,9 +56,8 @@ export default function ModalAnswerCard(props: IProps): ReactElement {
 
     for (let i = 0; i < game.playersPriority.length; i++) {
       if (game.playersPriority[i].userId === game.isHost) {
-        isHost =
-          game.playersPriority[i + 1]?.userId ||
-          game.playersPriority[0]?.userId;
+        isHost = game.playersPriority[i + 1]?.userId
+          || game.playersPriority[0]?.userId;
       }
     }
     const progress = {
@@ -95,7 +96,7 @@ export default function ModalAnswerCard(props: IProps): ReactElement {
         progressHost,
         isHost,
         current,
-      })
+      }),
     );
 
     setModal({
@@ -127,19 +128,20 @@ export default function ModalAnswerCard(props: IProps): ReactElement {
         {user.canSendMessage ? (
           <div className={style.answerContainer}>
             <p className={style.answerText}>
-              <span className={style.answerUserName}>{modal.username}</span>{' '}
+              <span className={style.answerUserName}>{modal.username}</span>
+              {' '}
               верно ответил на вопрос?
             </p>
             <button
               className={style.answerButton}
-              type='submit'
+              type="submit"
               onClick={yesHandler}
             >
               Да
             </button>
             <button
               className={style.answerButton}
-              type='submit'
+              type="submit"
               onClick={noHandler}
             >
               Нет
@@ -148,7 +150,8 @@ export default function ModalAnswerCard(props: IProps): ReactElement {
         ) : (
           <div className={style.answerContainer}>
             <p className={style.answerText}>
-              На вопрос отвечает{' '}
+              На вопрос отвечает
+              {' '}
               <span className={style.answerUserName}>{modal.username}</span>
             </p>
           </div>

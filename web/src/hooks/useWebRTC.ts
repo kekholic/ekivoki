@@ -1,3 +1,4 @@
+/* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable linebreak-style */
 /* eslint-disable consistent-return */
 import { useEffect, useRef, useCallback } from 'react';
@@ -52,7 +53,7 @@ export default function useWebRTC(roomID: string) {
       });
 
       peerConnections.current[peerID].onicecandidate = (
-        event: RTCPeerConnectionIceEvent
+        event: RTCPeerConnectionIceEvent,
       ) => {
         if (event.candidate) {
           socket.emit(ACTIONS.RELAY_ICE, {
@@ -96,7 +97,7 @@ export default function useWebRTC(roomID: string) {
         if (localMediaStream.current) {
           peerConnections.current[peerID].addTrack(
             track,
-            localMediaStream.current
+            localMediaStream.current,
           );
         }
       });
@@ -129,7 +130,7 @@ export default function useWebRTC(roomID: string) {
       sessionDescription: IRTCSessionDescriptionInit;
     }) {
       await peerConnections.current[peerID]?.setRemoteDescription(
-        new RTCSessionDescription(remoteDescription)
+        new RTCSessionDescription(remoteDescription),
       );
 
       if (remoteDescription.type === 'offer') {
@@ -154,7 +155,7 @@ export default function useWebRTC(roomID: string) {
   useEffect(() => {
     socket.on(ACTIONS.ICE_CANDIDATE, ({ peerID, iceCandidate }) => {
       peerConnections.current[peerID]?.addIceCandidate(
-        new RTCIceCandidate(iceCandidate)
+        new RTCIceCandidate(iceCandidate),
       );
     });
 
@@ -172,11 +173,10 @@ export default function useWebRTC(roomID: string) {
       delete peerConnections.current[peerID];
       delete peerMediaElements.current[peerID];
 
-      updateClients((list: Array<string>) => {
+      updateClients((list: Array<string>) =>
         // console.log(list, 'лист');
         // console.log('peerID: ', peerID);
-        return list.filter((c) => c !== peerID);
-      });
+        list.filter((c) => c !== peerID));
     };
 
     socket.on(ACTIONS.REMOVE_PEER, handleRemovePeer);

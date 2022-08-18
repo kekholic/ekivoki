@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable max-len */
 /* eslint-disable no-empty-pattern */
 import React, { useEffect, useState } from 'react';
