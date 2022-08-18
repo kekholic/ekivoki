@@ -32,6 +32,7 @@ export default function VideoComponent(props: IvcProps): ReactElement {
 
   const [nick, setNick] = useState('');
 
+
   interface IPlayersNava {
     pic: string;
     id: number;
@@ -60,9 +61,8 @@ export default function VideoComponent(props: IvcProps): ReactElement {
   }, [game.playersPriority]);
 
   useEffect(() => { /// //??????
-    setNick('1');
-  }, [game.videoComponents]);
-  return (
+
+
     clients?.map((clientID: string) => (
       (game.videoComponents[clientID] === game.isHost)
         ? (
