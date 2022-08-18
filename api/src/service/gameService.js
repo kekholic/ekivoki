@@ -123,7 +123,7 @@ class GameService {
       resp.game = newGame;
       resp.user.username = username;
       resp.user.userId = id;
-      resp.questions = questions;
+      resp.questions = questions.sort(() => 1 - Math.random());
       resp.questions.current = 1;
       return resp;
     } catch (error) {
