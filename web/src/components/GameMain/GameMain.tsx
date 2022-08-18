@@ -272,10 +272,6 @@ export default function GameMain() {
           ) : (
             <CardForPlayer id={id} findIndex={findIndex} giveAnswer={giveAnswer} />
           ))}
-
-        {game.questions.list[findIndex()].type === 3 && (
-          <Canvas roomID={id} canSendMessage={user.canSendMessage} />
-        )}
         {boardVisible && <ModalBoard boardVisible={boardVisible} />}
         {winner.win && <ModalEnd winner={winner} />}
       </div>
