@@ -12,7 +12,7 @@ export default function Canvas({ roomID, canSendMessage }) {
   const isDrawing = useRef(false);
 
   const drawHandler = (msg) => {
-    console.log('msg: ', msg.figure);
+    // // console.log('msg: ', msg.figure);
     const canvas = CANVAS_REF.current;
     if (canvas && isDrawing.current === false) {
       const context = canvas.getContext('2d');
@@ -22,7 +22,7 @@ export default function Canvas({ roomID, canSendMessage }) {
       }
       if (msg.figure.x) {
         context.lineTo(msg.figure.x, msg.figure.y);
-        console.log('yes');
+        // // console.log('yes');
         context.strokeStyle = 'black';
         context.lineWidth = '3px';
         context.lineCap = 'round';
@@ -49,7 +49,7 @@ export default function Canvas({ roomID, canSendMessage }) {
       isDrawing.current = true;
       const canvas = CANVAS_REF.current;
       const context = canvas.getContext('2d');
-      console.log('STARt');
+      // // console.log('STARt');
       context.beginPath();
       const { eventOffsetX, eventOffsetY } = getCanvasOffset(event);
       socket.emit('draw_server', {
@@ -71,8 +71,8 @@ export default function Canvas({ roomID, canSendMessage }) {
         const canvas = CANVAS_REF.current;
         const context = canvas.getContext('2d');
         const { eventOffsetX, eventOffsetY } = getCanvasOffset(event);
-        console.log(eventOffsetX, eventOffsetY);
-        // console.log(event);
+        // // console.log(eventOffsetX, eventOffsetY);
+        // // console.log(event);
         socket.emit('draw_server', {
           roomID,
           figure: {
@@ -97,7 +97,7 @@ export default function Canvas({ roomID, canSendMessage }) {
       if (isDrawing.current) {
         const canvas = CANVAS_REF.current;
         const context = canvas.getContext('2d');
-        console.log('STOP');
+        // // console.log('STOP');
 
         socket.emit('draw_server', {
           roomID,
@@ -115,12 +115,12 @@ export default function Canvas({ roomID, canSendMessage }) {
 
   useEffect(() => {
     socket.on('draw', (msg) => {
-      console.log('msg: ', msg.figure);
+      // // console.log('msg: ', msg.figure);
       drawHandler(msg);
     });
 
     const canvas = CANVAS_REF.current;
-    console.log('canvas: ', canvas);
+    // // console.log('canvas: ', canvas);
     canvas.width = 800;
     canvas.height = 600;
 

@@ -6,12 +6,14 @@ export default function useActivateAccount(activateLink: string) {
   const [errorMsg, setErrorMsg] = useState('');
   const chekActivateLink = useCallback(async () => {
     try {
-      const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/auth/activate/${activateLink}`);
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API_URL}/auth/activate/${activateLink}`
+      );
       setIsActivated(data);
     } catch (error: any) {
       const { message } = error.response.data;
       setErrorMsg(message);
-      console.log(error);
+      // console.log(error);
     }
   }, [activateLink]);
 

@@ -12,7 +12,6 @@ const Container = styled.div`
 `;
 
 const Content = styled.canvas`
-  width: 100%;
   border: 4px solid #206eb0;
   background-color: white;
   cursor: pointer;
@@ -24,7 +23,7 @@ function Canvas({ children }: any) {
 }
 
 Canvas.Container = function CanvasContainer({ children, ...restProps }: any) {
-  return <Container {...restProps}>{children}</Container>;
+  return <Container style={{ margin: '20px 0px 0px 0px' }} {...restProps}>{children}</Container>;
 };
 
 Canvas.Content = function CanvasContent({ CANVAS_REF, ...restProps }: any) {

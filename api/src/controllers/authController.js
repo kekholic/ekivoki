@@ -6,11 +6,11 @@ class AuthController {
   async registration(req, res, next) {
     try {
       const { email, password, username } = req.body;
-      console.log('AAAAAAAAAAA', req.body);
+      // // console.log('AAAAAAAAAAA', req.body);
       const userData = await authService.registration(
         email,
         password,
-        username,
+        username
       );
       res.cookie('refreshToken', userData.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -35,7 +35,7 @@ class AuthController {
   }
 
   async login(req, res, next) {
-    console.log('zashel v login');
+    // // console.log('zashel v login');
     try {
       const { email, password } = req.body;
       const userData = await authService.login(email, password);
@@ -52,7 +52,7 @@ class AuthController {
   }
 
   async logout(req, res, next) {
-    console.log('zashel v logout', req.cookies);
+    // // console.log('zashel v logout', req.cookies);
     try {
       const { refreshToken } = req.cookies;
       const token = await authService.logout(refreshToken);

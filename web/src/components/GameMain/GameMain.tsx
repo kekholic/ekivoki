@@ -96,14 +96,14 @@ export default function GameMain() {
 
     socket.on('playerJoined', (player) => {
       // users = { ...users, player };
-      console.log('PLAYER JOINED BEFORE DISPATCH', player);
+      // // console.log('PLAYER JOINED BEFORE DISPATCH', player);
       if (user.canSendMessage) {
         dispatch(playerJoinedUpdateState(player));
       }
     });
 
     socket.on('sendNewGameStateBack', (msg) => {
-      console.log('what a fuck?');
+      // // console.log('what a fuck?');
       dispatch(updateGameState(msg.game));
     });
 
@@ -165,9 +165,9 @@ export default function GameMain() {
       dispatch(updateCanSendStatus(true));
     }
 
-    // console.log('socket.id', socket.id);
+    // // console.log('socket.id', socket.id);
     if (game.game.id === 0 && allGames.games.length === 0 && user.user.id) {
-      console.log('Стэйт слетел !', game.game.id, 'soketID', socket.id);
+      // // console.log('Стэйт слетел !', game.game.id, 'soketID', socket.id);
       socket.timeout(3000).emit('f5', {
         roomID: id,
         user: user.user,
@@ -175,27 +175,27 @@ export default function GameMain() {
     }
 
     socket.on('f5', (msg) => {
-      console.log('принял сообщение об слете игры с сервера');
-      console.log('****************', msg.user.id, game.isHost);
+      // // console.log('принял сообщение об слете игры с сервера');
+      // // console.log('****************', msg.user.id, game.isHost);
       if (msg.user.id === game.isHost) {
-        console.log('зашел в условие смены');
+        // // console.log('зашел в условие смены');
         const users = game.playersPriority.filter(
-          (user) => user.userId !== game.isHost,
+          (user) => user.userId !== game.isHost
         );
-        console.log('users: ', users);
+        // // console.log('users: ', users);
         const tempHost = users.sort((a, b) => a.userId - b.userId).pop();
-        console.log('tempHost: ', tempHost);
+        // // console.log('tempHost: ', tempHost);
 
         if (user.user.id === tempHost?.userId) {
-          console.log('tempHost?.userId: ', tempHost?.userId);
-          console.log('user.user.id: ', user.user.id);
-          console.log('Поменял могу отправлять сообщения');
+          // // console.log('tempHost?.userId: ', tempHost?.userId);
+          // // console.log('user.user.id: ', user.user.id);
+          // // console.log('Поменял могу отправлять сообщения');
           dispatch(updateCanSendStatus(true));
         }
       }
       dispatch(reconnect(msg));
       // if (game.game.id !== 0) {
-      //   console.log('Отправил сообщениес новым стейтом');
+      //   // console.log('Отправил сообщениес новым стейтом');
       //   socket.emit('updatef5', {
       //     roomID: id,
       //     game,
@@ -204,7 +204,7 @@ export default function GameMain() {
     });
 
     // i += 1;
-    // console.log(i);
+    // // console.log(i);
   }, [game, user]);
 
   const giveAnswer = () => {
@@ -273,9 +273,13 @@ export default function GameMain() {
         )}
         {game.game.status === GAME_STATUS.IN_PROGRESS &&
           (user.canSendMessage ? (
-            <CardForHost findIndex={findIndex} />
+            <CardForHost findIndex={findIndex} id={id} />
           ) : (
-            <CardForPlayer id={id} findIndex={findIndex} giveAnswer={giveAnswer} />
+            <CardForPlayer
+              id={id}
+              findIndex={findIndex}
+              giveAnswer={giveAnswer}
+            />
           ))}
 
         {/*    {game.questions.list[findIndex()].type === 3 && (

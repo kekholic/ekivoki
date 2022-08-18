@@ -17,12 +17,12 @@ export const LOCAL_VIDEO: string = socket.id;
 
 export default function useWebRTC(roomID: string) {
   const game = useAppSelector((store) => store.game);
-  const MY_VIDEO: string = socket.id;
+  // const MY_VIDEO: string = socket.id;
   const [clients, updateClients] = useStateWithCallback([]);
 
   const addNewClient = (newClient: string, cb: () => void) => {
     updateClients((list: Array<string>) => {
-      console.log('list: ', list);
+      // console.log('list: ', list);
       if (!list.includes(newClient)) {
         return [...list, newClient];
       }
@@ -173,8 +173,8 @@ export default function useWebRTC(roomID: string) {
       delete peerMediaElements.current[peerID];
 
       updateClients((list: Array<string>) => {
-        console.log(list, 'лист');
-        console.log('peerID: ', peerID);
+        // console.log(list, 'лист');
+        // console.log('peerID: ', peerID);
         return list.filter((c) => c !== peerID);
       });
     };

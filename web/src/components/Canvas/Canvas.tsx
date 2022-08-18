@@ -3,6 +3,7 @@ import '../../App.css';
 import React, { useEffect, useRef } from 'react';
 import CanvasContainer from '../CanvasContainer/CanvasContainer';
 import socket from '../../socket';
+import './Canvas.module.css';
 // import { useAppSelector } from '../../hooks/redux';
 
 interface IProps {
@@ -27,7 +28,7 @@ export default function Canvas({ roomID, canSendMessage }: IProps) {
   const isDrawing = useRef(false);
 
   const drawHandler = (msg: IMsg) => {
-    console.log('msg: ', msg.figure);
+    // // console.log('msg: ', msg.figure);
     const canvas = CANVAS_REF.current;
     if (canvas && isDrawing.current === false) {
       const context = canvas?.getContext('2d');
@@ -40,7 +41,7 @@ export default function Canvas({ roomID, canSendMessage }: IProps) {
         }
         if (msg.figure.x) {
           context.lineTo(msg.figure.x, msg.figure.y);
-          console.log('yes');
+          // // console.log('yes');
           context.strokeStyle = 'black';
           context.lineWidth = 3;
           context.lineCap = 'round';
@@ -69,7 +70,7 @@ export default function Canvas({ roomID, canSendMessage }: IProps) {
       const canvas = CANVAS_REF.current;
       const context = canvas?.getContext('2d');
       if (context) {
-        console.log('STARt');
+        // // console.log('STARt');
         context.beginPath();
         const { eventOffsetX, eventOffsetY } = getCanvasOffset(event);
         socket.emit('draw_server', {
@@ -93,8 +94,8 @@ export default function Canvas({ roomID, canSendMessage }: IProps) {
         const context = canvas?.getContext('2d');
         if (context) {
           const { eventOffsetX, eventOffsetY } = getCanvasOffset(event);
-          console.log(eventOffsetX, eventOffsetY);
-          // console.log(event);
+          // // console.log(eventOffsetX, eventOffsetY);
+          // // console.log(event);
           socket.emit('draw_server', {
             roomID,
             figure: {
@@ -120,7 +121,7 @@ export default function Canvas({ roomID, canSendMessage }: IProps) {
       if (isDrawing.current) {
         const canvas = CANVAS_REF.current;
         const context = canvas?.getContext('2d');
-        console.log('STOP');
+        // // console.log('STOP');
 
         socket.emit('draw_server', {
           roomID,
@@ -138,15 +139,14 @@ export default function Canvas({ roomID, canSendMessage }: IProps) {
 
   useEffect(() => {
     socket.on('draw', (msg) => {
-      console.log('msg: ', msg.figure);
+      // // console.log('msg: ', msg.figure);
       drawHandler(msg);
     });
 
     const canvas = CANVAS_REF.current;
-    console.log('canvas: ', canvas);
     if (canvas) {
-      canvas.width = 800;
-      canvas.height = 600;
+      canvas.width = 550;
+      canvas.height = 300;
     }
 
     if (canvas) {
@@ -165,7 +165,7 @@ export default function Canvas({ roomID, canSendMessage }: IProps) {
   }, [canSendMessage]);
 
   return (
-    <div style={{ width: '100%' }}>
+    <div>
       <CanvasContainer CANVAS_REF={CANVAS_REF} />
     </div>
   );

@@ -6,9 +6,7 @@ import React, { Dispatch, ReactElement, useEffect } from 'react';
 import style from './ModalAnswerCard.module.css';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { modalCloseNo } from '../../lib/game/gameUpdate';
-import {
-  correctAnswer,
-} from '../../store/reducers/gameSlice';
+import { correctAnswer } from '../../store/reducers/gameSlice';
 
 interface IProps {
   modal: IModal;
@@ -29,9 +27,7 @@ interface Iwinner {
 }
 
 export default function ModalAnswerCard(props: IProps): ReactElement {
-  const {
-    setModal, modal, findIndex, setWinner,
-  } = props;
+  const { setModal, modal, findIndex, setWinner } = props;
 
   const dispatch = useAppDispatch();
 
@@ -58,8 +54,9 @@ export default function ModalAnswerCard(props: IProps): ReactElement {
 
     for (let i = 0; i < game.playersPriority.length; i++) {
       if (game.playersPriority[i].userId === game.isHost) {
-        isHost = game.playersPriority[i + 1]?.userId
-          || game.playersPriority[0]?.userId;
+        isHost =
+          game.playersPriority[i + 1]?.userId ||
+          game.playersPriority[0]?.userId;
       }
     }
     const progress = {
@@ -71,18 +68,18 @@ export default function ModalAnswerCard(props: IProps): ReactElement {
       userId: user.user.id,
       score: game.progress[user.user.id] ? game.progress[user.user.id] : 0,
     };
-    progressHost.score += 1;
-    progress.score += 1;
+    progressHost.score += game.questions.list[findIndex()].type;
+    progress.score += game.questions.list[findIndex()].type;
 
     if (progressHost.score >= 44) {
-      console.log('progressHost.score : ', progressHost.score);
+      // console.log('progressHost.score : ', progressHost.score);
       setWinner({
         name: user.user.username || '',
         score: progressHost.score + game.questions.list[findIndex()].type,
         win: true,
       });
     } else if (progress.score >= 44) {
-      console.log('progress.score: ', progress.score);
+      // console.log('progress.score: ', progress.score);
       setWinner({
         name: modal.username,
         score: progress.score + game.questions.list[findIndex()].type,
@@ -98,7 +95,7 @@ export default function ModalAnswerCard(props: IProps): ReactElement {
         progressHost,
         isHost,
         current,
-      }),
+      })
     );
 
     setModal({
@@ -110,7 +107,7 @@ export default function ModalAnswerCard(props: IProps): ReactElement {
   };
 
   useEffect(() => {
-    console.log('rerender!!!');
+    // console.log('rerender!!!');
   }, [modal.visible]);
 
   return (
@@ -120,29 +117,39 @@ export default function ModalAnswerCard(props: IProps): ReactElement {
       }
     >
       <div
-        className={modal.visible ? `${style.modalContent} ${style.modalContentActive}` : `${style.modalContent}`}
+        className={
+          modal.visible
+            ? `${style.modalContent} ${style.modalContentActive}`
+            : `${style.modalContent}`
+        }
         onClick={(e) => e.stopPropagation()}
       >
         {user.canSendMessage ? (
           <div className={style.answerContainer}>
             <p className={style.answerText}>
-              <span className={style.answerUserName}>
-                {modal.username}
-              </span>
-              {' '}
+              <span className={style.answerUserName}>{modal.username}</span>{' '}
               верно ответил на вопрос?
             </p>
-            <button className={style.answerButton} type="submit" onClick={yesHandler}>Да</button>
-            <button className={style.answerButton} type="submit" onClick={noHandler}>Нет</button>
+            <button
+              className={style.answerButton}
+              type='submit'
+              onClick={yesHandler}
+            >
+              Да
+            </button>
+            <button
+              className={style.answerButton}
+              type='submit'
+              onClick={noHandler}
+            >
+              Нет
+            </button>
           </div>
         ) : (
           <div className={style.answerContainer}>
             <p className={style.answerText}>
-              На вопрос отвечает
-              {' '}
-              <span className={style.answerUserName}>
-                {modal.username}
-              </span>
+              На вопрос отвечает{' '}
+              <span className={style.answerUserName}>{modal.username}</span>
             </p>
           </div>
         )}

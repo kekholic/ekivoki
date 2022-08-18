@@ -16,7 +16,9 @@ class AuthService {
     try {
       const candidate = await prisma.user.findUnique({ where: { email } });
       if (candidate) {
-        throw new Error(`Пользователь с почтовым адресом ${email} уже существует`);
+        throw new Error(
+          `Пользователь с почтовым адресом ${email} уже существует`
+        );
       }
       const hashPassword = await bcrypt.hash(password, 8);
       const activateLink = uuid.v4();
@@ -30,7 +32,7 @@ class AuthService {
       });
       await mailService.sendActivationMail(
         email,
-        `${process.env.CLIENT_URL}/activate/${activateLink}`,
+        `${process.env.CLIENT_URL}/activate/${activateLink}`
       );
       const userDto = new UserDto(user);
       const tokens = tokenService.generateTokens({ ...userDto });
@@ -41,7 +43,7 @@ class AuthService {
         user: userDto,
       };
     } catch (error) {
-      console.log(error);
+      // // console.log(error);
       throw ApiError.BadRequest('Невалидные данные');
     }
   }
@@ -61,7 +63,6 @@ class AuthService {
         appruvedMail: true,
         codeActivation: null,
       },
-
     });
     if (!updatedUser) {
       throw ApiError.BadRequest('Ошибка активации ');
@@ -114,7 +115,7 @@ class AuthService {
       await tokenService.saveToken(userDto.id, tokens);
       return { ...tokens, user: userDto };
     } catch (error) {
-      console.log(error);
+      // // console.log(error);
       throw ApiError.BadRequest('Ошибка обновления токена');
     }
   }

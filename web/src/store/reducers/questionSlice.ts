@@ -39,7 +39,7 @@ export const questionSlice = createSlice({
   extraReducers: {
     // register and login reducers
     [getCard.fulfilled.type]: (state, action: PayloadAction<any>) => {
-      console.log('action: ', action.payload);
+      // console.log('action: ', action.payload);
       state.id = action.payload.id;
       state.collectionId = action.payload.collectionId;
       state.questionForPlayers = action.payload.questionForPlayers;

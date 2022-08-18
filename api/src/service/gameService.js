@@ -13,7 +13,7 @@ const ApiError = require('../exceptions/apiError');
 
 class GameService {
   /*   gameConnections(ws, msg) {
-      console.log('eebat');
+      // console.log('eebat');
       aWss.clients.forEach((client) => {
         client.send(JSON.stringify(msg));
       });
@@ -30,7 +30,7 @@ class GameService {
       });
       return allGame;
     } catch (error) {
-      console.log(error);
+      // // console.log(error);
       throw ApiError.BadRequest('Ошибка получения списка игр');
     }
   }
@@ -43,7 +43,7 @@ class GameService {
         },
       });
     } catch (error) {
-      console.log(error);
+      // // console.log(error);
     }
   }
 
@@ -69,7 +69,7 @@ class GameService {
       });
       return oneGame.status;
     } catch (error) {
-      console.log(error);
+      // // console.log(error);
       throw ApiError.BadRequest('Ошибка получения статуса игры');
     }
   }
@@ -107,12 +107,13 @@ class GameService {
           questionForPlayers: true,
           questionForHost: true,
           exceptions: true,
+          word: true,
           theme: true,
           task: true,
           type: true,
         },
       });
-      console.log('QUESTIONS', questions);
+      // // console.log('QUESTIONS', questions);
       const resp = {
         game: {},
         user: {},
@@ -122,7 +123,10 @@ class GameService {
       resp.game = newGame;
       resp.user.username = username;
       resp.user.userId = id;
-      resp.questions = questions;
+      resp.questions = questions
+        .map((elem, index) => [elem, Math.random()])
+        .sort((a, b) => a[1] - b[1])
+        .map((elem) => elem[0]);
       resp.questions.current = 1;
       return resp;
     } catch (error) {
@@ -223,7 +227,7 @@ class GameService {
         },
       });
     } catch (error) {
-      console.log(error);
+      // // console.log(error);
       throw ApiError.BadRequest('Ошибка смены статуса игры');
     }
   }
