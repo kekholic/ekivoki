@@ -52,6 +52,7 @@ export const initialState: GameState = {
         questionForPlayers: '',
         theme: '',
         task: '',
+        word: '',
         exceptions: '',
         id: 0,
         type: 0,

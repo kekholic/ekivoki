@@ -165,7 +165,7 @@ export default function Canvas({ roomID, canSendMessage }: IProps) {
   }, [canSendMessage]);
 
   return (
-    <div>
+    <div style={{ width: '100%' }}>
       <CanvasContainer CANVAS_REF={CANVAS_REF} />
     </div>
   );

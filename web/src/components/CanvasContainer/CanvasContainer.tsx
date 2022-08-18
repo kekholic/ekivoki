@@ -12,9 +12,11 @@ const Container = styled.div`
 `;
 
 const Content = styled.canvas`
-  border: 1px solid black;
+  width: 100%;
+  border: 4px solid #206eb0;
   background-color: white;
   cursor: pointer;
+  border-radius: 12px;
 `;
 
 function Canvas({ children }: any) {

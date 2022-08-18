@@ -48,3 +48,31 @@
   top: 3%;
   right: 3%;
 }
+
+@media (max-width: 2230px) {
+  .videoHost{
+    width: 700px;
+  }
+  .videoPlayer{
+    width: 400px;
+  }
+}
+
+@media (max-width: 1920px) {
+  .videoHost{
+    width: 550px;
+  }
+  .videoPlayer{
+    width: 400px;
+  }
+}
+
+
+@media (max-width: 1440px) {
+  .videoHost{
+    width: 410px;
+  }
+  .videoPlayer{
+    width: 300px;
+  }
+}
