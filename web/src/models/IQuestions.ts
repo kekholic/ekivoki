@@ -8,6 +8,7 @@ interface IList {
   questionForPlayers: string,
   theme: string,
   task: string,
+  word: string,
   exceptions: string,
   id: number,
   type: number
