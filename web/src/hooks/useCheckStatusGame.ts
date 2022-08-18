@@ -6,20 +6,22 @@ export default function checkStatusGame(id: number) {
 
   async function getStatusGame() {
     try {
-      const { data } = await $api.post(`${process.env.REACT_APP_API_URL}/game/checkStatusGame`, { id });
+      const { data } = await $api.post(
+        `${process.env.REACT_APP_API_URL}/game/checkStatusGame`,
+        { id }
+      );
       return data;
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   }
 
   useEffect(() => {
-    getStatusGame()
-      .then((data) => {
-        // console.log(data);
+    getStatusGame().then((data) => {
+      // // console.log(data);
 
-        setStatusGame(data);
-      });
+      setStatusGame(data);
+    });
   }, [id]);
 
   return statusGame;

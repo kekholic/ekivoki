@@ -28,7 +28,7 @@ export default function Canvas({ roomID, canSendMessage }: IProps) {
   const isDrawing = useRef(false);
 
   const drawHandler = (msg: IMsg) => {
-    console.log('msg: ', msg.figure);
+    // // console.log('msg: ', msg.figure);
     const canvas = CANVAS_REF.current;
     if (canvas && isDrawing.current === false) {
       const context = canvas?.getContext('2d');
@@ -41,7 +41,7 @@ export default function Canvas({ roomID, canSendMessage }: IProps) {
         }
         if (msg.figure.x) {
           context.lineTo(msg.figure.x, msg.figure.y);
-          console.log('yes');
+          // // console.log('yes');
           context.strokeStyle = 'black';
           context.lineWidth = 3;
           context.lineCap = 'round';
@@ -70,7 +70,7 @@ export default function Canvas({ roomID, canSendMessage }: IProps) {
       const canvas = CANVAS_REF.current;
       const context = canvas?.getContext('2d');
       if (context) {
-        console.log('STARt');
+        // // console.log('STARt');
         context.beginPath();
         const { eventOffsetX, eventOffsetY } = getCanvasOffset(event);
         socket.emit('draw_server', {
@@ -94,8 +94,8 @@ export default function Canvas({ roomID, canSendMessage }: IProps) {
         const context = canvas?.getContext('2d');
         if (context) {
           const { eventOffsetX, eventOffsetY } = getCanvasOffset(event);
-          console.log(eventOffsetX, eventOffsetY);
-          // console.log(event);
+          // // console.log(eventOffsetX, eventOffsetY);
+          // // console.log(event);
           socket.emit('draw_server', {
             roomID,
             figure: {
@@ -121,7 +121,7 @@ export default function Canvas({ roomID, canSendMessage }: IProps) {
       if (isDrawing.current) {
         const canvas = CANVAS_REF.current;
         const context = canvas?.getContext('2d');
-        console.log('STOP');
+        // // console.log('STOP');
 
         socket.emit('draw_server', {
           roomID,
@@ -139,7 +139,7 @@ export default function Canvas({ roomID, canSendMessage }: IProps) {
 
   useEffect(() => {
     socket.on('draw', (msg) => {
-      console.log('msg: ', msg.figure);
+      // // console.log('msg: ', msg.figure);
       drawHandler(msg);
     });
 

@@ -13,7 +13,7 @@ const ApiError = require('../exceptions/apiError');
 
 class GameService {
   /*   gameConnections(ws, msg) {
-      console.log('eebat');
+      // console.log('eebat');
       aWss.clients.forEach((client) => {
         client.send(JSON.stringify(msg));
       });
@@ -30,7 +30,7 @@ class GameService {
       });
       return allGame;
     } catch (error) {
-      console.log(error);
+      // // console.log(error);
       throw ApiError.BadRequest('Ошибка получения списка игр');
     }
   }
@@ -43,7 +43,7 @@ class GameService {
         },
       });
     } catch (error) {
-      console.log(error);
+      // // console.log(error);
     }
   }
 
@@ -69,7 +69,7 @@ class GameService {
       });
       return oneGame.status;
     } catch (error) {
-      console.log(error);
+      // // console.log(error);
       throw ApiError.BadRequest('Ошибка получения статуса игры');
     }
   }
@@ -97,7 +97,7 @@ class GameService {
       });
       if (!userNgames) {
         throw ApiError.BadRequest(
-          'Не удалось добавить пользьзователя в игру игру',
+          'Не удалось добавить пользьзователя в игру игру'
         );
       }
 
@@ -113,7 +113,7 @@ class GameService {
           type: true,
         },
       });
-      console.log('QUESTIONS', questions);
+      // // console.log('QUESTIONS', questions);
       const resp = {
         game: {},
         user: {},
@@ -227,7 +227,7 @@ class GameService {
         },
       });
     } catch (error) {
-      console.log(error);
+      // // console.log(error);
       throw ApiError.BadRequest('Ошибка смены статуса игры');
     }
   }

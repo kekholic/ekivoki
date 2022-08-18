@@ -1,9 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-type Props = {}
+type Props = {};
 
-export default function NewGameSettings({ }: Props) {
+export default function NewGameSettings({}: Props) {
   const navigate = useNavigate();
   const createGameHandler = (e: React.SyntheticEvent): void => {
     e.preventDefault();
@@ -15,8 +15,8 @@ export default function NewGameSettings({ }: Props) {
     const players = target.players.value;
     const password = target.password.value;
 
-    console.log(players);
-    console.log(password);
+    // console.log(players);
+    // console.log(password);
     // TODO:
     // отправка в редакс стейт нужных полей
     // отрпавка в базу данных нужной инфы с инпутов
@@ -28,19 +28,17 @@ export default function NewGameSettings({ }: Props) {
   };
   return (
     <form onSubmit={createGameHandler}>
-      <label htmlFor="players">
+      <label htmlFor='players'>
         Количество игроков:
-        <input type="text" name="players" />
+        <input type='text' name='players' />
       </label>
       <br />
-      <label htmlFor="password">
+      <label htmlFor='password'>
         Пароль:
-        <input type="password" name="password" />
+        <input type='password' name='password' />
       </label>
       <br />
-      <button type="submit">Создать игру!</button>
-
+      <button type='submit'>Создать игру!</button>
     </form>
-
   );
 }

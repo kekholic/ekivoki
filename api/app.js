@@ -81,9 +81,9 @@ app.use('/question', questionRouter);
 //   });
 // };
 // io.on('connection', (socket) => {
-//   console.log('socket connection', socket.id);
+//   // console.log('socket connection', socket.id);
 //   socket.on('join_room', (msg) => {
-//     console.log(msg);
+//     // console.log(msg);
 //     socket.join(msg.id);
 //     socket.to(msg.id).emit('resive_message', msg);
 //   });
@@ -123,7 +123,7 @@ async function clearVoidRooms() {
   const clearInterval = setInterval(async () => {
     const dateNow = new Date();
     await gameService.deletGamesOnDate(dateNow);
-    // console.log('udalil');
+    // // console.log('udalil');
   }, 60 * 30 * 1000);
 }
 clearVoidRooms();
@@ -134,7 +134,9 @@ async function getClientRooms() {
   const allgamePading = await gameService.searchGame();
   const arrGame = Array.from(rooms.keys());
 
-  const newarrGame = allgamePading.filter((game) => arrGame.includes(String(game.id)));
+  const newarrGame = allgamePading.filter((game) =>
+    arrGame.includes(String(game.id))
+  );
 
   return newarrGame;
 }
@@ -147,14 +149,14 @@ async function shareRoomsInfo() {
 
 io.on('connection', (socket) => {
   shareRoomsInfo();
-  // console.log('socket connection');
+  // // console.log('socket connection');
   socket.on(ACTIONS.SHARE_ROOMS, () => {
     shareRoomsInfo();
   });
 
   socket.on(ACTIONS.JOIN, (config) => {
     const { room: roomID } = config;
-    console.log('roomID', roomID);
+    // // console.log('roomID', roomID);
     const { rooms: joinedRooms } = socket;
 
     if (!Number.isNaN(Number(roomID))) {
@@ -185,7 +187,7 @@ io.on('connection', (socket) => {
 
   // вход игрока в существующую игру:
   socket.on('playerJoined', (msg) => {
-    console.log('playerJoined', msg.roomID);
+    // // console.log('playerJoined', msg.roomID);
     msg.user.socket = socket.id;
     io.to(msg.roomID).emit('playerJoined', msg.user);
   });
@@ -208,42 +210,42 @@ io.on('connection', (socket) => {
   });
 
   socket.on('boardVisible', (msg) => {
-    // console.log('boardVisible.roomID: ', msg.roomID);
+    // // console.log('boardVisible.roomID: ', msg.roomID);
     io.to(msg.roomID).emit('OpenBoard', msg);
   });
 
   socket.on('exit_game_host', (msg) => {
-    // console.log('exit_game_host.roomID: ', msg.roomID);
+    // // console.log('exit_game_host.roomID: ', msg.roomID);
     io.to(msg.roomID).emit('exit_game_host', msg);
   });
 
   socket.on('exit_game', (msg) => {
-    // console.log('exit_game.roomID: ', msg.roomID);
+    // // console.log('exit_game.roomID: ', msg.roomID);
     io.to(msg.roomID).emit('exit_game', msg);
   });
   socket.on('endGame', (msg) => {
-    // console.log('msgendGame: ', msg);
+    // // console.log('msgendGame: ', msg);
     socket.to(msg.roomID).emit('EndGame', msg);
     gameService.finishGame(msg);
   });
 
   socket.on('f5', (msg) => {
     msg.user.socket = socket.id;
-    console.log('Принял сообщение что кто то слетел', msg);
+    // // console.log('Принял сообщение что кто то слетел', msg);
     socket.to(msg.roomID).timeout(2000).emit('f5', msg);
   });
 
   socket.on('disconnect', () => {
-    // console.log('zashel v disconect ***************');
+    // // console.log('zashel v disconect ***************');
     leaveRoom();
   });
 
   function leaveRoom() {
     const { rooms } = socket;
-    console.log('zashwl v liv', rooms);
+    // // console.log('zashwl v liv', rooms);
     Array.from(rooms).forEach((roomID) => {
       const clients = Array.from(io.sockets.adapter.rooms.get(roomID) || []);
-      console.log('clients', clients);
+      // // console.log('clients', clients);
       clients.forEach((clientID) => {
         io.to(clientID).emit(ACTIONS.REMOVE_PEER, {
           peerID: socket.id,
@@ -253,11 +255,11 @@ io.on('connection', (socket) => {
           peerID: clientID,
         });
       });
-      console.log(Number(roomID));
+      // // console.log(Number(roomID));
       if (!Number.isNaN(Number(roomID))) {
         gameService.changePlayersCount(Number(roomID), 'decrement');
       }
-      // console.log('zashwl posle lib liv', rooms);
+      // // console.log('zashwl posle lib liv', rooms);
       socket.leave(roomID);
     });
     shareRoomsInfo();
@@ -267,7 +269,7 @@ io.on('connection', (socket) => {
     leaveRoom();
   });
   socket.on('disconnecting', () => {
-    // console.log('zashel v disconect');
+    // // console.log('zashel v disconect');
     leaveRoom();
   });
 
@@ -288,5 +290,5 @@ io.on('connection', (socket) => {
 
 app.use(errorMiddleware);
 server.listen(PORT, async () => {
-  console.log(`Сервер запущен на порте ${PORT}! `);
+  // // console.log(`Сервер запущен на порте ${PORT}! `);
 });

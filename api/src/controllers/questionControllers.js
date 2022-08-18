@@ -8,7 +8,7 @@ class QuestionController {
     const { id } = req.body;
     try {
       const question = await prisma.card.findUnique({ where: { id } });
-      console.log('question: ', question);
+      // // console.log('question: ', question);
       res.json(question);
     } catch (error) {
       next(error);

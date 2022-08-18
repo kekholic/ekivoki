@@ -14,7 +14,7 @@ export const getAuth = createAsyncThunk(
     try {
       const res = await $api.post<IData>(
         `/auth/${data.username ? 'registration' : 'login'}`,
-        data,
+        data
       );
       localStorage.setItem('token', res.data.accessToken);
       localStorage.setItem('user', JSON.stringify(res.data.user));
@@ -22,23 +22,26 @@ export const getAuth = createAsyncThunk(
     } catch (err) {
       return thunkAPI.rejectWithValue('Ошибка');
     }
-  },
+  }
 );
 
 export const checkAuth = createAsyncThunk(
   'auth/checkAuth',
   async (_, thunkAPI) => {
     try {
-      const res = await axios.get<IData>(`${process.env.REACT_APP_API_URL}/auth/refresh`, {
-        withCredentials: true,
-      });
+      const res = await axios.get<IData>(
+        `${process.env.REACT_APP_API_URL}/auth/refresh`,
+        {
+          withCredentials: true,
+        }
+      );
       localStorage.setItem('token', res.data.accessToken);
       localStorage.setItem('user', JSON.stringify(res.data.user));
       return res.data.user;
     } catch (err) {
       return thunkAPI.rejectWithValue('Ошибка');
     }
-  },
+  }
 );
 
 export const getLogout = createAsyncThunk(
@@ -52,7 +55,7 @@ export const getLogout = createAsyncThunk(
     } catch (err) {
       return thunkAPI.rejectWithValue('Ошибка');
     }
-  },
+  }
 );
 
 export const createGame = createAsyncThunk(
@@ -64,7 +67,7 @@ export const createGame = createAsyncThunk(
     } catch (err) {
       return thunkAPI.rejectWithValue(err);
     }
-  },
+  }
 );
 
 export const getGame = createAsyncThunk(
@@ -76,7 +79,7 @@ export const getGame = createAsyncThunk(
     } catch (err) {
       return thunkAPI.rejectWithValue('Ошибка');
     }
-  },
+  }
 );
 
 export const incrementCountPlayers = createAsyncThunk(
@@ -88,7 +91,7 @@ export const incrementCountPlayers = createAsyncThunk(
     } catch (err) {
       return thunkAPI.rejectWithValue('Ошибка');
     }
-  },
+  }
 );
 
 export const decrementCountPlayers = createAsyncThunk(
@@ -100,7 +103,7 @@ export const decrementCountPlayers = createAsyncThunk(
     } catch (err) {
       return thunkAPI.rejectWithValue('Ошибка');
     }
-  },
+  }
 );
 
 export const startGame = createAsyncThunk(
@@ -112,7 +115,7 @@ export const startGame = createAsyncThunk(
     } catch (err) {
       return thunkAPI.rejectWithValue('Ошибка');
     }
-  },
+  }
 );
 
 export const endGame = createAsyncThunk(
@@ -124,7 +127,7 @@ export const endGame = createAsyncThunk(
     } catch (err) {
       return thunkAPI.rejectWithValue('Ошибка');
     }
-  },
+  }
 );
 
 export const playersConnection = createAsyncThunk(
@@ -136,7 +139,7 @@ export const playersConnection = createAsyncThunk(
     } catch (err) {
       return thunkAPI.rejectWithValue('Ошибка');
     }
-  },
+  }
 );
 
 export const getCard = createAsyncThunk(
@@ -144,10 +147,10 @@ export const getCard = createAsyncThunk(
   async (data, thunkAPI) => {
     try {
       const res = await $api.post('/question', data); // подготовить к отправке обьект с данными { question.id }
-      console.log(res.data, 'getCard****************************');
+      // console.log(res.data, 'getCard****************************');
       return res.data; // {question} из бд
     } catch (err) {
       return thunkAPI.rejectWithValue('Ошибка');
     }
-  },
+  }
 );
