@@ -37,16 +37,29 @@
   color: #fff;
 }
 
-.videoUserName{
+.videoUserContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 8px;
-  
   border-radius: 10px;
   background: #E1782B;
-  font-size: 20px;
-  color: #fff;
   position: absolute;
   top: 3%;
   right: 3%;
+}
+
+.videoUserName{
+  font-size: 20px;
+  color: #fff;
+}
+
+.videoUserAvatar{
+  width: 30px;
+}
+
+.videoUserName + .videoUserAvatar{
+  margin-left: 5px;
 }
 
 @media (max-width: 2230px) {
