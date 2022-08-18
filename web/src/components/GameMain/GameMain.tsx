@@ -268,7 +268,7 @@ export default function GameMain() {
         )}
         {game.game.status === GAME_STATUS.IN_PROGRESS &&
           (user.canSendMessage ? (
-            <CardForHost findIndex={findIndex} />
+            <CardForHost findIndex={findIndex} id={id} />
           ) : (
             <CardForPlayer id={id} findIndex={findIndex} giveAnswer={giveAnswer} />
           ))}
