@@ -16,7 +16,6 @@ export default function VideoComponent(props: IvcProps): ReactElement {
   const { roomID } = props;
   const { clients, provideMediaRef } = useWebRTC(roomID);
   const { game } = useAppSelector((store) => store);
-  const { user } = useAppSelector((store) => store.user);
 
   const findUserName = (id: number): string => {
     const userName = game.playersPriority.find((el) => el.userId === id)?.username || '';
@@ -24,8 +23,11 @@ export default function VideoComponent(props: IvcProps): ReactElement {
   };
 
   const findUserAva = (id:number, arr: Array<IPlayersNava>): string => {
-    const avatar = arr.filter((el) => el.id === id);
-    return avatar[0].pic;
+    if (arr.length) {
+      const avatar = arr.filter((el) => el.id === id);
+      return avatar[0].pic;
+    }
+    return '';
   };
 
   const [nick, setNick] = useState('');
